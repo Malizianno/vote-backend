@@ -12,7 +12,7 @@
 				db.XX.INSERT-...module name...-...feature...-initial-data.xml
 
 			XXX: Golden Rules:
-			XXX: Always use a new changeset in existing prefix schemas (e.g. ALR_*, ADMIN_*, SCH_* etc.
+			XXX: Always use a new changeset in existing prefix schemas
 			XXX: Create new DDL or DML files only when it uses different prefix than existing business!
 			XXX: Push-in changesets only when refactoring without backwards compatibility (major bump in version)!
 		-->
