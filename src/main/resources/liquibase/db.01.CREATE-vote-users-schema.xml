@@ -7,8 +7,6 @@
 
     <changeSet author="vote-admin" id="vote-users-schema-creation">
 
-        <createSequence sequenceName="userssequence" startValue="100" incrementBy="1" />
-
         <createTable tableName="users">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" />
