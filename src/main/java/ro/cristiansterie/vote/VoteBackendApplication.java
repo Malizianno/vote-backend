@@ -7,15 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.UserRepository;
 
 @SpringBootApplication
-// @EnableJpaRepositories("ro.cristiansterie.vote.repository")
-@EntityScan("ro.cristiansterie.vote.entity")
 public class VoteBackendApplication {
 	protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
