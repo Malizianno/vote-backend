@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+		<!-- NAMING CONVENTIONS:
+			* DDL (CREATE/DROP/ALTER) changesets:
+				db.XX.CREATE-...module name...-...feature...-schema.xml
+
+			* DML (INSERT/UPDATE/DELETE) changesets:
+				db.XX.INSERT-...module name...-...feature...-initial-data.xml
+
+			XXX: Golden Rules:
+			XXX: Always use a new changeset in existing prefix schemas (e.g. ALR_*, ADMIN_*, SCH_* etc.
+			XXX: Create new DDL or DML files only when it uses different prefix than existing business!
+			XXX: Push-in changesets only when refactoring without backwards compatibility (major bump in version)!
+		-->
+
+		<!-- 01. Schema creation for users table-->
+		<include file="classpath:liquibase/db.01.CREATE-vote-users-schema.xml" />
+
+
+</databaseChangeLog>
