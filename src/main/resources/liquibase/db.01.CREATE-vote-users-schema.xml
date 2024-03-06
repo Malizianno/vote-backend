@@ -11,11 +11,30 @@
             <column name="id" type="BIGINT">
                 <constraints nullable="false" />
             </column>
-
             <column name="username" type="VARCHAR(200)">
                 <constraints nullable="true" />
             </column>
+        </createTable>
 
+        <createTable tableName="candidates">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="party" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image" type="VARCHAR(200)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="description" type="VARCHAR(200)">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
     </changeSet>
 
