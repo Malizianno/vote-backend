@@ -45,8 +45,9 @@ public class CandidateController {
 
         response.setCandidates(service.getFiltered(filter));
         response.setTotal(service.countFiltered(filter));
-        
-        return new ResponseEntity<>(response, null != response.getCandidates() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(response,
+                null != response.getCandidates() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(path = "/add")
