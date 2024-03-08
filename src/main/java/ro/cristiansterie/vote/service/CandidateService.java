@@ -42,6 +42,13 @@ public class CandidateService extends GenericService {
         return convert(repo.findAll(Example.of(convert(filter.getCandidate()), matcher), pageable).getContent());
     }
 
+    public int countFiltered(CandidateFilterDTO filter) {
+        ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase();
+
+        return (int) repo.count(Example.of(convert(filter.getCandidate()), matcher));
+    }
+
     public CandidateDTO get(@NonNull Integer id) {
         CandidateDAO returnable = repo.findById(id).orElse(null);
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;

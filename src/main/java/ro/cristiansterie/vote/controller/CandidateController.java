@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateFilterDTO;
+import ro.cristiansterie.vote.dto.CandidateResponseDTO;
 import ro.cristiansterie.vote.service.CandidateService;
 
 @RestController
@@ -39,9 +40,13 @@ public class CandidateController {
     }
 
     @PostMapping(path = "/filtered")
-    public ResponseEntity<List<CandidateDTO>> filtered(@RequestBody CandidateFilterDTO filter) {
-        List<CandidateDTO> candidates = service.getFiltered(filter);
-        return new ResponseEntity<>(candidates, null != candidates ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    public ResponseEntity<CandidateResponseDTO> filtered(@RequestBody CandidateFilterDTO filter) {
+        CandidateResponseDTO response = new CandidateResponseDTO();
+
+        response.setCandidates(service.getFiltered(filter));
+        response.setTotal(service.countFiltered(filter));
+        
+        return new ResponseEntity<>(response, null != response.getCandidates() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(path = "/add")
