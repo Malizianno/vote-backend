@@ -1,14 +1,14 @@
 package ro.cristiansterie.vote.dto;
 
 public class UserDTO {
-    private int id;
+    private Integer id;
     private String username;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
