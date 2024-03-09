@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ro.cristiansterie.vote.dto.DashboardTotalsDTO;
 import ro.cristiansterie.vote.repository.CandidateRepository;
 import ro.cristiansterie.vote.repository.UserRepository;
+import ro.cristiansterie.vote.util.EntityHelper;
 
 @Service
 public class DashboardService {
@@ -29,5 +30,29 @@ public class DashboardService {
         totals.setUsers((int) users.count());
 
         return totals;
+    }
+
+    public boolean generateFakeUsers(int no) {
+        try {
+            users.saveAll(EntityHelper.generateFakeUsers(no));
+
+            return true;
+        } catch (Exception e) {
+            log.info("Cannot save fake users because of: {}", e.getMessage());
+        }
+
+        return false;
+    }
+
+    public boolean generateFakeCandidates(int no) {
+        try {
+            candidates.saveAll(EntityHelper.generateFakeCandidates(no));
+
+            return true;
+        } catch (Exception e) {
+            log.info("Cannot save fake candidates because of: {}", e.getMessage());
+        }
+
+        return true;
     }
 }
