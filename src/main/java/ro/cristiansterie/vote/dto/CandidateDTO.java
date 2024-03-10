@@ -1,10 +1,12 @@
 package ro.cristiansterie.vote.dto;
 
+import ro.cristiansterie.vote.util.PartyTypeEnum;
+
 public class CandidateDTO {
     private Integer id;
     private String firstName;
     private String lastName;
-    private String party;
+    private PartyTypeEnum party;
 
     private String image;
     private String description;
@@ -33,11 +35,11 @@ public class CandidateDTO {
         this.lastName = lastName;
     }
 
-    public String getParty() {
+    public PartyTypeEnum getParty() {
         return party;
     }
 
-    public void setParty(String party) {
+    public void setParty(PartyTypeEnum party) {
         this.party = party;
     }
 

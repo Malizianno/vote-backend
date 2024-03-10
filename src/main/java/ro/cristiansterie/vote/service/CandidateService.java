@@ -18,6 +18,7 @@ import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateFilterDTO;
 import ro.cristiansterie.vote.entity.CandidateDAO;
 import ro.cristiansterie.vote.repository.CandidateRepository;
+import ro.cristiansterie.vote.util.PartyTypeEnum;
 
 @Service
 public class CandidateService extends GenericService {
@@ -34,6 +35,8 @@ public class CandidateService extends GenericService {
     }
 
     public List<CandidateDTO> getFiltered(CandidateFilterDTO filter) {
+        filter = this.checkFilters(filter);
+
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
         Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
@@ -43,6 +46,8 @@ public class CandidateService extends GenericService {
     }
 
     public int countFiltered(CandidateFilterDTO filter) {
+        filter = this.checkFilters(filter);
+        
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
 
@@ -82,5 +87,13 @@ public class CandidateService extends GenericService {
 
     protected List<CandidateDTO> convert(List<CandidateDAO> candidates) {
         return candidates.stream().map(this::convert).collect(Collectors.toList());
+    }
+
+    private CandidateFilterDTO checkFilters(CandidateFilterDTO filter) {
+        if (PartyTypeEnum.ALL.equals(filter.getCandidate().getParty())) {
+            filter.getCandidate().setParty(null);
+        }
+
+        return filter;
     }
 }

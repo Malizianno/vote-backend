@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import ro.cristiansterie.vote.util.AppConstants;
+import ro.cristiansterie.vote.util.PartyTypeEnum;
 
 @Entity(name = AppConstants.TABLE_CANDIDATE)
 public class CandidateDAO {
@@ -17,7 +18,7 @@ public class CandidateDAO {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    private String party;
+    private PartyTypeEnum party;
 
     private String image;
     private String description;
@@ -46,11 +47,11 @@ public class CandidateDAO {
         this.lastName = lastName;
     }
 
-    public String getParty() {
+    public PartyTypeEnum getParty() {
         return party;
     }
 
-    public void setParty(String party) {
+    public void setParty(PartyTypeEnum party) {
         this.party = party;
     }
 

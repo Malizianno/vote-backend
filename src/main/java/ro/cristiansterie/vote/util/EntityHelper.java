@@ -14,8 +14,6 @@ public class EntityHelper {
     private static final String[] LAST_NAMES = new String[] { "Anghelescu", "Popescu", "Aftenie", "Ionescu",
             "Adumitroaiei", "Dîrlău", "Gabor", "Decusară", "Iliescu", "Deju", "Petrescu", "Hârlișcă", "Chiricheș",
             "Halbeș", "Kogălniceanu", "Kiriță", "Protopopescu", "Deaconu", "Pamfil", "Pretop", "Oală", "Similea" };
-    private static final String[] PARTIES = new String[] { "PSD", "PNL", "USR", "UDMR", "PMP", "POT", "PD-L",
-            "Noua Dreaptă", "Independent" };
 
     private static Random random = new Random();
 
@@ -48,10 +46,10 @@ public class EntityHelper {
 
         dto.setFirstName(FIRST_NAMES[random.nextInt(FIRST_NAMES.length)]);
         dto.setLastName(LAST_NAMES[random.nextInt(LAST_NAMES.length)]);
-        dto.setParty(PARTIES[random.nextInt(PARTIES.length)]);
+        dto.setParty(PartyTypeEnum.values()[random.nextInt(PartyTypeEnum.values().length)]);
         dto.setDescription(
                 "Numele meu este " + dto.getFirstName() + " " + dto.getLastName()
-                        + ("Independent".equals(dto.getParty())
+                        + (PartyTypeEnum.IND.equals(dto.getParty())
                                 ? " și sunt "
                                 : " și fac parte din partidul ")
                         + dto.getParty()
