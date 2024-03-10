@@ -1,6 +1,7 @@
 package ro.cristiansterie.vote.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -43,10 +44,12 @@ public class EntityHelper {
 
     private static CandidateDAO generateCandidateDAO() {
         CandidateDAO dto = new CandidateDAO();
+        List<PartyTypeEnum> parties = Arrays.stream(PartyTypeEnum.values())
+                .filter(party -> !PartyTypeEnum.ALL.equals(party)).toList();
 
         dto.setFirstName(FIRST_NAMES[random.nextInt(FIRST_NAMES.length)]);
         dto.setLastName(LAST_NAMES[random.nextInt(LAST_NAMES.length)]);
-        dto.setParty(PartyTypeEnum.values()[random.nextInt(PartyTypeEnum.values().length)]);
+        dto.setParty(parties.get(random.nextInt(parties.size() - 1)));
         dto.setDescription(
                 "Numele meu este " + dto.getFirstName() + " " + dto.getLastName()
                         + (PartyTypeEnum.IND.equals(dto.getParty())
