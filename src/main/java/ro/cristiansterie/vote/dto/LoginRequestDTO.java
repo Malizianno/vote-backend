@@ -2,18 +2,10 @@ package ro.cristiansterie.vote.dto;
 
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
-public class UserDTO {
-    private Integer id;
+public class LoginRequestDTO {
     private String username;
+    private String password;
     private UserRoleEnum role;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -21,6 +13,14 @@ public class UserDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public UserRoleEnum getRole() {

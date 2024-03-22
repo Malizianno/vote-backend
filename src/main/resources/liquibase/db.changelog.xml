@@ -17,8 +17,11 @@
 			XXX: Push-in changesets only when refactoring without backwards compatibility (major bump in version)!
 		-->
 
-		<!-- 01. Schema creation for users table-->
+		<!-- 01. Schema creation for users table -->
 		<include file="classpath:liquibase/db.01.CREATE-vote-users-schema.xml" />
+
+		<!-- 02. Data insertion for users table -->
+		<include file="classpath:liquibase/db.02.INSERT-vote-users-admin-schema.xml" />
 
 
 </databaseChangeLog>

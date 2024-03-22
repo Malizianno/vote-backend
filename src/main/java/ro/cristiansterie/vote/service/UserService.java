@@ -1,6 +1,7 @@
 package ro.cristiansterie.vote.service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,11 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
@@ -18,9 +24,10 @@ import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.UserFilterDTO;
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.UserRepository;
+import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
-public class UserService extends GenericService {
+public class UserService extends GenericService implements UserDetailsService {
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private UserRepository repo;
@@ -55,6 +62,10 @@ public class UserService extends GenericService {
     }
 
     public UserDTO save(UserDTO user) {
+        if (null == user || !validateUserRole(user)) {
+            log.error("Cannot save user: {}", user);
+        }
+
         return null != user ? convert(repo.save(convert(user))) : null;
     }
 
@@ -64,10 +75,24 @@ public class UserService extends GenericService {
 
             return true;
         } catch (Exception e) {
-            log.error("Cannot delete user {} because: {}", id, e);
+            log.error("Cannot delete user {} because: {}", id, e.getMessage());
         }
 
         return false;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserDAO found = this.repo.findByUsername(username);
+
+        if (null == found || null == found.getUsername()) {
+            throw new UsernameNotFoundException("User not found by username: " + username);
+        }
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(found.getRole().toString()));
+
+        return new User(found.getUsername(), found.getPassword(), authorities);
     }
 
     // CONVERTERS
@@ -82,5 +107,11 @@ public class UserService extends GenericService {
 
     protected List<UserDTO> convert(List<UserDAO> users) {
         return users.stream().map(this::convert).collect(Collectors.toList());
+    }
+
+    // VALIDATORS
+
+    private boolean validateUserRole(UserDTO user) {
+        return null != user.getRole() && (UserRoleEnum.ADMIN.equals(user.getRole()) || UserRoleEnum.VOTANT.equals(user.getRole()));
     }
 }

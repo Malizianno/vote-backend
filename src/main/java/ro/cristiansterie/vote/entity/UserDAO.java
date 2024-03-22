@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import ro.cristiansterie.vote.util.AppConstants;
+import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Entity(name = AppConstants.TABLE_USER)
 public class UserDAO {
@@ -15,6 +16,8 @@ public class UserDAO {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String username;
+    private String password;
+    private UserRoleEnum role;
 
     public Integer getId() {
         return id;
@@ -30,5 +33,21 @@ public class UserDAO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public UserRoleEnum getRole() {
+        return role;
+    }
+
+    public void setRole(UserRoleEnum role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
