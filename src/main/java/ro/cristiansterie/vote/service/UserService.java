@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
@@ -31,9 +32,11 @@ public class UserService extends GenericService implements UserDetailsService {
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private UserRepository repo;
+    private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repo) {
+    public UserService(UserRepository repo, PasswordEncoder passwordEncoder) {
         this.repo = repo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserDTO> getAll() {
@@ -64,7 +67,11 @@ public class UserService extends GenericService implements UserDetailsService {
     public UserDTO save(UserDTO user) {
         if (null == user || !validateUserRole(user)) {
             log.error("Cannot save user: {}", user);
+
+            return null;
         }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return null != user ? convert(repo.save(convert(user))) : null;
     }

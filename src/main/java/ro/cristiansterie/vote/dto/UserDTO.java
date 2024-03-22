@@ -5,6 +5,7 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 public class UserDTO {
     private Integer id;
     private String username;
+    private String password;
     private UserRoleEnum role;
 
     public Integer getId() {
@@ -29,5 +30,13 @@ public class UserDTO {
 
     public void setRole(UserRoleEnum role) {
         this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

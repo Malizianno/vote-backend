@@ -22,7 +22,7 @@ public class LoginController {
     }
 
     @PostMapping(path = "/")
-    public ResponseEntity<LoginResponseDTO> fakeCandidates(@RequestBody LoginRequestDTO dto) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO dto) {
         LoginResponseDTO response = service.login(dto);
 
         return new ResponseEntity<>(response, null != response ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
