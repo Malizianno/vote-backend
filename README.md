@@ -13,4 +13,7 @@ vot.e App is designed to be a three-part app known as microservice architecture 
 This app stores the data, collected via the mobile app at account creation and data collected via the admin UI when using the voting mechanism;
 The data is stored in a MySQL database, installed on a RaspberryPi found at ip (check application.properties).
 
+v1.1.0 - implemented ADMIN authentication and overall authorization.
+v1.0.0 - basic SpringBoot application.
+
 All rights reserved to Cristian Sterie
