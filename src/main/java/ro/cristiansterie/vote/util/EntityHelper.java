@@ -65,6 +65,8 @@ public class EntityHelper {
     private static UserDAO generateUserDAO() {
         UserDAO dto = new UserDAO();
 
+        dto.setRole(UserRoleEnum.ADMIN);
+        dto.setPassword("$2a$10$f/QdFjL002VC5.ZmhEtW9eKqUJfn0CvvzIr.dbW/0h5Eu3q1d75ga");
         dto.setUsername(
                 FIRST_NAMES[random.nextInt(FIRST_NAMES.length)].toLowerCase() + "."
                         + LAST_NAMES[random.nextInt(LAST_NAMES.length)].toLowerCase());
