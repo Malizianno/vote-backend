@@ -34,7 +34,7 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests(
                 auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll().anyRequest().authenticated())
-                .cors(cors -> cors.disable())
+                // .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
                 .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
