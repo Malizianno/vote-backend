@@ -16,7 +16,7 @@
         <insert tableName="users">
             <column name="id" value="1000"></column>
             <column name="username" value="votant.test"></column>
-            <column name="password" value=""></column>
+            <column name="password" value="$2a$10$MmNcSXIFHpq4mJqKC8IWf.LGscW5Cg4yFhXppRH/mAU67TRQo2G6."></column>
             <column name="role" value="1"></column>
         </insert>
         
