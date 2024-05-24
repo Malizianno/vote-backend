@@ -21,18 +21,23 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ro.cristiansterie.vote.properties.AuthProperties;
 import ro.cristiansterie.vote.service.UserService;
+import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.JWTTokenAuthentication;
 import ro.cristiansterie.vote.util.JWTUtils;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 public class JWTFilter extends OncePerRequestFilter {
-    
+
     protected static final String[] ALLOW_PATTERNS = new String[] { "/login/**", "/index.html" };
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private JWTUtils jwtUtil;
+
+    @Autowired
+    private AuthProperties authProperties;
 
     @Autowired
     private UserService userService;
@@ -54,13 +59,16 @@ public class JWTFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             if (!requestMatcher.matches(request)) {
+                String apikey = request.getHeader(AppConstants.AUTH_APIKEY);
+
                 log.info("Requested URI: {}", request.getRequestURI());
+                log.info("Requested with apikey: {}", apikey);
 
                 String jwt = parseJWTToken(request);
 
-                // log.warn("Requested authentication with token: {}", jwt);
+                if (null != jwt && jwtUtil.validateJWTToken(jwt) && apikey.equals(authProperties.getFrontend())) {
+                    log.info("validating ADMIN user...");
 
-                if (null != jwt && jwtUtil.validateJWTToken(jwt)) {
                     UserDetails userDetails = userService.loadUserByUsername(jwtUtil.parseUsername(jwt));
                     UserRoleEnum role = UserRoleEnum.valueOf(userDetails.getAuthorities().toArray()[0].toString());
 
@@ -69,8 +77,21 @@ public class JWTFilter extends OncePerRequestFilter {
                     auth.setAuthenticated(true);
 
                     SecurityContextHolder.getContext().setAuthentication(auth);
-                    log.info("Authentication successfull for: {} for {} area!", userDetails.getUsername(),
-                            role.toString().toUpperCase());
+                    log.info("Authentication successfull for user: {}, apikey: {}!", userDetails.getUsername(), apikey);
+                }
+
+                if (null != jwt && jwtUtil.validateJWTToken(jwt) && apikey.equals(authProperties.getMobile())) {
+                    log.info("validating VOTANT user...");
+
+                    UserDetails userDetails = userService.loadUserByUsername(jwtUtil.parseUsername(jwt));
+                    UserRoleEnum role = UserRoleEnum.valueOf(userDetails.getAuthorities().toArray()[0].toString());
+
+                    Authentication auth = new JWTTokenAuthentication(jwt, userDetails.getUsername(), role,
+                            userDetails.getAuthorities());
+                    auth.setAuthenticated(true);
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                    log.info("Authentication successfull for user: {}, apikey: {}!", userDetails.getUsername(), apikey);
                 }
             }
         } catch (Exception e) {

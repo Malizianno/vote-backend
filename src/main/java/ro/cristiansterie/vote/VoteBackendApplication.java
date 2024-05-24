@@ -12,12 +12,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import ro.cristiansterie.vote.properties.AuthProperties;
 import ro.cristiansterie.vote.properties.JWTConfiguration;
 import ro.cristiansterie.vote.repository.CandidateRepository;
 import ro.cristiansterie.vote.repository.UserRepository;
 
 @SpringBootApplication
-@EnableConfigurationProperties({ JWTConfiguration.class })
+@EnableConfigurationProperties({ JWTConfiguration.class, AuthProperties.class })
 public class VoteBackendApplication {
 	protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
