@@ -18,6 +18,7 @@ public class UserDAO {
     private String username;
     private String password;
     private UserRoleEnum role;
+    private Boolean hasVoted;
 
     public Integer getId() {
         return id;
@@ -49,5 +50,13 @@ public class UserDAO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getHasVoted() {
+        return hasVoted;
+    }
+
+    public void setHasVoted(Boolean hasVoted) {
+        this.hasVoted = hasVoted;
     }
 }

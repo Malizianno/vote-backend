@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ro.cristiansterie.vote.dto.VoteDTO;
@@ -19,9 +20,11 @@ import ro.cristiansterie.vote.repository.VoteRepository;
 public class VoteService extends GenericService {
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private UserService userService;
     private VoteRepository repo;
 
-    public VoteService(VoteRepository repo) {
+    public VoteService(UserService userService, VoteRepository repo) {
+        this.userService = userService;
         this.repo = repo;
     }
 
@@ -40,7 +43,10 @@ public class VoteService extends GenericService {
 
     public boolean takeAVote(VoteDTO newVote) {
         try {
+            String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             VoteDTO saved = convert(repo.save(convert(newVote)));
+
+            this.userService.setHasVoted(username);
 
             return null != saved && null != saved.getId();
         } catch (Exception e) {

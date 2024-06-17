@@ -71,9 +71,12 @@ public class UserService extends GenericService implements UserDetailsService {
             return null;
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // in case new to DB encode password, otherwise update everything else
+        if (null == repo.findByUsername(user.getUsername()).getId()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
 
-        return null != user ? convert(repo.save(convert(user))) : null;
+        return convert(repo.save(convert(user)));
     }
 
     public boolean delete(Integer id) {
@@ -86,6 +89,35 @@ public class UserService extends GenericService implements UserDetailsService {
         }
 
         return false;
+    }
+
+    public boolean hasVotedByUsername(String username) {
+        UserDAO user = this.repo.findByUsername(username);
+
+        if (null == user || null == user.getHasVoted()) {
+            return false;
+        }
+
+        return user.getHasVoted();
+    }
+
+    /**
+     * Use this only in case of voting by an user 
+     * @param username to vote
+     * @return if the user has successfully voted
+     */
+    public boolean setHasVoted(String username) {
+        UserDAO user = this.repo.findByUsername(username);
+
+        if (null == user) {
+            return false;
+        }
+
+        user.setHasVoted(true);
+
+        this.save(convert(user));
+
+        return true;
     }
 
     @Override

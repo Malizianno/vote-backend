@@ -73,6 +73,7 @@ public class LoginService {
                 response.setUsername(request.getUsername());
                 response.setRole(request.getRole());
                 response.setToken(token);
+                response.setHasVoted(userService.hasVotedByUsername(request.getUsername()));
 
                 return response;
             }

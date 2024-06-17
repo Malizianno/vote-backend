@@ -24,12 +24,14 @@ public class ElectionsService extends GenericService {
     private ElectionProperties electionProps;
     private VoteService voteService;
     private CandidateService candidateService;
+    private UserService userService;
 
     public ElectionsService(VoteService voteService, ElectionProperties electionProps,
-            CandidateService candidateService) {
+            CandidateService candidateService, UserService userService) {
         this.voteService = voteService;
         this.electionProps = electionProps;
         this.candidateService = candidateService;
+        this.userService = userService;
     }
 
     public boolean getElectionCampaignStatus() {
@@ -59,7 +61,7 @@ public class ElectionsService extends GenericService {
         return candidateService.get(winnerCandidate);
     }
 
-    public Boolean vote(CandidateDTO voted) {
+    public boolean vote(CandidateDTO voted) {
         VoteDTO newVote = new VoteDTO();
 
         newVote.setCandidateID(voted.getId());
@@ -69,7 +71,12 @@ public class ElectionsService extends GenericService {
         return voteService.takeAVote(newVote);
     }
 
-    public Boolean cleanAllVotes() {
+    public boolean hasUserVoted(String username) {
+        return userService.hasVotedByUsername(username);
+    }
+
+    // XXX: dangerous method, use with care
+    public boolean cleanAllVotes() {
         return voteService.cleanDBTable();
     }
 }
