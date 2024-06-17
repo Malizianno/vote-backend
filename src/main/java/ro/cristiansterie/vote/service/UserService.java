@@ -71,8 +71,10 @@ public class UserService extends GenericService implements UserDetailsService {
             return null;
         }
 
+        UserDAO found = repo.findByUsername(user.getUsername());
+
         // in case new to DB encode password, otherwise update everything else
-        if (null == repo.findByUsername(user.getUsername()).getId()) {
+        if (null == found) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
