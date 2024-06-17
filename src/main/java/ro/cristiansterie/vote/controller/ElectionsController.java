@@ -1,5 +1,7 @@
 package ro.cristiansterie.vote.controller;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,5 +56,19 @@ public class ElectionsController {
         Boolean voted = service.vote(candidate);
 
         return new ResponseEntity<>(voted, null != voted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(path = "/countAllVotes")
+    public ResponseEntity<Integer> countAllVotes() {
+        Integer count = service.countAllVotes();
+
+        return new ResponseEntity<>(count, null != count ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(path = "/getParsedVotes")
+    public ResponseEntity<Map<Integer, Long>> getParsedVotes() {
+        Map<Integer, Long> result = service.getParsedVotes();
+
+        return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 }

@@ -27,9 +27,9 @@ public class DashboardController {
         return new ResponseEntity<>(totals, null != totals ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(path = "/fake/candidates/{no}")
-    public ResponseEntity<Boolean> fakeCandidates(@PathVariable int no) {
-        boolean status = service.generateFakeCandidates(no);
+    @PostMapping(path = "/fake/candidates")
+    public ResponseEntity<Boolean> fakeCandidates() {
+        boolean status = service.generateFakeCandidates();
 
         return new ResponseEntity<>(status, status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
@@ -37,6 +37,13 @@ public class DashboardController {
     @PostMapping(path = "/fake/users/{no}")
     public ResponseEntity<Boolean> fakeUsers(@PathVariable int no) {
         boolean status = service.generateFakeUsers(no);
+
+        return new ResponseEntity<>(status, status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(path = "/fake/votes/{no}")
+    public ResponseEntity<Boolean> fakeVotes(@PathVariable int no) {
+        boolean status = service.generateFakeVotes(no);
 
         return new ResponseEntity<>(status, status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

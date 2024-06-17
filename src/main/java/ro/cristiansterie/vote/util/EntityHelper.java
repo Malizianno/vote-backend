@@ -22,11 +22,13 @@ public class EntityHelper {
         // empty private constructor
     }
 
-    public static List<CandidateDAO> generateFakeCandidates(int no) {
+    public static List<CandidateDAO> generateFakeCandidates() {
         List<CandidateDAO> returnable = new ArrayList<>();
 
-        for (int i = 0; i < no; i++) {
-            returnable.add(generateCandidateDAO());
+        PartyTypeEnum[] parties = PartyTypeEnum.values();
+
+        for (int i = 1; i < parties.length; i++) {
+            returnable.add(generateCandidateDAO(parties[i]));
         }
 
         return returnable;
@@ -42,14 +44,12 @@ public class EntityHelper {
         return returnable;
     }
 
-    private static CandidateDAO generateCandidateDAO() {
+    private static CandidateDAO generateCandidateDAO(PartyTypeEnum party) {
         CandidateDAO dto = new CandidateDAO();
-        List<PartyTypeEnum> parties = Arrays.stream(PartyTypeEnum.values())
-                .filter(party -> !PartyTypeEnum.ALL.equals(party)).toList();
 
         dto.setFirstName(FIRST_NAMES[random.nextInt(FIRST_NAMES.length)]);
         dto.setLastName(LAST_NAMES[random.nextInt(LAST_NAMES.length)]);
-        dto.setParty(parties.get(random.nextInt(parties.size() - 1)));
+        dto.setParty(party);
         dto.setDescription(
                 "Numele meu este " + dto.getFirstName() + " " + dto.getLastName()
                         + (PartyTypeEnum.IND.equals(dto.getParty())

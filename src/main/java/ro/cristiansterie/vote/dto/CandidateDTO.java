@@ -59,4 +59,9 @@ public class CandidateDTO {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return "CandidateDTO [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", party=" + party
+                + ", image=" + image + ", description=" + description + "]";
+    }
 }
