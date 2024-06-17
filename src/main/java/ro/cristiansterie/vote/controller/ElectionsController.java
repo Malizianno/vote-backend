@@ -1,6 +1,6 @@
 package ro.cristiansterie.vote.controller;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
+import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
 import ro.cristiansterie.vote.service.ElectionsService;
 
 @RestController
@@ -66,8 +67,8 @@ public class ElectionsController {
     }
 
     @GetMapping(path = "/getParsedVotes")
-    public ResponseEntity<Map<Integer, Long>> getParsedVotes() {
-        Map<Integer, Long> result = service.getParsedVotes();
+    public ResponseEntity<List<CandidateWithStatisticsDTO>> getParsedVotes() {
+        List<CandidateWithStatisticsDTO> result = service.getParsedVotes();
 
         return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

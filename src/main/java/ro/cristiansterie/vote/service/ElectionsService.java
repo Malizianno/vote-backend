@@ -1,18 +1,18 @@
 package ro.cristiansterie.vote.service;
 
 import java.lang.invoke.MethodHandles;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.Collections;
-import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
+import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
 import ro.cristiansterie.vote.dto.VoteDTO;
 import ro.cristiansterie.vote.properties.ElectionProperties;
 
@@ -72,17 +72,27 @@ public class ElectionsService extends GenericService {
         return voteService.takeAVote(newVote);
     }
 
-    public Map<Integer, Long> getParsedVotes() {
-        Map<Integer, Long> returnable = new HashMap<>();
+    public List<CandidateWithStatisticsDTO> getParsedVotes() {
+        List<CandidateWithStatisticsDTO> returnable = new ArrayList<>();
 
         List<VoteDTO> votes = voteService.getAll();
         List<CandidateDTO> candidates = candidateService.getAll();
 
         candidates.forEach(candidate -> {
-            var canidateVotes = votes.stream().map(VoteDTO::getCandidateID)
+            var candidateVotes = votes.stream().map(VoteDTO::getCandidateID)
                     .filter(candidateID -> candidateID.equals(candidate.getId())).count();
 
-            returnable.put(candidate.getId(), canidateVotes);
+            var newCandidateWithStatistics = new CandidateWithStatisticsDTO();
+
+            newCandidateWithStatistics.setId(candidate.getId());
+            newCandidateWithStatistics.setFirstName(candidate.getFirstName());
+            newCandidateWithStatistics.setLastName(candidate.getLastName());
+            newCandidateWithStatistics.setDescription(candidate.getDescription());
+            newCandidateWithStatistics.setImage(candidate.getImage());
+            newCandidateWithStatistics.setParty(candidate.getParty());
+            newCandidateWithStatistics.setTotalVotes(candidateVotes);
+
+            returnable.add(newCandidateWithStatistics);
         });
 
         return returnable;
