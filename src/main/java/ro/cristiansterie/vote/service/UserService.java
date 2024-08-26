@@ -77,7 +77,7 @@ public class UserService extends GenericService implements UserDetailsService {
         if (null == found) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-
+        
         return convert(repo.save(convert(user)));
     }
 
@@ -120,6 +120,14 @@ public class UserService extends GenericService implements UserDetailsService {
         this.save(convert(user));
 
         return true;
+    }
+
+    public UserDTO getByUsername(String username) {
+        if (null == username || username.isBlank()) {
+            return null;
+        }
+        
+        return convert(this.repo.findByUsername(username));
     }
 
     @Override

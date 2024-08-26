@@ -8,20 +8,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
 import ro.cristiansterie.vote.service.ElectionsService;
+import ro.cristiansterie.vote.service.UserService;
 
 @RestController
 @RequestMapping(path = "/election")
 public class ElectionsController {
 
     private ElectionsService service;
+    private UserService userService;
 
-    public ElectionsController(ElectionsService service) {
+    public ElectionsController(ElectionsService service, UserService userService) {
         this.service = service;
+        this.userService = userService;
     }
 
     @GetMapping(path = "/status")
@@ -53,8 +57,8 @@ public class ElectionsController {
     }
 
     @PostMapping(path = "/vote")
-    public ResponseEntity<Boolean> vote(@RequestBody CandidateDTO candidate) {
-        Boolean voted = service.vote(candidate);
+    public ResponseEntity<Boolean> vote(@RequestBody CandidateDTO candidate, @RequestParam("userID") Integer userID) {
+        Boolean voted = service.vote(candidate, userID);
 
         return new ResponseEntity<>(voted, null != voted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

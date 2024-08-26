@@ -30,7 +30,7 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 
 public class JWTFilter extends OncePerRequestFilter {
 
-    protected static final String[] ALLOW_PATTERNS = new String[] { "/login/**", "/index.html" };
+    protected static final String[] ALLOW_PATTERNS = new String[] { "/login/**", "/users/save/**", "/index.html" };
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired

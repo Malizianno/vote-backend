@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import ro.cristiansterie.vote.config.CustomAuthenticationManager;
 import ro.cristiansterie.vote.dto.LoginRequestDTO;
 import ro.cristiansterie.vote.dto.LoginResponseDTO;
-import ro.cristiansterie.vote.properties.AuthProperties;
+import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.util.JWTUtils;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
@@ -74,6 +74,12 @@ public class LoginService {
                 response.setRole(request.getRole());
                 response.setToken(token);
                 response.setHasVoted(userService.hasVotedByUsername(request.getUsername()));
+
+                UserDTO foundLocalUser = userService.getByUsername(request.getUsername());
+
+                if (null != foundLocalUser && null != foundLocalUser.getId()) {
+                    response.setId(foundLocalUser.getId());
+                }
 
                 return response;
             }

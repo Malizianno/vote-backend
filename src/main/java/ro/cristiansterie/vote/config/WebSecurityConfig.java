@@ -22,6 +22,7 @@ public class WebSecurityConfig {
         String DEFAULT_CHECK_HEALTH_URL = "/actuator";
         String DEFAULT_H2_ENDPOINT = "/h2/**";
         String DEFAULT_LOGIN_ENDPOINT = "/login/**";
+        String DEFAULT_SINGUP_ENDPOINT = "/users/save/**";
 
         String[] AUTH_WHITELIST = {
                 "/v3/api-docs/**",
@@ -29,7 +30,8 @@ public class WebSecurityConfig {
                 "/docs/swagger-ui/**",
                 DEFAULT_CHECK_HEALTH_URL,
                 DEFAULT_H2_ENDPOINT,
-                DEFAULT_LOGIN_ENDPOINT
+                DEFAULT_LOGIN_ENDPOINT,
+                DEFAULT_SINGUP_ENDPOINT
         };
 
         http.authorizeHttpRequests(

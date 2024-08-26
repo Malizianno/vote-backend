@@ -8,6 +8,7 @@ public class LoginResponseDTO {
     private String token;
     private UserRoleEnum role;
     private boolean hasVoted;
+    private Integer id;
 
     public String getUsername() {
         return username;
@@ -39,5 +40,13 @@ public class LoginResponseDTO {
 
     public void setHasVoted(boolean hasVoted) {
         this.hasVoted = hasVoted;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

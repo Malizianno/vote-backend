@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ro.cristiansterie.vote.dto.DashboardTotalsDTO;
 import ro.cristiansterie.vote.entity.CandidateDAO;
+import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.CandidateRepository;
 import ro.cristiansterie.vote.repository.UserRepository;
 import ro.cristiansterie.vote.util.EntityHelper;
@@ -74,7 +75,11 @@ public class DashboardService {
                 int randVotesNo = new Random().nextInt(maxRand);
 
                 for (int i = 0; i < randVotesNo; i++) {
-                    electionsService.vote(candidatesService.convert(candidate));
+                    electionsService.vote(candidatesService.convert(candidate), 999);
+
+                    UserDAO user = users.findById(999).get();
+                    user.setHasVoted(false);
+                    users.save(user);
                 }
             });
 

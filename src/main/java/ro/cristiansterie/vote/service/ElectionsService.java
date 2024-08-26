@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
+import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.VoteDTO;
 import ro.cristiansterie.vote.properties.ElectionProperties;
 
@@ -62,12 +63,28 @@ public class ElectionsService extends GenericService {
         return candidateService.get(winnerCandidate);
     }
 
-    public boolean vote(CandidateDTO voted) {
+    public boolean vote(CandidateDTO voted, Integer userID) {
         VoteDTO newVote = new VoteDTO();
 
         newVote.setCandidateID(voted.getId());
         newVote.setParty(voted.getParty());
         newVote.setTimestamp(System.currentTimeMillis());
+
+        // save the voting action on user entity
+        UserDTO userToVote = userService.get(userID);
+
+        if (null == userToVote || null == userToVote.getId()) {
+            return false; // no user found in DB
+        }
+
+        if (null != userToVote && null != userToVote.getId() && null != userToVote.getHasVoted()
+                && userToVote.getHasVoted()) {
+            return false; // user has voted
+        }
+
+        userToVote.setHasVoted(true);
+
+        userService.save(userToVote);
 
         return voteService.takeAVote(newVote);
     }
