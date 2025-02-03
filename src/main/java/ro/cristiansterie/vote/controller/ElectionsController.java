@@ -21,11 +21,9 @@ import ro.cristiansterie.vote.service.UserService;
 public class ElectionsController {
 
     private ElectionsService service;
-    private UserService userService;
 
     public ElectionsController(ElectionsService service, UserService userService) {
         this.service = service;
-        this.userService = userService;
     }
 
     @GetMapping(path = "/status")
