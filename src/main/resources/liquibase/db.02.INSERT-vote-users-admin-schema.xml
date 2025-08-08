@@ -7,14 +7,14 @@
 
     <changeSet author="vote-admin" id="vote-users-admin-insert-data">
         <insert tableName="users">
-            <column name="id" value="999"></column>
+            <column name="id" value="1"></column>
             <column name="username" value="admin"></column>
             <column name="password" value="$2a$10$MmNcSXIFHpq4mJqKC8IWf.LGscW5Cg4yFhXppRH/mAU67TRQo2G6."></column>
             <column name="role" value="0"></column>
         </insert>
 
         <insert tableName="users">
-            <column name="id" value="1000"></column>
+            <column name="id" value="2"></column>
             <column name="username" value="votant.test"></column>
             <column name="password" value="$2a$10$MmNcSXIFHpq4mJqKC8IWf.LGscW5Cg4yFhXppRH/mAU67TRQo2G6."></column>
             <column name="role" value="1"></column>

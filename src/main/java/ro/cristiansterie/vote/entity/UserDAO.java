@@ -11,13 +11,13 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 @Entity(name = AppConstants.TABLE_USER)
 public class UserDAO {
 
-    // XXX: this should be implemented once you add auth + auth
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(unique = true)
     private String username;
+
     private String password;
     private UserRoleEnum role;
     private Boolean hasVoted;

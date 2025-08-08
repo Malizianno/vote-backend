@@ -72,12 +72,12 @@ public class DashboardService {
             int maxRand = no / candidatesList.size();
 
             candidatesList.forEach(candidate -> {
-                int randVotesNo = new Random().nextInt(maxRand);
+                int randVotesNo = new Random().nextInt(maxRand > 0 ? maxRand : 1);
 
                 for (int i = 0; i < randVotesNo; i++) {
-                    electionsService.vote(candidatesService.convert(candidate), 999);
+                    electionsService.vote(candidatesService.convert(candidate), i + 1);
 
-                    UserDAO user = users.findById(999).get();
+                    UserDAO user = users.findById(i + 1).get();
                     user.setHasVoted(false);
                     users.save(user);
                 }
