@@ -64,7 +64,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="set-auto-increment-start_users" author="vote-admin">
+    <changeSet id="set-auto-increment-start-users" author="vote-admin">
         <sql> ALTER TABLE users AUTO_INCREMENT = 1000; </sql>
     </changeSet>
 

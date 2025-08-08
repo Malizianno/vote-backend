@@ -23,10 +23,10 @@ public class DashboardService {
     private UserRepository users;
 
     private CandidateService candidatesService;
-    private ElectionsService electionsService;
+    private ElectionsHelperService electionsService;
 
     public DashboardService(CandidateRepository candidates, UserRepository users, CandidateService candidatesService,
-            ElectionsService electionsService) {
+            ElectionsHelperService electionsService) {
         this.candidates = candidates;
         this.users = users;
         this.candidatesService = candidatesService;

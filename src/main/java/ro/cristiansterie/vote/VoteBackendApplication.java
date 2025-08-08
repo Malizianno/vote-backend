@@ -9,9 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.lang.NonNull;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import ro.cristiansterie.vote.properties.AuthProperties;
 import ro.cristiansterie.vote.properties.ElectionProperties;
@@ -32,16 +29,6 @@ public class VoteBackendApplication {
 	CommandLineRunner runner(UserRepository userRepo, CandidateRepository candidateRepo) {
 		return args -> {
 			log.info("Application started successfully! message from the CommandLineRunner ;)");
-		};
-	}
-
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(@NonNull CorsRegistry registry) {
-				registry.addMapping("/**");
-			}
 		};
 	}
 }

@@ -23,5 +23,7 @@
 		<!-- 02. Data insertion for users table -->
 		<include file="classpath:liquibase/db.02.INSERT-vote-users-admin-schema.xml" />
 
+		<!-- 03. Data creation for elections table -->
+		<include file="classpath:liquibase/db.03.CREATE-elections-schema.xml" />
 
 </databaseChangeLog>

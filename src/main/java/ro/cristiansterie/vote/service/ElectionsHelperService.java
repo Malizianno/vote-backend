@@ -19,7 +19,7 @@ import ro.cristiansterie.vote.properties.ElectionProperties;
 
 // WIP: this class executes elections, take care of voting process alltogether
 @Service
-public class ElectionsService extends GenericService {
+public class ElectionsHelperService extends GenericService {
 
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -28,7 +28,7 @@ public class ElectionsService extends GenericService {
     private CandidateService candidateService;
     private UserService userService;
 
-    public ElectionsService(VoteService voteService, ElectionProperties electionProps,
+    public ElectionsHelperService(VoteService voteService, ElectionProperties electionProps,
             CandidateService candidateService, UserService userService) {
         this.voteService = voteService;
         this.electionProps = electionProps;
