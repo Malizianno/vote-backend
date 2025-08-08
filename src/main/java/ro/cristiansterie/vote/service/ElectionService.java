@@ -53,6 +53,10 @@ public class ElectionService extends GenericService {
         return (int) repo.count(Example.of(convert(filter.getElection()), matcher));
     }
 
+    public ElectionDTO getLastElection() {
+        return convert(repo.findFirstByOrderByStartDateDesc());
+    }
+
     public ElectionDTO get(@NonNull Integer id) {
         ElectionDAO returnable = repo.findById(id).orElse(null);
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;

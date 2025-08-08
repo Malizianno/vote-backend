@@ -34,6 +34,10 @@
             <column name="end_date" type="DATE">
                 <constraints nullable="false" />
             </column>
+            <column name="candidates" type="JSON">
+                <constraints nullable="false" />
+            </column>
+            
         </createTable>
 
     </changeSet>

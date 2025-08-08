@@ -1,5 +1,7 @@
 package ro.cristiansterie.vote.dto;
 
+import java.util.List;
+
 public class ElectionDTO {
     private Integer id;
     private Boolean enabled;
@@ -7,6 +9,7 @@ public class ElectionDTO {
     private String description;
     private String startDate;
     private String endDate;
+    private List<CandidateDTO> candidates;
 
     public Integer getId() {
         return id;
@@ -56,4 +59,12 @@ public class ElectionDTO {
         this.endDate = endDate;
     }
 
+    public List<CandidateDTO> getCandidates() {
+        return candidates;
+    }
+
+    public void setCandidates(List<CandidateDTO> candidates) {
+        this.candidates = candidates;
+    }
+    
 }

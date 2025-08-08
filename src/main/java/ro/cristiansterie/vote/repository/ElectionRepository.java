@@ -6,4 +6,5 @@ import ro.cristiansterie.vote.entity.ElectionDAO;
 
 public interface ElectionRepository extends JpaRepository<ElectionDAO, Integer> {
 
+    public ElectionDAO findFirstByOrderByStartDateDesc();
 }

@@ -23,14 +23,16 @@ public class DashboardService {
     private UserRepository users;
 
     private CandidateService candidatesService;
-    private ElectionsHelperService electionsService;
+    private ElectionsHelperService electionHelperService;
+    private ElectionService electionService;
 
     public DashboardService(CandidateRepository candidates, UserRepository users, CandidateService candidatesService,
-            ElectionsHelperService electionsService) {
+            ElectionsHelperService electionsHelperService, ElectionService electionService) {
         this.candidates = candidates;
         this.users = users;
         this.candidatesService = candidatesService;
-        this.electionsService = electionsService;
+        this.electionHelperService = electionsHelperService;
+        this.electionService = electionService;
     }
 
     public DashboardTotalsDTO getTotals() {
@@ -56,7 +58,21 @@ public class DashboardService {
 
     public boolean generateFakeCandidates() {
         try {
-            candidates.saveAll(EntityHelper.generateFakeCandidates());
+            // first clean the DB with previous candidates
+            candidates.deleteAll();
+            // generate fake candidates
+            var fakeCandidates = EntityHelper.generateFakeCandidates();
+            // then generate and save new fake candidates
+            candidates.saveAll(fakeCandidates);
+
+            // add candidates to live election
+            var election = electionService.getLastElection();
+
+            if (election == null || election.getEndDate() != null)
+                throw new IllegalStateException("No election to add fake candidates to!");
+
+            election.setCandidates(candidatesService.convert(fakeCandidates));
+            electionService.save(election);
 
             return true;
         } catch (Exception e) {
@@ -75,7 +91,7 @@ public class DashboardService {
                 int randVotesNo = new Random().nextInt(maxRand > 0 ? maxRand : 1);
 
                 for (int i = 0; i < randVotesNo; i++) {
-                    electionsService.vote(candidatesService.convert(candidate), i + 1);
+                    electionHelperService.vote(candidatesService.convert(candidate), i + 1);
 
                     UserDAO user = users.findById(i + 1).get();
                     user.setHasVoted(false);
