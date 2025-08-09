@@ -16,6 +16,7 @@ import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.UserFilterDTO;
 import ro.cristiansterie.vote.dto.UserResponseDTO;
 import ro.cristiansterie.vote.service.UserService;
+import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -44,8 +45,22 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> filtered(@RequestBody UserFilterDTO filter) {
         UserResponseDTO response = new UserResponseDTO();
 
+        // create filters
+        var adminFilter = new UserFilterDTO();
+        var admin = new UserDTO();
+        admin.setRole(UserRoleEnum.ADMIN);
+        adminFilter.setUser(admin);
+
+        var votantFilter = new UserFilterDTO();
+        var votant = new UserDTO();
+        votant.setRole(UserRoleEnum.VOTANT);
+        votantFilter.setUser(votant);
+
+        // set response data
         response.setUsers(service.getFiltered(filter));
         response.setTotal(service.countFiltered(filter));
+        response.setAdminUsersCount(service.countFiltered(adminFilter));
+        response.setVotantUsersCount(service.countFiltered(votantFilter));
 
         return new ResponseEntity<>(response, null != response.getUsers() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
