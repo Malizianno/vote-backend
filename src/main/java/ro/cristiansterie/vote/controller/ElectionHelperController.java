@@ -17,11 +17,11 @@ import ro.cristiansterie.vote.service.ElectionsHelperService;
 
 @RestController
 @RequestMapping(path = "/election/helper")
-public class ElectionHelper {
+public class ElectionHelperController {
 
     private final ElectionsHelperService service;
 
-    public ElectionHelper(ElectionsHelperService service) {
+    public ElectionHelperController(ElectionsHelperService service) {
         this.service = service;
     }
 

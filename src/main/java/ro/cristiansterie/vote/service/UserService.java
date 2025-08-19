@@ -21,10 +21,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
+import ro.cristiansterie.vote.dto.CandidateFilterDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.UserFilterDTO;
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.UserRepository;
+import ro.cristiansterie.vote.util.PartyTypeEnum;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
@@ -44,6 +46,8 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     public List<UserDTO> getFiltered(UserFilterDTO filter) {
+        filter = this.checkFilters(filter);
+
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
         Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
@@ -53,6 +57,8 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     public int countFiltered(UserFilterDTO filter) {
+        filter = this.checkFilters(filter);
+
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
 
@@ -142,6 +148,14 @@ public class UserService extends GenericService implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority(found.getRole().toString()));
 
         return new User(found.getUsername(), found.getPassword(), authorities);
+    }
+
+    private UserFilterDTO checkFilters(UserFilterDTO filter) {
+        if (UserRoleEnum.ALL.equals(filter.getUser().getRole())) {
+            filter.getUser().setRole(null);
+        }
+
+        return filter;
     }
 
     // CONVERTERS
