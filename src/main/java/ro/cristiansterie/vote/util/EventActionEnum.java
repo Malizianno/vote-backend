@@ -7,6 +7,8 @@ public enum EventActionEnum {
     DELETE("delete"),
     GET("get"),
     GET_ALL("getAll"),
+    GET_FILTERED("getFiltered"),
+    GET_LAST_10("getLast10"),
     VOTE("vote"),
     LOGIN("login"),
     LOGOUT("logout"),

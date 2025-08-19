@@ -26,4 +26,7 @@
 		<!-- 03. Data creation for elections table -->
 		<include file="classpath:liquibase/db.03.CREATE-elections-schema.xml" />
 
+		<!-- 04. Data creation for events table -->
+		<include file="classpath:liquibase/db.04.CREATE-events-schema.xml" />
+
 </databaseChangeLog>

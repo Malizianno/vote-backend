@@ -92,9 +92,8 @@ public class ElectionService extends GenericService {
         return elections.stream().map(this::convert).collect(Collectors.toList());
     }
 
+    // TODO: check if this is still needed
     private ElectionFilterDTO checkFilters(ElectionFilterDTO filter) {
-        // WIP: set filter checks specific for this
-
         return filter;
     }
 }

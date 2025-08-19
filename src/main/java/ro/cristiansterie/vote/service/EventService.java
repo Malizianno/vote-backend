@@ -114,8 +114,11 @@ public class EventService extends GenericService {
         return event.getUsername() != null
                 && !event.getUsername().isEmpty()
                 && event.getRole() != null
+                && event.getRole() != UserRoleEnum.ALL
                 && event.getAction() != null
-                && event.getScreen() != null;
+                && event.getAction() != EventActionEnum.ALL
+                && event.getScreen() != null
+                && event.getScreen() != EventScreenEnum.ALL;
     }
 
     private EventFilterDTO checkFilters(EventFilterDTO filter) {
