@@ -2,6 +2,7 @@ package ro.cristiansterie.vote.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
@@ -53,7 +54,7 @@ public class WebSecurityConfig {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:4090") // or your frontend origin
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
@@ -62,7 +63,6 @@ public class WebSecurityConfig {
             }
         };
     }
-
 
     @Bean
     public JWTFilter jwtFilter() {
