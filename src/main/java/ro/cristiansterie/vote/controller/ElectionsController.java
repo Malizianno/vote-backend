@@ -10,26 +10,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ro.cristiansterie.vote.dto.CandidateDTO;
-import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
 import ro.cristiansterie.vote.dto.ElectionDTO;
 import ro.cristiansterie.vote.dto.ElectionFilterDTO;
 import ro.cristiansterie.vote.dto.ElectionResponseDTO;
 import ro.cristiansterie.vote.service.ElectionService;
-import ro.cristiansterie.vote.service.ElectionsHelperService;
 
 @RestController
 @RequestMapping(path = "/election")
 public class ElectionsController {
 
-    private ElectionsHelperService helper;
     private ElectionService service;
 
-    public ElectionsController(ElectionsHelperService helper, ElectionService service) {
-        this.helper = helper;
+    public ElectionsController(ElectionService service) {
         this.service = service;
     }
 
@@ -68,54 +62,4 @@ public class ElectionsController {
         return new ResponseEntity<>(deleted, null != deleted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    // WIP: helper area starts here
-
-    @GetMapping(path = "/status")
-    public ResponseEntity<Boolean> status() {
-        Boolean status = helper.getElectionCampaignStatus();
-
-        return new ResponseEntity<>(status, null != status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping(path = "/switchStatus")
-    public ResponseEntity<Boolean> switchStatus() {
-        Boolean switched = helper.switchElectionCampaignStatus();
-
-        return new ResponseEntity<>(switched, null != switched ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping(path = "/result")
-    public ResponseEntity<CandidateDTO> result() {
-        CandidateDTO result = helper.getElectionResult();
-
-        return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping(path = "/cleanDB")
-    public ResponseEntity<Boolean> cleanDB() {
-        Boolean result = helper.cleanAllVotes();
-
-        return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
-
-    @PostMapping(path = "/vote")
-    public ResponseEntity<Boolean> vote(@RequestBody CandidateDTO candidate, @RequestParam("userID") Integer userID) {
-        Boolean voted = helper.vote(candidate, userID);
-
-        return new ResponseEntity<>(voted, null != voted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping(path = "/countAllVotes")
-    public ResponseEntity<Integer> countAllVotes() {
-        Integer count = helper.countAllVotes();
-
-        return new ResponseEntity<>(count, null != count ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping(path = "/getParsedVotes")
-    public ResponseEntity<List<CandidateWithStatisticsDTO>> getParsedVotes() {
-        List<CandidateWithStatisticsDTO> result = helper.getParsedVotes();
-
-        return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
 }
