@@ -18,18 +18,26 @@ import ro.cristiansterie.vote.dto.ElectionDTO;
 import ro.cristiansterie.vote.dto.ElectionFilterDTO;
 import ro.cristiansterie.vote.entity.ElectionDAO;
 import ro.cristiansterie.vote.repository.ElectionRepository;
+import ro.cristiansterie.vote.util.AppConstants;
+import ro.cristiansterie.vote.util.EventActionEnum;
+import ro.cristiansterie.vote.util.EventScreenEnum;
 
 @Service
 public class ElectionService extends GenericService {
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private ElectionRepository repo;
+    private EventService events;
 
-    public ElectionService(ElectionRepository repo) {
+    public ElectionService(ElectionRepository repo, EventService events) {
         this.repo = repo;
+        this.events = events;
     }
 
     public List<ElectionDTO> getAll() {
+        // save event
+        events.save(EventActionEnum.GET_ALL, EventScreenEnum.ELECTIONS, AppConstants.EVENT_ELECTIONS_GET_ALL);
+        // return all elections
         return convert(repo.findAll());
     }
 
@@ -41,6 +49,10 @@ public class ElectionService extends GenericService {
         Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
                 Sort.by(Sort.Direction.DESC, "id"));
 
+        // save event
+        events.save(EventActionEnum.GET_FILTERED, EventScreenEnum.ELECTIONS,
+                AppConstants.EVENT_ELECTIONS_GET_FILTERED);
+
         return convert(repo.findAll(Example.of(convert(filter.getElection()), matcher), pageable).getContent());
     }
 
@@ -50,25 +62,45 @@ public class ElectionService extends GenericService {
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
 
+        // save event
+        events.save(EventActionEnum.COUNT_FILTERED, EventScreenEnum.ELECTIONS,
+                AppConstants.EVENT_ELECTIONS_COUNT_FILTERED);
+
         return (int) repo.count(Example.of(convert(filter.getElection()), matcher));
     }
 
     public ElectionDTO getLastElection() {
+        // save event
+        events.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS, AppConstants.EVENT_ELECTIONS_GET_LAST);
+
         return convert(repo.findFirstByOrderByStartDateDesc());
     }
 
     public ElectionDTO get(@NonNull Integer id) {
         ElectionDAO returnable = repo.findById(id).orElse(null);
+
+        // save event
+        events.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS, AppConstants.EVENT_ELECTIONS_GET_ONE + id);
+
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
 
     public ElectionDTO save(ElectionDTO toSave) {
-        return convert(repo.save(convert(toSave)));
+        var saved = repo.save(convert(toSave));
+
+        // save event
+        events.save(EventActionEnum.CREATE, EventScreenEnum.ELECTIONS,
+                AppConstants.EVENT_ELECTIONS_SAVE + saved.getId());
+
+        return convert(saved);
     }
 
     public boolean delete(Integer id) {
         try {
             repo.deleteById(id);
+
+            // save event
+            events.save(EventActionEnum.DELETE, EventScreenEnum.ELECTIONS, AppConstants.EVENT_ELECTIONS_DELETE + id);
 
             return true;
         } catch (Exception e) {

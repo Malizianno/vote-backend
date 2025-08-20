@@ -1,7 +1,6 @@
 package ro.cristiansterie.vote.service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,21 +11,17 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
-import ro.cristiansterie.vote.config.WebSecurityConfig;
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateFilterDTO;
-import ro.cristiansterie.vote.dto.EventDTO;
 import ro.cristiansterie.vote.entity.CandidateDAO;
 import ro.cristiansterie.vote.repository.CandidateRepository;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
 import ro.cristiansterie.vote.util.PartyTypeEnum;
-import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
 public class CandidateService extends GenericService {
@@ -42,18 +37,8 @@ public class CandidateService extends GenericService {
 
     public List<CandidateDTO> getAll() {
         // save event
-        EventDTO event = new EventDTO();
-        event.setUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        event.setRole(UserRoleEnum.valueOf(
-                SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString()));
-        event.setAction(EventActionEnum.GET_ALL);
-        event.setScreen(EventScreenEnum.CANDIDATES);
-
-        event.setTimestamp(String.valueOf(new Date().getTime()));
-        event.setMessage(AppConstants.EVENT_CANDIDATES_GET_ALL);
-
-        events.save(event);
-
+        events.save(EventActionEnum.GET_ALL, EventScreenEnum.CANDIDATES, AppConstants.EVENT_CANDIDATES_GET_ALL);
+        // return all candidates
         return convert(repo.findAll());
     }
 
@@ -66,17 +51,9 @@ public class CandidateService extends GenericService {
                 Sort.by(Sort.Direction.DESC, "id"));
 
         // save event
-        EventDTO event = new EventDTO();
-        event.setUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        event.setRole(UserRoleEnum.valueOf(
-                SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString()));
-        event.setAction(EventActionEnum.GET_FILTERED);
-        event.setScreen(EventScreenEnum.CANDIDATES);
-        event.setTimestamp(String.valueOf(new Date().getTime()));
-        event.setMessage(AppConstants.EVENT_CANDIDATES_GET_FILTERED);
-
-        events.save(event);
-
+        events.save(EventActionEnum.GET_FILTERED, EventScreenEnum.CANDIDATES,
+                AppConstants.EVENT_CANDIDATES_GET_FILTERED);
+        // return filtered candidates
         return convert(repo.findAll(Example.of(convert(filter.getCandidate()), matcher), pageable).getContent());
     }
 
@@ -86,21 +63,36 @@ public class CandidateService extends GenericService {
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
 
+        // save event
+        events.save(EventActionEnum.COUNT_FILTERED, EventScreenEnum.CANDIDATES,
+                AppConstants.EVENT_CANDIDATES_COUNT_FILTERED);
+
         return (int) repo.count(Example.of(convert(filter.getCandidate()), matcher));
     }
 
     public CandidateDTO get(@NonNull Integer id) {
         CandidateDAO returnable = repo.findById(id).orElse(null);
 
+        // save event
+        events.save(EventActionEnum.GET, EventScreenEnum.CANDIDATES, AppConstants.EVENT_CANDIDATES_GET_ONE + id);
+
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
 
     public CandidateDTO save(CandidateDTO toSave) {
-        return convert(repo.save(convert(toSave)));
+        var saved = repo.save(convert(toSave));
+
+        // save event
+        events.save(EventActionEnum.CREATE, EventScreenEnum.CANDIDATES,
+                AppConstants.EVENT_CANDIDATES_SAVE + saved.getId());
+
+        return convert(saved);
     }
 
     public boolean delete(Integer id) {
         try {
+            // save event
+            events.save(EventActionEnum.DELETE, EventScreenEnum.CANDIDATES, AppConstants.EVENT_CANDIDATES_DELETE + id);
             repo.deleteById(id);
 
             return true;

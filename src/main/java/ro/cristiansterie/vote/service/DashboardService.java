@@ -13,7 +13,10 @@ import ro.cristiansterie.vote.entity.CandidateDAO;
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.CandidateRepository;
 import ro.cristiansterie.vote.repository.UserRepository;
+import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EntityHelper;
+import ro.cristiansterie.vote.util.EventActionEnum;
+import ro.cristiansterie.vote.util.EventScreenEnum;
 
 @Service
 public class DashboardService {
@@ -25,14 +28,16 @@ public class DashboardService {
     private CandidateService candidatesService;
     private ElectionsHelperService electionHelperService;
     private ElectionService electionService;
+    private EventService events;
 
     public DashboardService(CandidateRepository candidates, UserRepository users, CandidateService candidatesService,
-            ElectionsHelperService electionsHelperService, ElectionService electionService) {
+            ElectionsHelperService electionsHelperService, ElectionService electionService, EventService events) {
         this.candidates = candidates;
         this.users = users;
         this.candidatesService = candidatesService;
         this.electionHelperService = electionsHelperService;
         this.electionService = electionService;
+        this.events = events;
     }
 
     public DashboardTotalsDTO getTotals() {
@@ -41,11 +46,18 @@ public class DashboardService {
         totals.setCandidates((int) candidates.count());
         totals.setUsers((int) users.count());
 
+        // save event
+        events.save(EventActionEnum.GET_ALL, EventScreenEnum.DASHBOARD, AppConstants.EVENT_DASHBOARD_GET_TOTALS);
+
         return totals;
     }
 
     public boolean generateFakeUsers(int no) {
         try {
+            // save event
+            events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,
+                    AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_USERS);
+
             users.saveAll(EntityHelper.generateFakeUsers(no));
 
             return true;
@@ -67,6 +79,10 @@ public class DashboardService {
 
             // add candidates to live election
             var election = electionService.getLastElection();
+
+            // save event
+            events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,
+                    AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_CANDIDATES);
 
             if (election == null || election.getEndDate() != null)
                 throw new IllegalStateException("No election to add fake candidates to!");
@@ -98,6 +114,10 @@ public class DashboardService {
                     users.save(user);
                 }
             });
+
+            // save event
+            events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,
+                    AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_VOTES);
 
             return true;
         } catch (Exception e) {

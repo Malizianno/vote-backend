@@ -21,12 +21,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
-import ro.cristiansterie.vote.dto.CandidateFilterDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.UserFilterDTO;
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.UserRepository;
-import ro.cristiansterie.vote.util.PartyTypeEnum;
+import ro.cristiansterie.vote.util.AppConstants;
+import ro.cristiansterie.vote.util.EventActionEnum;
+import ro.cristiansterie.vote.util.EventScreenEnum;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
@@ -35,13 +36,18 @@ public class UserService extends GenericService implements UserDetailsService {
 
     private UserRepository repo;
     private PasswordEncoder passwordEncoder;
+    private final EventService events;
 
-    public UserService(UserRepository repo, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repo, PasswordEncoder passwordEncoder, EventService events) {
         this.repo = repo;
         this.passwordEncoder = passwordEncoder;
+        this.events = events;
     }
 
     public List<UserDTO> getAll() {
+        // save event
+        events.save(EventActionEnum.GET_ALL, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ALL);
+
         return convert(repo.findAll());
     }
 
@@ -53,6 +59,10 @@ public class UserService extends GenericService implements UserDetailsService {
         Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
                 Sort.by(Sort.Direction.DESC, "id"));
 
+        // save event
+        events.save(EventActionEnum.GET_FILTERED, EventScreenEnum.USERS,
+                AppConstants.EVENT_USERS_GET_FILTERED);
+
         return convert(repo.findAll(Example.of(convert(filter.getUser()), matcher), pageable).getContent());
     }
 
@@ -62,11 +72,19 @@ public class UserService extends GenericService implements UserDetailsService {
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
 
+        // save event
+        events.save(EventActionEnum.COUNT_FILTERED, EventScreenEnum.USERS,
+                AppConstants.EVENT_USERS_COUNT_FILTERED);
+
         return (int) repo.count(Example.of(convert(filter.getUser()), matcher));
     }
 
     public UserDTO get(@NonNull Integer id) {
         UserDAO returnable = repo.findById(id).orElse(null);
+
+        // save event
+        events.save(EventActionEnum.GET, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ONE + id);
+        // return user if exists
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
 
@@ -83,13 +101,22 @@ public class UserService extends GenericService implements UserDetailsService {
         if (null == found) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        
-        return convert(repo.save(convert(user)));
+
+        var saved = repo.save(convert(user));
+
+        // save event
+        events.save(EventActionEnum.CREATE, EventScreenEnum.USERS,
+                AppConstants.EVENT_USERS_SAVE + saved.getId());
+
+        return convert(saved);
     }
 
     public boolean delete(Integer id) {
         try {
             repo.deleteById(id);
+
+            // save event
+            events.save(EventActionEnum.DELETE, EventScreenEnum.USERS, AppConstants.EVENT_USERS_DELETE + id);
 
             return true;
         } catch (Exception e) {
@@ -110,7 +137,8 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     /**
-     * Use this only in case of voting by an user 
+     * Use this only in case of voting by an user
+     * 
      * @param username to vote
      * @return if the user has successfully voted
      */
@@ -132,7 +160,7 @@ public class UserService extends GenericService implements UserDetailsService {
         if (null == username || username.isBlank()) {
             return null;
         }
-        
+
         return convert(this.repo.findByUsername(username));
     }
 
@@ -175,6 +203,7 @@ public class UserService extends GenericService implements UserDetailsService {
     // VALIDATORS
 
     private boolean validateUserRole(UserDTO user) {
-        return null != user.getRole() && (UserRoleEnum.ADMIN.equals(user.getRole()) || UserRoleEnum.VOTANT.equals(user.getRole()));
+        return null != user.getRole()
+                && (UserRoleEnum.ADMIN.equals(user.getRole()) || UserRoleEnum.VOTANT.equals(user.getRole()));
     }
 }

@@ -15,6 +15,9 @@ import ro.cristiansterie.vote.config.CustomAuthenticationManager;
 import ro.cristiansterie.vote.dto.LoginRequestDTO;
 import ro.cristiansterie.vote.dto.LoginResponseDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
+import ro.cristiansterie.vote.util.AppConstants;
+import ro.cristiansterie.vote.util.EventActionEnum;
+import ro.cristiansterie.vote.util.EventScreenEnum;
 import ro.cristiansterie.vote.util.JWTUtils;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
@@ -25,11 +28,14 @@ public class LoginService {
     private CustomAuthenticationManager authManager;
     private JWTUtils jwtUtil;
     private UserService userService;
+    private final EventService events;
 
-    public LoginService(CustomAuthenticationManager authManager, JWTUtils jwtUtil, UserService userService) {
+    public LoginService(CustomAuthenticationManager authManager, JWTUtils jwtUtil, UserService userService,
+            EventService events) {
         this.authManager = authManager;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
+        this.events = events;
     }
 
     public LoginResponseDTO login(LoginRequestDTO request) {
@@ -52,6 +58,10 @@ public class LoginService {
                 response.setUsername(request.getUsername());
                 response.setRole(request.getRole());
                 response.setToken(token);
+
+                // save event
+                events.save(EventActionEnum.LOGIN, EventScreenEnum.LOGIN,
+                        AppConstants.EVENT_LOGIN_AUTHENTICATED + request.getUsername());
 
                 return response;
             }
@@ -80,6 +90,10 @@ public class LoginService {
                 if (null != foundLocalUser && null != foundLocalUser.getId()) {
                     response.setId(foundLocalUser.getId());
                 }
+
+                // save event
+                events.save(EventActionEnum.LOGIN, EventScreenEnum.LOGIN,
+                        AppConstants.EVENT_LOGIN_AUTHENTICATED + request.getUsername());
 
                 return response;
             }

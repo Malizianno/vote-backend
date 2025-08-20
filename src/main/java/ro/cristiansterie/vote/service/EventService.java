@@ -2,6 +2,7 @@ package ro.cristiansterie.vote.service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
@@ -80,6 +82,28 @@ public class EventService extends GenericService {
         }
 
         return convert(repo.save(convert(event)));
+    }
+
+    public boolean save(EventActionEnum action, EventScreenEnum screen, String message) {
+        EventDTO event = new EventDTO();
+        
+        event.setUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        event.setRole(UserRoleEnum.valueOf(
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString()));
+        event.setAction(action);
+        event.setScreen(screen);
+        event.setTimestamp(String.valueOf(new Date().getTime()));
+        event.setMessage(message);
+
+        try {
+            save(event);
+
+            return true;
+        } catch (Exception e) {
+            log.error("Cannot save event: {}", e.getMessage());
+        }
+
+        return false;
     }
 
     public boolean delete(Integer id) {

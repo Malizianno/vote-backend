@@ -16,8 +16,11 @@ import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.VoteDTO;
 import ro.cristiansterie.vote.properties.ElectionProperties;
+import ro.cristiansterie.vote.util.AppConstants;
+import ro.cristiansterie.vote.util.EventActionEnum;
+import ro.cristiansterie.vote.util.EventScreenEnum;
 
-// WIP: this class executes elections, take care of voting process alltogether
+// XXX: this class executes elections, take care of voting process alltogether
 @Service
 public class ElectionsHelperService extends GenericService {
 
@@ -27,21 +30,31 @@ public class ElectionsHelperService extends GenericService {
     private VoteService voteService;
     private CandidateService candidateService;
     private UserService userService;
+    private EventService eventService;
 
     public ElectionsHelperService(VoteService voteService, ElectionProperties electionProps,
-            CandidateService candidateService, UserService userService) {
+            CandidateService candidateService, UserService userService, EventService eventService) {
         this.voteService = voteService;
         this.electionProps = electionProps;
         this.candidateService = candidateService;
         this.userService = userService;
+        this.eventService = eventService;
     }
 
     public boolean getElectionCampaignStatus() {
+        // save event
+        eventService.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS_HELPER,
+                AppConstants.EVENT_ELECTIONS_HELPER_GET_CAMPAIGN_STATUS);
+
         return null != electionProps.getEnabled() && electionProps.getEnabled();
     }
 
     public boolean switchElectionCampaignStatus() {
         try {
+            // save event
+            eventService.save(EventActionEnum.UPDATE, EventScreenEnum.ELECTIONS_HELPER,
+                    AppConstants.EVENT_ELECTIONS_HELPER_SWITCH_CAMPAIGN_STATUS);
+
             electionProps.setEnabled(!electionProps.getEnabled());
 
             return true;
@@ -59,6 +72,10 @@ public class ElectionsHelperService extends GenericService {
                 .collect(Collectors.groupingBy(VoteDTO::getCandidateID, Collectors.counting()));
 
         Integer winnerCandidate = Collections.max(candidatesAndVotes.entrySet(), Map.Entry.comparingByValue()).getKey();
+
+        // save event
+        eventService.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS_HELPER,
+                AppConstants.EVENT_ELECTIONS_HELPER_GET_ELECTION_RESULT);
 
         return candidateService.get(winnerCandidate);
     }
@@ -86,6 +103,10 @@ public class ElectionsHelperService extends GenericService {
 
         userService.save(userToVote);
 
+        // save event
+        eventService.save(EventActionEnum.CREATE, EventScreenEnum.ELECTIONS_HELPER,
+                AppConstants.EVENT_ELECTIONS_HELPER_VOTE + voted.getId());
+
         return voteService.takeAVote(newVote);
     }
 
@@ -112,6 +133,10 @@ public class ElectionsHelperService extends GenericService {
             returnable.add(newCandidateWithStatistics);
         });
 
+        // save event
+        eventService.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS_HELPER,
+                AppConstants.EVENT_ELECTIONS_HELPER_GET_PARSED_VOTES);
+
         return returnable;
     }
 
@@ -125,6 +150,10 @@ public class ElectionsHelperService extends GenericService {
 
     // XXX: dangerous method, use with care
     public boolean cleanAllVotes() {
+        // save event
+        eventService.save(EventActionEnum.DELETE, EventScreenEnum.ELECTIONS_HELPER,
+                AppConstants.EVENT_ELECTIONS_HELPER_CLEAN_ALL_VOTES);
+
         return voteService.cleanDBTable();
     }
 }
