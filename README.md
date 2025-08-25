@@ -15,5 +15,8 @@ The data is stored in a MySQL database, installed on a RaspberryPi found at ip (
 
 ### v1.1.0 - implemented ADMIN authentication and overall authorization.
 ### v1.0.0 - basic SpringBoot application.
+### v1.1.0 - graphical interface added.
+### v1.2.0 - added settings enhacers for adding tests live.
+### v2.0.0 - added new logo
 
 All rights reserved to Cristian Sterie
