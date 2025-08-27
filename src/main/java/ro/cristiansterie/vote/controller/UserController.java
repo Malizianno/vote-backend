@@ -76,4 +76,10 @@ public class UserController {
         Boolean deleted = service.delete(id);
         return new ResponseEntity<>(deleted, null != deleted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping(path= "/profile/{id}")
+    public ResponseEntity<UserDTO> profile(@PathVariable int id) {
+        UserDTO profile = service.get(id);
+        return new ResponseEntity<>(profile, null != profile ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
 }

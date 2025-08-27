@@ -1,11 +1,16 @@
 package ro.cristiansterie.vote.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 public class UserDTO {
     private Integer id;
     private String username;
+
+    @JsonIgnore
     private String password;
+    
     private UserRoleEnum role;
     private Boolean hasVoted;
 
