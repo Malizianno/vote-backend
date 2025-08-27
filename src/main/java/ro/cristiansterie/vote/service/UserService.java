@@ -29,6 +29,7 @@ import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
 import ro.cristiansterie.vote.util.UserRoleEnum;
+import ro.cristiansterie.vote.util.UserUpdateActionEnum;
 
 @Service
 public class UserService extends GenericService implements UserDetailsService {
@@ -88,7 +89,7 @@ public class UserService extends GenericService implements UserDetailsService {
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
 
-    public UserDTO save(UserDTO user) {
+    public UserDTO save(UserDTO user, UserUpdateActionEnum updateType) {
         if (null == user || !validateUserRole(user)) {
             log.error("Cannot save user: {}", user);
 
@@ -98,8 +99,10 @@ public class UserService extends GenericService implements UserDetailsService {
         UserDAO found = repo.findByUsername(user.getUsername());
 
         // in case new to DB encode password, otherwise update everything else
-        if (null == found) {
+        if (shouldBeThePasswordEncoded(user, found, updateType)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(found.getPassword());
         }
 
         var saved = repo.save(convert(user));
@@ -151,7 +154,7 @@ public class UserService extends GenericService implements UserDetailsService {
 
         user.setHasVoted(true);
 
-        this.save(convert(user));
+        this.save(convert(user), UserUpdateActionEnum.PROFILE_UPDATE);
 
         return true;
     }
@@ -184,6 +187,16 @@ public class UserService extends GenericService implements UserDetailsService {
         }
 
         return filter;
+    }
+
+    private boolean shouldBeThePasswordEncoded(UserDTO user, UserDAO found, UserUpdateActionEnum updateType) {
+        return null == found
+                || (null != updateType && UserUpdateActionEnum.USER_UPDATE.equals(updateType)
+                        && null != user
+                        && null != user.getPassword()
+                        && null != found.getPassword()
+                        && !user.getPassword().equals(found.getPassword()));
+
     }
 
     // CONVERTERS
