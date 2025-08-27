@@ -21,6 +21,7 @@ import ro.cristiansterie.vote.dto.EventDTO;
 import ro.cristiansterie.vote.dto.EventFilterDTO;
 import ro.cristiansterie.vote.entity.EventDAO;
 import ro.cristiansterie.vote.repository.EventRepository;
+import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
 import ro.cristiansterie.vote.util.UserRoleEnum;
@@ -86,10 +87,13 @@ public class EventService extends GenericService {
 
     public boolean save(EventActionEnum action, EventScreenEnum screen, String message) {
         EventDTO event = new EventDTO();
-        
-        event.setUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        event.setRole(UserRoleEnum.valueOf(
-                SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString()));
+        var loggedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        var loggedRole = UserRoleEnum.valueOf(
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString());
+
+        event.setUsername(
+                loggedUsername.equals(AppConstants.ANONYMOUS_USER) ? AppConstants.ADMIN_USER : loggedUsername);
+        event.setRole(loggedRole.equals(UserRoleEnum.ROLE_ANONYMOUS) ? UserRoleEnum.ADMIN : loggedRole);
         event.setAction(action);
         event.setScreen(screen);
         event.setTimestamp(String.valueOf(new Date().getTime()));

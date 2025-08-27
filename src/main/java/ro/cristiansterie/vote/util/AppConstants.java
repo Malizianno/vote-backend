@@ -13,6 +13,8 @@ public class AppConstants {
     /* AUTH */
 
     public static final String AUTH_APIKEY                  = "apikey";
+    public static final String ANONYMOUS_USER               = "anonymousUser";
+    public static final String ADMIN_USER                   = "admin";
 
     /* EVENTS MESSAGES */
 
@@ -44,6 +46,7 @@ public class AppConstants {
     public static final String EVENT_ELECTIONS_HELPER_CLEAN_ALL_VOTES           = "Clean all votes for current election";
 
     public static final String EVENT_LOGIN_AUTHENTICATED                        = "User authenticated with username: ";
+    public static final String EVENT_LOGIN_LOGOUT                               = "User logged out with username: ";
 
     public static final String EVENT_USERS_GET_ALL                              = "Get all users";
     public static final String EVENT_USERS_GET_FILTERED                         = "Get filtered users";

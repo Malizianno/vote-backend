@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import ro.cristiansterie.vote.config.CustomAuthenticationManager;
 import ro.cristiansterie.vote.dto.LoginRequestDTO;
 import ro.cristiansterie.vote.dto.LoginResponseDTO;
+import ro.cristiansterie.vote.dto.LogoutRequestDTO;
+import ro.cristiansterie.vote.dto.LogoutResponseDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
@@ -99,6 +101,36 @@ public class LoginService {
             }
         } catch (Exception e) {
             log.info("Exception happened while logging in: {}", e);
+        }
+
+        return null;
+    }
+
+    public LogoutResponseDTO logout(LogoutRequestDTO request) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (null != auth && auth.isAuthenticated()) {
+                String username = (String) auth.getPrincipal();
+
+                if (!username.isEmpty() && !request.getUsername().isEmpty()) {
+                    log.info("Logout successfull for username: {}", username);
+
+                    // save event
+                    events.save(EventActionEnum.LOGOUT, EventScreenEnum.LOGIN,
+                            AppConstants.EVENT_LOGIN_LOGOUT + request.getUsername());
+
+                    SecurityContextHolder.getContext().setAuthentication(null);
+                }
+
+                LogoutResponseDTO response = new LogoutResponseDTO();
+
+                response.setUsername(request.getUsername());
+                response.setResponse(auth.isAuthenticated());
+
+                return response;
+            }
+        } catch (Exception e) {
+            log.info("Exception happened while logging out: {}", e);
         }
 
         return null;
