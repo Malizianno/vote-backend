@@ -56,7 +56,7 @@ public class EntityHelper {
                                 : " și fac parte din partidul ")
                         + dto.getParty()
                         + " și particip anul acesta la alegerile prezidențiale, cu dorința de a schimba România!");
-        dto.setImage("https://100k-faces.glitch.me/random-image");
+        dto.setImage("https://picsum.photos/200/300");
 
         return dto;
     }
