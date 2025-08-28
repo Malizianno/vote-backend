@@ -18,5 +18,6 @@ The data is stored in a MySQL database, installed on a RaspberryPi found at ip (
 ### v1.1.0 - graphical interface added.
 ### v1.2.0 - added settings enhacers for adding tests live.
 ### v2.0.0 - added new logo
+### v2.1.0 - added profile editing (from vote-mobile)
 
 All rights reserved to Cristian Sterie
