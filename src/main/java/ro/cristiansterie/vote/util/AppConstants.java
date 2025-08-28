@@ -52,6 +52,8 @@ public class AppConstants {
     public static final String EVENT_USERS_GET_FILTERED                         = "Get filtered users";
     public static final String EVENT_USERS_COUNT_FILTERED                       = "Count filtered users";
     public static final String EVENT_USERS_GET_ONE                              = "Get user with ID: ";
-    public static final String EVENT_USERS_SAVE                                 = "Save user with ID: ";
+    public static final String EVENT_USERS_GET_PROFILE                          = "Get user profile with ID: ";
+    public static final String EVENT_USERS_USER_SAVE                            = "Save user with ID: ";
+    public static final String EVENT_USERS_PROFILE_SAVE                         = "Save user profile with ID: ";
     public static final String EVENT_USERS_DELETE                               = "Delete user with ID: ";
 }

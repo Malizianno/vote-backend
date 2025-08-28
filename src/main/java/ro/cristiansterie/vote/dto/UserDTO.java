@@ -2,6 +2,8 @@ package ro.cristiansterie.vote.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ro.cristiansterie.vote.util.UserGenderEnum;
+import ro.cristiansterie.vote.util.UserNationalityEnum;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 public class UserDTO {

@@ -23,13 +23,13 @@ import org.springframework.stereotype.Service;
 import lombok.NonNull;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.UserFilterDTO;
+import ro.cristiansterie.vote.dto.UserVoterDTO;
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.UserRepository;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
 import ro.cristiansterie.vote.util.UserRoleEnum;
-import ro.cristiansterie.vote.util.UserUpdateActionEnum;
 
 @Service
 public class UserService extends GenericService implements UserDetailsService {
@@ -89,7 +89,16 @@ public class UserService extends GenericService implements UserDetailsService {
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
 
-    public UserDTO save(UserDTO user, UserUpdateActionEnum updateType) {
+    public UserVoterDTO getProfile(@NonNull Integer id) {
+        UserDAO returnable = repo.findById(id).orElse(null);
+
+        // save event
+        events.save(EventActionEnum.GET, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_PROFILE + id);
+        // return user if exists
+        return null != returnable && null != returnable.getId() ? convertToVoter(returnable) : null;
+    }
+
+    public UserDTO save(UserDTO user) {
         if (null == user || !validateUserRole(user)) {
             log.error("Cannot save user: {}", user);
 
@@ -99,7 +108,7 @@ public class UserService extends GenericService implements UserDetailsService {
         UserDAO found = repo.findByUsername(user.getUsername());
 
         // in case new to DB encode password, otherwise update everything else
-        if (shouldBeThePasswordEncoded(user, found, updateType)) {
+        if (shouldBeThePasswordEncoded(user, found)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         } else {
             user.setPassword(found.getPassword());
@@ -109,9 +118,34 @@ public class UserService extends GenericService implements UserDetailsService {
 
         // save event
         events.save(EventActionEnum.CREATE, EventScreenEnum.USERS,
-                AppConstants.EVENT_USERS_SAVE + saved.getId());
+                AppConstants.EVENT_USERS_USER_SAVE + saved.getId());
 
         return convert(saved);
+    }
+
+    public UserVoterDTO saveProfile(UserVoterDTO user) {
+        if (null == user || !validateUserRole(user)) {
+            log.error("Cannot save user: {}", user);
+
+            return null;
+        }
+
+        UserDAO found = repo.findByUsername(user.getUsername());
+
+        // in case new to DB encode password, otherwise update everything else
+        if (shouldBeThePasswordEncoded(user, found)) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(found.getPassword());
+        }
+
+        UserDAO saved = repo.save(convertFromVoter(user));
+
+        // save event
+        events.save(EventActionEnum.CREATE, EventScreenEnum.USERS,
+                AppConstants.EVENT_USERS_PROFILE_SAVE + saved.getId());
+
+        return convertToVoter(saved);
     }
 
     public boolean delete(Integer id) {
@@ -154,7 +188,7 @@ public class UserService extends GenericService implements UserDetailsService {
 
         user.setHasVoted(true);
 
-        this.save(convert(user), UserUpdateActionEnum.PROFILE_UPDATE);
+        this.save(convert(user));
 
         return true;
     }
@@ -189,13 +223,9 @@ public class UserService extends GenericService implements UserDetailsService {
         return filter;
     }
 
-    private boolean shouldBeThePasswordEncoded(UserDTO user, UserDAO found, UserUpdateActionEnum updateType) {
-        return null == found
-                || (null != updateType && UserUpdateActionEnum.USER_UPDATE.equals(updateType)
-                        && null != user
-                        && null != user.getPassword()
-                        && null != found.getPassword()
-                        && !user.getPassword().equals(found.getPassword()));
+    private boolean shouldBeThePasswordEncoded(UserDTO user, UserDAO found) {
+        return null == found || (null != user && null != user.getPassword() && null != found.getPassword()
+                && !user.getPassword().equals(found.getPassword()));
 
     }
 
@@ -207,6 +237,14 @@ public class UserService extends GenericService implements UserDetailsService {
 
     protected UserDTO convert(UserDAO user) {
         return mapper.map(user, UserDTO.class);
+    }
+
+    protected UserVoterDTO convertToVoter(UserDAO user) {
+        return mapper.map(user, UserVoterDTO.class);
+    }
+
+    protected UserDAO convertFromVoter(UserVoterDTO user) {
+        return mapper.map(user, UserDAO.class);
     }
 
     protected List<UserDTO> convert(List<UserDAO> users) {

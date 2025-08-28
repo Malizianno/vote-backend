@@ -68,5 +68,68 @@
         <sql> ALTER TABLE users AUTO_INCREMENT = 1000; </sql>
     </changeSet>
 
+    <changeSet id="extend-user-table-for-voter-type" author="vote-admin">
+        <addColumn tableName="users">
+            <column name="firstname" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="lastname" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="gender" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="id_series" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="id_number" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="cnp" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="nationality" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="birth_address" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="residence_address" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="validity_start_date" type="DATE">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="validity_end_date" type="DATE">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="users">
+            <column name="id_image" type="MEDIUMTEXT">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

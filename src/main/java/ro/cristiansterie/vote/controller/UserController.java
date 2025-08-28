@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.UserFilterDTO;
 import ro.cristiansterie.vote.dto.UserResponseDTO;
+import ro.cristiansterie.vote.dto.UserVoterDTO;
 import ro.cristiansterie.vote.service.UserService;
 import ro.cristiansterie.vote.util.UserRoleEnum;
-import ro.cristiansterie.vote.util.UserUpdateActionEnum;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -68,9 +67,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/save")
-    public ResponseEntity<UserDTO> save(@RequestBody UserDTO user,
-            @RequestParam(required = false, defaultValue = "PROFILE_UPDATE") UserUpdateActionEnum updateType) {
-        UserDTO saved = service.save(user, updateType);
+    public ResponseEntity<UserDTO> save(@RequestBody UserDTO user) {
+        UserDTO saved = service.save(user);
         return new ResponseEntity<>(saved, null != saved ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
@@ -82,7 +80,13 @@ public class UserController {
 
     @GetMapping(path = "/profile/{id}")
     public ResponseEntity<UserDTO> profile(@PathVariable int id) {
-        UserDTO profile = service.get(id);
+        UserDTO profile = service.getProfile(id);
         return new ResponseEntity<>(profile, null != profile ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping(path = "/profile/save")
+    public ResponseEntity<UserDTO> saveProfile(@RequestBody UserVoterDTO user) {
+        UserDTO saved = service.saveProfile(user);
+        return new ResponseEntity<>(saved, null != saved ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 }

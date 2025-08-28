@@ -19,7 +19,6 @@ import ro.cristiansterie.vote.properties.ElectionProperties;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
-import ro.cristiansterie.vote.util.UserUpdateActionEnum;
 
 // XXX: this class executes elections, take care of voting process alltogether
 @Service
@@ -102,7 +101,7 @@ public class ElectionsHelperService extends GenericService {
 
         userToVote.setHasVoted(true);
 
-        userService.save(userToVote, UserUpdateActionEnum.USER_UPDATE);
+        userService.save(userToVote);
 
         // save event
         eventService.save(EventActionEnum.CREATE, EventScreenEnum.ELECTIONS_HELPER,

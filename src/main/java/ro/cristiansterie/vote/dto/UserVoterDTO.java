@@ -1,90 +1,22 @@
-package ro.cristiansterie.vote.entity;
+package ro.cristiansterie.vote.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.UserGenderEnum;
 import ro.cristiansterie.vote.util.UserNationalityEnum;
-import ro.cristiansterie.vote.util.UserRoleEnum;
 
-@Entity(name = AppConstants.TABLE_USER)
-public class UserDAO {
+public class UserVoterDTO extends UserDTO {
 
-    // app user type
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(unique = true)
-    private String username;
-
-    private String password;
-    private UserRoleEnum role;
-    private Boolean hasVoted;
-
-    // voter user type
     private String firstname;
     private String lastname;
     private UserGenderEnum gender;
-    @Column(name = "id_series")
     private String idSeries;
-    @Column(name = "id_number")
     private Integer idNumber;
     private Long cnp;
     private UserNationalityEnum nationality;
-    @Column(name = "birth_address")
     private String birthAddress;
-    @Column(name = "residence_address")
     private String residenceAddress;
-    @Column(name = "validity_start_date")
     private Long validityStartDate;
-    @Column(name = "validity_end_date")
     private Long validityEndDate;
-    @Column(name = "id_image")
     private String idImage;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public UserRoleEnum getRole() {
-        return role;
-    }
-
-    public void setRole(UserRoleEnum role) {
-        this.role = role;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getHasVoted() {
-        return hasVoted;
-    }
-
-    public void setHasVoted(Boolean hasVoted) {
-        this.hasVoted = hasVoted;
-    }
 
     public String getFirstname() {
         return firstname;
@@ -181,4 +113,5 @@ public class UserDAO {
     public void setIdImage(String idImage) {
         this.idImage = idImage;
     }
+
 }
