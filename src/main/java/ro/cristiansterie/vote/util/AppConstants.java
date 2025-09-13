@@ -37,6 +37,7 @@ public class AppConstants {
     public static final String EVENT_ELECTIONS_GET_ONE                          = "Get election with ID: ";
     public static final String EVENT_ELECTIONS_SAVE                             = "Save election with ID: ";
     public static final String EVENT_ELECTIONS_DELETE                           = "Delete election with ID: ";
+    public static final String EVENT_ELECTIONS_CHANGE_STATUS                    = "Change election status for election with ID: ";
 
     public static final String EVENT_ELECTIONS_HELPER_GET_CAMPAIGN_STATUS       = "Get election campaign status";
     public static final String EVENT_ELECTIONS_HELPER_SWITCH_CAMPAIGN_STATUS    = "Switch election campaign status";

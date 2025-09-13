@@ -110,6 +110,23 @@ public class ElectionService extends GenericService {
         return false;
     }
 
+    public boolean changeStatus(int id, boolean enabled) {
+        ElectionDAO election = repo.findById(id).orElse(null);
+
+        if (null == election || null == election.getId()) {
+            return false;
+        }
+
+        election.setEnabled(enabled);
+        repo.save(election);
+
+        // save event
+        events.save(EventActionEnum.UPDATE, EventScreenEnum.ELECTIONS,
+                AppConstants.EVENT_ELECTIONS_CHANGE_STATUS + id + ", status: " + enabled);
+
+        return true;
+    }
+
     // CONVERTERS
 
     protected ElectionDAO convert(ElectionDTO election) {

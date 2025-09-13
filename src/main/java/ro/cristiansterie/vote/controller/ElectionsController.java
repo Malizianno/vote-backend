@@ -62,4 +62,9 @@ public class ElectionsController {
         return new ResponseEntity<>(deleted, null != deleted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping(path = "/changeStatus/{id}/{enabled}")
+    public ResponseEntity<Boolean> changeStatus(@PathVariable int id, @PathVariable boolean enabled) {
+        Boolean changed = service.changeStatus(id, enabled);
+        return new ResponseEntity<>(changed, null != changed ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
 }

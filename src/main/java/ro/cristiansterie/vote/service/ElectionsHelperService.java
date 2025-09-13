@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
+import ro.cristiansterie.vote.dto.ElectionCampaignDTO;
+import ro.cristiansterie.vote.dto.ElectionDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.VoteDTO;
-import ro.cristiansterie.vote.properties.ElectionProperties;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
@@ -26,43 +27,38 @@ public class ElectionsHelperService extends GenericService {
 
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private ElectionProperties electionProps;
     private VoteService voteService;
     private CandidateService candidateService;
     private UserService userService;
     private EventService eventService;
+    private final ElectionService electionService;
 
-    public ElectionsHelperService(VoteService voteService, ElectionProperties electionProps,
-            CandidateService candidateService, UserService userService, EventService eventService) {
+    public ElectionsHelperService(VoteService voteService, CandidateService candidateService, UserService userService,
+            EventService eventService, ElectionService electionService) {
         this.voteService = voteService;
-        this.electionProps = electionProps;
         this.candidateService = candidateService;
         this.userService = userService;
         this.eventService = eventService;
+        this.electionService = electionService;
     }
 
-    public boolean getElectionCampaignStatus() {
+    public ElectionDTO getCurrentElection() {
+        return electionService.getLastElection();
+    }
+
+    public ElectionCampaignDTO getElectionCampaignStatus() {
+        ElectionCampaignDTO returnable = new ElectionCampaignDTO();
+
+        var campaign = electionService.getAll().stream().filter(el -> el.isEnabled()).collect(Collectors.toList());
+
+        returnable.setEnabled(campaign.size() > 0);
+        returnable.setElections(campaign);
+
         // save event
         eventService.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS_HELPER,
                 AppConstants.EVENT_ELECTIONS_HELPER_GET_CAMPAIGN_STATUS);
 
-        return null != electionProps.getEnabled() && electionProps.getEnabled();
-    }
-
-    public boolean switchElectionCampaignStatus() {
-        try {
-            // save event
-            eventService.save(EventActionEnum.UPDATE, EventScreenEnum.ELECTIONS_HELPER,
-                    AppConstants.EVENT_ELECTIONS_HELPER_SWITCH_CAMPAIGN_STATUS);
-
-            electionProps.setEnabled(!electionProps.getEnabled());
-
-            return true;
-        } catch (Exception e) {
-            log.error("Exception while switching election campaign status: {}", e.getMessage());
-        }
-
-        return false;
+        return returnable;
     }
 
     public CandidateDTO getElectionResult() {

@@ -19,7 +19,7 @@ public class ElectionDTO {
         this.id = id;
     }
 
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 

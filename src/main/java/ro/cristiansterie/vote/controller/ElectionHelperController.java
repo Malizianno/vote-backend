@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
+import ro.cristiansterie.vote.dto.ElectionCampaignDTO;
 import ro.cristiansterie.vote.service.ElectionsHelperService;
 
 @RestController
@@ -26,17 +27,10 @@ public class ElectionHelperController {
     }
 
     @GetMapping(path = "/status")
-    public ResponseEntity<Boolean> status() {
-        Boolean status = service.getElectionCampaignStatus();
+    public ResponseEntity<ElectionCampaignDTO> status() {
+        var result = service.getElectionCampaignStatus();
 
-        return new ResponseEntity<>(status, null != status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping(path = "/switchStatus")
-    public ResponseEntity<Boolean> switchStatus() {
-        Boolean switched = service.switchElectionCampaignStatus();
-
-        return new ResponseEntity<>(switched, null != switched ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = "/result")
