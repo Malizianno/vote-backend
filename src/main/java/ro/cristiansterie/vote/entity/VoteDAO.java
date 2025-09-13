@@ -21,6 +21,8 @@ public class VoteDAO {
 
     private Long timestamp;
 
+    private Integer electionId;
+
     public Integer getId() {
         return id;
     }
@@ -51,5 +53,13 @@ public class VoteDAO {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Integer getElectionId() {
+        return electionId;
+    }
+
+    public void setElectionId(Integer electionId) {
+        this.electionId = electionId;
     }
 }

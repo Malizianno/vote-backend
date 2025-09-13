@@ -30,7 +30,7 @@ public class VoteService extends GenericService {
 
     // WIP: this should return statistic on votes only, should check bussiness logic
 
-    public List<VoteDTO> getAll() {
+    private List<VoteDTO> getAll() {
         return convert(repo.findAll());
     }
 
@@ -56,11 +56,11 @@ public class VoteService extends GenericService {
         return false;
     }
 
-    public boolean cleanDBTable() {
+    public boolean cleanDBTable(int electionId) {
         try {
             // first check if there are any entries in DB table
             if (repo.count() > 0) {
-                repo.deleteAll();
+                repo.deleteByElectionId(electionId);
             }
 
             return true;

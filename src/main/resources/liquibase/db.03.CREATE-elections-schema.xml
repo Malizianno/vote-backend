@@ -37,9 +37,17 @@
             <column name="candidates" type="JSON">
                 <constraints nullable="false" />
             </column>
-            
+
         </createTable>
 
+    </changeSet>
+
+    <changeSet id="vote-elections-schema-creation-patch-add-election-to-candidates" author="vote-admin">
+        <addColumn tableName="candidates">
+            <column name="election_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

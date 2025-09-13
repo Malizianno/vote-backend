@@ -35,26 +35,32 @@ public class CandidateService extends GenericService {
         this.events = events;
     }
 
-    public List<CandidateDTO> getAll() {
-        // save event
-        events.save(EventActionEnum.GET_ALL, EventScreenEnum.CANDIDATES, AppConstants.EVENT_CANDIDATES_GET_ALL);
-        // return all candidates
-        return convert(repo.findAll());
-    }
-
     public List<CandidateDTO> getFiltered(CandidateFilterDTO filter) {
         filter = this.checkFilters(filter);
 
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
-        Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
-                Sort.by(Sort.Direction.DESC, "id"));
+
+        Pageable pageable = null;
+        if (filter.getPaging() != null) {
+            pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
+                    Sort.by(Sort.Direction.DESC, "id"));
+        }
 
         // save event
         events.save(EventActionEnum.GET_FILTERED, EventScreenEnum.CANDIDATES,
                 AppConstants.EVENT_CANDIDATES_GET_FILTERED);
+
         // return filtered candidates
-        return convert(repo.findAll(Example.of(convert(filter.getCandidate()), matcher), pageable).getContent());
+        List<CandidateDAO> candidatesToReturn;
+        if (filter.getPaging() == null || pageable == null) {
+            candidatesToReturn = repo.findAll(Example.of(convert(filter.getCandidate()), matcher));
+        } else {
+            candidatesToReturn = repo.findAll(Example.of(convert(filter.getCandidate()), matcher), pageable)
+                    .getContent();
+        }
+
+        return convert(candidatesToReturn);
     }
 
     public int countFiltered(CandidateFilterDTO filter) {

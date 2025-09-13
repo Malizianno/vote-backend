@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
+import ro.cristiansterie.vote.dto.CandidateFilterDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
 import ro.cristiansterie.vote.dto.ElectionCampaignDTO;
 import ro.cristiansterie.vote.dto.ElectionDTO;
@@ -43,7 +44,7 @@ public class ElectionsHelperService extends GenericService {
         this.electionService = electionService;
     }
 
-    public ElectionDTO getCurrentElection() {
+    public ElectionDTO getLastElection() {
         return electionService.getLastElection();
     }
 
@@ -62,8 +63,10 @@ public class ElectionsHelperService extends GenericService {
         return returnable;
     }
 
-    public CandidateDTO getElectionResult() {
-        List<VoteDTO> allVotes = voteService.getAll();
+    public CandidateDTO getElectionResult(int electionId) {
+        VoteDTO filterVote = new VoteDTO();
+        filterVote.setElectionId(electionId);
+        List<VoteDTO> allVotes = voteService.getFiltered(filterVote);
 
         Map<Integer, Long> candidatesAndVotes = allVotes.stream()
                 .collect(Collectors.groupingBy(VoteDTO::getCandidateID, Collectors.counting()));
@@ -84,6 +87,7 @@ public class ElectionsHelperService extends GenericService {
         newVote.setCandidateID(voted.getId());
         newVote.setParty(voted.getParty());
         newVote.setTimestamp(System.currentTimeMillis());
+        newVote.setElectionId(voted.getElectionId());
 
         // save the voting action on user entity
         UserDTO userToVote = userService.get(userID);
@@ -108,11 +112,19 @@ public class ElectionsHelperService extends GenericService {
         return voteService.takeAVote(newVote);
     }
 
-    public List<CandidateWithStatisticsDTO> getParsedVotes() {
+    public List<CandidateWithStatisticsDTO> getParsedVotes(int electionId) {
         List<CandidateWithStatisticsDTO> returnable = new ArrayList<>();
 
-        List<VoteDTO> votes = voteService.getAll();
-        List<CandidateDTO> candidates = candidateService.getAll();
+        VoteDTO filterVote = new VoteDTO();
+        filterVote.setElectionId(electionId);
+
+        CandidateFilterDTO filterCandidate = new CandidateFilterDTO();
+        CandidateDTO candidateUsedForFilter = new CandidateDTO();
+        candidateUsedForFilter.setElectionId(electionId);
+        filterCandidate.setCandidate(candidateUsedForFilter);
+
+        List<VoteDTO> votes = voteService.getFiltered(filterVote);
+        List<CandidateDTO> candidates = candidateService.getFiltered(filterCandidate);
 
         candidates.forEach(candidate -> {
             var candidateVotes = votes.stream().map(VoteDTO::getCandidateID)
@@ -142,16 +154,19 @@ public class ElectionsHelperService extends GenericService {
         return userService.hasVotedByUsername(username);
     }
 
-    public int countAllVotes() {
-        return voteService.getAll().size();
+    public int countAllVotes(int electionId) {
+        VoteDTO filterVote = new VoteDTO();
+        filterVote.setElectionId(electionId);
+
+        return voteService.getFiltered(filterVote).size();
     }
 
     // XXX: dangerous method, use with care
-    public boolean cleanAllVotes() {
+    public boolean cleanAllVotes(int electionId) {
         // save event
         eventService.save(EventActionEnum.DELETE, EventScreenEnum.ELECTIONS_HELPER,
                 AppConstants.EVENT_ELECTIONS_HELPER_CLEAN_ALL_VOTES);
 
-        return voteService.cleanDBTable();
+        return voteService.cleanDBTable(electionId);
     }
 }

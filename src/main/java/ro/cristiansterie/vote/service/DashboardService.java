@@ -45,10 +45,10 @@ public class DashboardService {
         this.events = events;
     }
 
-    public DashboardTotalsDTO getTotals() {
+    public DashboardTotalsDTO getTotals(int electionID) {
         DashboardTotalsDTO totals = new DashboardTotalsDTO();
 
-        totals.setCandidates((int) candidates.count());
+        totals.setCandidates((int) candidates.countByElectionId(electionID));
         totals.setUsers((int) users.count());
 
         // save event
@@ -73,27 +73,27 @@ public class DashboardService {
         return false;
     }
 
-    public boolean generateFakeCandidates() {
+    public boolean generateFakeCandidates(int electionId) {
         try {
+            var foundElection = electionService.get(electionId);
             // first clean the DB with previous candidates
-            candidates.deleteAll();
+            candidates.deleteByElectionId(electionId);
             // generate fake candidates
-            var fakeCandidates = EntityHelper.generateFakeCandidates();
+            var fakeCandidates = EntityHelper.generateFakeCandidates(electionId);
             // then generate and save new fake candidates
             candidates.saveAll(fakeCandidates);
-
-            // add candidates to live election
-            var election = electionService.getLastElection();
-
+            
+            
             // save event
             events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,
                     AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_CANDIDATES);
 
-            if (election == null || election.getEndDate() != null)
+            if (foundElection == null || foundElection.getId() == null || foundElection.getId() <= 0) {
                 throw new IllegalStateException("No election to add fake candidates to!");
+            }
 
-            election.setCandidates(candidatesService.convert(fakeCandidates));
-            electionService.save(election);
+            foundElection.setCandidates(candidatesService.convert(fakeCandidates));
+            electionService.save(foundElection);
 
             return true;
         } catch (Exception e) {
@@ -106,9 +106,9 @@ public class DashboardService {
     // XXX: this is very danbgerous, please REMOVEW THIS method after testing
     // and quit generating fake votes
     @Transactional
-    public boolean generateFakeVotes(int no) {
+    public boolean generateFakeVotes(int no, int electionId) {
         try {
-            List<CandidateDAO> candidatesList = candidates.findAll();
+            List<CandidateDAO> candidatesList = candidates.findAllByElectionId(electionId);
             List<UserDAO> usersList = users.findAll();
             int maxRand = no / candidatesList.size(); // votes per candidate
 

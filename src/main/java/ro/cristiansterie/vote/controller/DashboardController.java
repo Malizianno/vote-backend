@@ -21,15 +21,15 @@ public class DashboardController {
         this.service = service;
     }
 
-    @GetMapping(path = "/totals")
-    public ResponseEntity<DashboardTotalsDTO> totals() {
-        DashboardTotalsDTO totals = service.getTotals();
+    @GetMapping(path = "/totals/{electionID}")
+    public ResponseEntity<DashboardTotalsDTO> totals(@PathVariable int electionID) {
+        DashboardTotalsDTO totals = service.getTotals(electionID);
         return new ResponseEntity<>(totals, null != totals ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(path = "/fake/candidates")
-    public ResponseEntity<Boolean> fakeCandidates() {
-        boolean status = service.generateFakeCandidates();
+    @PostMapping(path = "/fake/candidates/{electionId}")
+    public ResponseEntity<Boolean> fakeCandidates(@PathVariable int electionId) {
+        boolean status = service.generateFakeCandidates(electionId);
 
         return new ResponseEntity<>(status, status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
@@ -41,9 +41,9 @@ public class DashboardController {
         return new ResponseEntity<>(status, status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(path = "/fake/votes/{no}")
-    public ResponseEntity<Boolean> fakeVotes(@PathVariable int no) {
-        Boolean status = service.generateFakeVotes(no);
+    @PostMapping(path = "/fake/votes/{no}/{electionId}")
+    public ResponseEntity<Boolean> fakeVotes(@PathVariable int no, @PathVariable int electionId) {
+        Boolean status = service.generateFakeVotes(no, electionId);
 
         return new ResponseEntity<>(status, status != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

@@ -23,6 +23,8 @@ public class CandidateDAO {
     private String image;
     private String description;
 
+    private Integer electionId;
+
     public Integer getId() {
         return id;
     }
@@ -69,5 +71,13 @@ public class CandidateDAO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getElectionId() {
+        return electionId;
+    }
+
+    public void setElectionId(Integer electionId) {
+        this.electionId = electionId;
     }
 }

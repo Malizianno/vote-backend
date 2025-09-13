@@ -11,6 +11,8 @@ public class CandidateDTO {
     private String image;
     private String description;
 
+    private Integer electionId;
+
     public Integer getId() {
         return id;
     }
@@ -59,9 +61,17 @@ public class CandidateDTO {
         this.description = description;
     }
 
+    public Integer getElectionId() {
+        return electionId;
+    }
+
+    public void setElectionId(Integer electionId) {
+        this.electionId = electionId;
+    }
+
     @Override
     public String toString() {
         return "CandidateDTO [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", party=" + party
-                + ", image=" + image + ", description=" + description + "]";
+                + ", image=" + image + ", description=" + description + ", electionId=" + electionId + "]";
     }
 }
