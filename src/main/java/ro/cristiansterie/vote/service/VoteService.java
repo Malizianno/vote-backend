@@ -46,7 +46,7 @@ public class VoteService extends GenericService {
             String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             VoteDTO saved = convert(repo.save(convert(newVote)));
 
-            this.userService.setHasVoted(username);
+            this.userService.setHasVotedTrue(username);
 
             return null != saved && null != saved.getId();
         } catch (Exception e) {

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
@@ -76,6 +77,7 @@ public class ElectionsHelperService extends GenericService {
         return candidateService.get(winnerCandidate);
     }
 
+    @Transactional
     public boolean vote(CandidateDTO voted, Integer userID) {
         VoteDTO newVote = new VoteDTO();
 
@@ -95,9 +97,9 @@ public class ElectionsHelperService extends GenericService {
             return false; // user has voted
         }
 
-        userToVote.setHasVoted(true);
-
-        userService.save(userToVote);
+        // TODO: check if this really made it work for mobile :)
+        // userToVote.setHasVoted(true);
+        // userService.save(userToVote);
 
         // save event
         eventService.save(EventActionEnum.CREATE, EventScreenEnum.ELECTIONS_HELPER,

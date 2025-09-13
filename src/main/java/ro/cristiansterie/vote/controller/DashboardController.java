@@ -43,8 +43,8 @@ public class DashboardController {
 
     @PostMapping(path = "/fake/votes/{no}")
     public ResponseEntity<Boolean> fakeVotes(@PathVariable int no) {
-        boolean status = service.generateFakeVotes(no);
+        Boolean status = service.generateFakeVotes(no);
 
-        return new ResponseEntity<>(status, status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(status, status != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 }

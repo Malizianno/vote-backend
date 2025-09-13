@@ -1,12 +1,17 @@
 package ro.cristiansterie.vote.service;
 
 import java.lang.invoke.MethodHandles;
+import java.security.Security;
 import java.util.List;
 import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ro.cristiansterie.vote.dto.DashboardTotalsDTO;
 import ro.cristiansterie.vote.entity.CandidateDAO;
@@ -98,22 +103,43 @@ public class DashboardService {
         return false;
     }
 
+    // XXX: this is very danbgerous, please REMOVEW THIS method after testing
+    // and quit generating fake votes
+    @Transactional
     public boolean generateFakeVotes(int no) {
         try {
             List<CandidateDAO> candidatesList = candidates.findAll();
-            int maxRand = no / candidatesList.size();
+            List<UserDAO> usersList = users.findAll();
+            int maxRand = no / candidatesList.size(); // votes per candidate
 
-            candidatesList.forEach(candidate -> {
-                int randVotesNo = new Random().nextInt(maxRand > 0 ? maxRand : 1);
+            // testing
+            var originalAuth = SecurityContextHolder.getContext().getAuthentication();
+
+            int totalVotesAfterRand = 0;
+            for (CandidateDAO candidate : candidatesList) {
+                int randVotesNo = new Random().nextInt(maxRand);
 
                 for (int i = 0; i < randVotesNo; i++) {
-                    electionHelperService.vote(candidatesService.convert(candidate), i + 1);
+                    var user = usersList.get(totalVotesAfterRand + i);
 
-                    UserDAO user = users.findById(i + 1).get();
-                    user.setHasVoted(false);
-                    users.save(user);
+                    AnonymousAuthenticationToken anonymousToken = new AnonymousAuthenticationToken(
+                            "key123", // unique key (can be any string)
+                            user.getUsername(), // principal name
+                            AuthorityUtils.createAuthorityList("ADMIN") // granted authorities
+                    );
+
+                    SecurityContextHolder.getContext().setAuthentication(anonymousToken);
+
+                    electionHelperService.vote(candidatesService.convert(candidate),
+                            user.getId());
                 }
-            });
+
+                totalVotesAfterRand += randVotesNo;
+            }
+
+            // end testing
+            // restore original authentication
+            SecurityContextHolder.getContext().setAuthentication(originalAuth);
 
             // save event
             events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,

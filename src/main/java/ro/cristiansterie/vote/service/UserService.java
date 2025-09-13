@@ -179,7 +179,7 @@ public class UserService extends GenericService implements UserDetailsService {
      * @param username to vote
      * @return if the user has successfully voted
      */
-    public boolean setHasVoted(String username) {
+    public boolean setHasVotedTrue(String username) {
         UserDAO user = this.repo.findByUsername(username);
 
         if (null == user) {
