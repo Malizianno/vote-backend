@@ -16,7 +16,6 @@ import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateFilterDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
 import ro.cristiansterie.vote.dto.ElectionCampaignDTO;
-import ro.cristiansterie.vote.dto.ElectionDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.VoteDTO;
 import ro.cristiansterie.vote.util.AppConstants;
@@ -42,10 +41,6 @@ public class ElectionsHelperService extends GenericService {
         this.userService = userService;
         this.eventService = eventService;
         this.electionService = electionService;
-    }
-
-    public ElectionDTO getLastElection() {
-        return electionService.getLastElection();
     }
 
     public ElectionCampaignDTO getElectionCampaignStatus() {

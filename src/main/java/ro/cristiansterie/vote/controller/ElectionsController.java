@@ -33,6 +33,12 @@ public class ElectionsController {
         return new ResponseEntity<>(election, null != election ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping(path = "/last")
+    public ResponseEntity<ElectionDTO> getLastActive() {
+        ElectionDTO result = service.getLastActiveElection();
+        return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
+
     @GetMapping(path = "/all")
     public ResponseEntity<List<ElectionDTO>> all() {
         List<ElectionDTO> elections = service.getAll();

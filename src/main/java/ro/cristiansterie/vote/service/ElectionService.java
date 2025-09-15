@@ -69,11 +69,13 @@ public class ElectionService extends GenericService {
         return (int) repo.count(Example.of(convert(filter.getElection()), matcher));
     }
 
-    public ElectionDTO getLastElection() {
+    public ElectionDTO getLastActiveElection() {
         // save event
         events.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS, AppConstants.EVENT_ELECTIONS_GET_LAST);
 
-        return convert(repo.findFirstByOrderByStartDateDesc());
+        var found = repo.findFirstByEnabledTrueOrderByStartDateDesc();
+
+        return found.isPresent() ? convert(found.get()) : null;
     }
 
     public ElectionDTO get(@NonNull Integer id) {

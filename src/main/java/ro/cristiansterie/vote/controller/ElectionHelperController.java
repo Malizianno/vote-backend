@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
 import ro.cristiansterie.vote.dto.ElectionCampaignDTO;
-import ro.cristiansterie.vote.dto.ElectionDTO;
 import ro.cristiansterie.vote.service.ElectionsHelperService;
 
 @RestController
@@ -68,13 +67,5 @@ public class ElectionHelperController {
         List<CandidateWithStatisticsDTO> result = service.getParsedVotes(electionId);
 
         return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping(path = "/lastElection")
-    public ResponseEntity<ElectionDTO> lastElection() {
-        ElectionDTO result = service.getLastElection();
-
-        return new ResponseEntity<>(null != result ? result : null,
-                null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 }
