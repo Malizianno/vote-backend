@@ -1,7 +1,6 @@
 package ro.cristiansterie.vote.service;
 
 import java.lang.invoke.MethodHandles;
-import java.security.Security;
 import java.util.List;
 import java.util.Random;
 
@@ -73,6 +72,7 @@ public class DashboardService {
         return false;
     }
 
+    @Transactional
     public boolean generateFakeCandidates(int electionId) {
         try {
             var foundElection = electionService.get(electionId);
@@ -82,8 +82,7 @@ public class DashboardService {
             var fakeCandidates = EntityHelper.generateFakeCandidates(electionId);
             // then generate and save new fake candidates
             candidates.saveAll(fakeCandidates);
-            
-            
+
             // save event
             events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,
                     AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_CANDIDATES);
