@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vote-backend
+  template:
+    metadata:
+      labels:
+        app: vote-backend
+    spec:
+      containers:
+        - name: vote-backend
+          image: maliziannu/vote-backend:latest
+          ports:
+            - containerPort: 8090
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub-secret
