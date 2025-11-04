@@ -89,4 +89,10 @@ public class UserController {
         UserDTO saved = service.saveProfile(user);
         return new ResponseEntity<>(saved, null != saved ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping(path = "/profile/register")
+    public ResponseEntity<UserDTO> registerProfile(@RequestBody UserVoterDTO user) {
+        UserDTO registered = service.registerProfile(user);
+        return new ResponseEntity<>(registered, null != registered ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
 }

@@ -148,6 +148,33 @@ public class UserService extends GenericService implements UserDetailsService {
         return convertToVoter(saved);
     }
 
+    public UserVoterDTO registerProfile(UserVoterDTO user) {
+        if (null == user) {
+            log.error("Cannot register user: {}", user);
+
+            return null;
+        }
+
+        // XXX: should remove this after face recognition is implemented
+        user.setUsername(
+                user.getLastname().substring(0, 3) + "." + user.getFirstname().substring(0, 3) + user.getCnp());
+
+        UserDAO found = repo.findByUsername(user.getUsername());
+        if (null != found) {
+            log.error("Cannot register user, username already exists: {}", user.getUsername());
+
+            return null;
+        }
+
+        UserDAO saved = repo.save(convertFromVoter(user));
+
+        // save event
+        events.save(EventActionEnum.CREATE, EventScreenEnum.USERS,
+                AppConstants.EVENT_USERS_PROFILE_REGISTER + saved.getId());
+
+        return convertToVoter(saved);
+    }
+
     public boolean delete(Integer id) {
         try {
             repo.deleteById(id);
