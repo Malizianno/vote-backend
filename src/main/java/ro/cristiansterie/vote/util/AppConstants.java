@@ -47,12 +47,15 @@ public class AppConstants {
     public static final String EVENT_ELECTIONS_HELPER_CLEAN_ALL_VOTES           = "Clean all votes for current election";
 
     public static final String EVENT_LOGIN_AUTHENTICATED                        = "User authenticated with username: ";
+    public static final String EVENT_LOGIN_AUTHENTICATED_VOTER                  = "Voter User authenticated with id: ";
     public static final String EVENT_LOGIN_LOGOUT                               = "User logged out with username: ";
 
     public static final String EVENT_USERS_GET_ALL                              = "Get all users";
+    public static final String EVENT_USERS_GET_ALL_FACE_IMAGES                  = "Get all face images in base64 associated with ids";
     public static final String EVENT_USERS_GET_FILTERED                         = "Get filtered users";
     public static final String EVENT_USERS_COUNT_FILTERED                       = "Count filtered users";
     public static final String EVENT_USERS_GET_ONE                              = "Get user with ID: ";
+    public static final String EVENT_USERS_GET_VOTER_ONE                        = "Get voter user with ID: ";
     public static final String EVENT_USERS_GET_PROFILE                          = "Get user profile with ID: ";
     public static final String EVENT_USERS_USER_SAVE                            = "Save user with ID: ";
     public static final String EVENT_USERS_PROFILE_SAVE                         = "Save user profile with ID: ";

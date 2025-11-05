@@ -1,10 +1,13 @@
 package ro.cristiansterie.vote.entity;
 
+import java.util.Base64;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.UserGenderEnum;
 import ro.cristiansterie.vote.util.UserNationalityEnum;
@@ -35,16 +38,18 @@ public class UserDAO {
     private Integer idNumber;
     private Long cnp;
     private UserNationalityEnum nationality;
-    @Column(name = "birth_address")
-    private String birthAddress;
     @Column(name = "residence_address")
     private String residenceAddress;
     @Column(name = "validity_start_date")
     private Long validityStartDate;
     @Column(name = "validity_end_date")
     private Long validityEndDate;
-    @Column(name = "id_image")
-    private String idImage;
+    @Lob
+    @Column(name = "id_image", columnDefinition = "LONGBLOB")
+    private byte[] idImage;
+    @Lob
+    @Column(name = "face_image", columnDefinition = "LONGBLOB")
+    private byte[] faceImage;
 
     public Integer getId() {
         return id;
@@ -142,14 +147,6 @@ public class UserDAO {
         this.nationality = nationality;
     }
 
-    public String getBirthAddress() {
-        return birthAddress;
-    }
-
-    public void setBirthAddress(String birthAddress) {
-        this.birthAddress = birthAddress;
-    }
-
     public String getResidenceAddress() {
         return residenceAddress;
     }
@@ -174,11 +171,35 @@ public class UserDAO {
         this.validityEndDate = validityEndDate;
     }
 
-    public String getIdImage() {
+    public byte[] getIdImage() {
         return idImage;
     }
 
-    public void setIdImage(String idImage) {
+    public String getBase64IdImage() {
+        return Base64.getEncoder().encodeToString(this.idImage);
+    }
+
+    public void setIdImage(byte[] idImage) {
         this.idImage = idImage;
+    }
+
+    public void setBase64IdImage(String base64IdImage) {
+        this.idImage = Base64.getDecoder().decode(base64IdImage);
+    }
+
+    public byte[] getFaceImage() {
+        return faceImage;
+    }
+
+    public String getBase64FaceImage() {
+        return Base64.getEncoder().encodeToString(this.faceImage);
+    }
+
+    public void setFaceImage(byte[] faceImage) {
+        this.faceImage = faceImage;
+    }
+
+    public void setBase64FaceImage(String base64FaceImage) {
+        this.faceImage = Base64.getDecoder().decode(base64FaceImage);
     }
 }

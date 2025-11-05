@@ -12,16 +12,21 @@ import ro.cristiansterie.vote.dto.LoginRequestDTO;
 import ro.cristiansterie.vote.dto.LoginResponseDTO;
 import ro.cristiansterie.vote.dto.LogoutRequestDTO;
 import ro.cristiansterie.vote.dto.LogoutResponseDTO;
+import ro.cristiansterie.vote.faceid.dto.FaceVerificationRequest;
+import ro.cristiansterie.vote.faceid.dto.FaceVerificationResponse;
+import ro.cristiansterie.vote.faceid.service.FaceVerificationService;
 import ro.cristiansterie.vote.service.LoginService;
 
 @RestController
 @RequestMapping(path = "/login")
 public class LoginController {
 
-    private LoginService service;
+    private final LoginService service;
+    private final FaceVerificationService faceService;
 
-    public LoginController(LoginService service) {
+    public LoginController(LoginService service, FaceVerificationService faceService) {
         this.service = service;
+        this.faceService = faceService;
     }
 
     @PostMapping(path = "/", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
@@ -38,5 +43,12 @@ public class LoginController {
         LogoutResponseDTO response = service.logout(dto);
 
         return new ResponseEntity<>(response, null != response ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/face")
+    public ResponseEntity<FaceVerificationResponse> verify(@RequestBody FaceVerificationRequest request) {
+        FaceVerificationResponse result = faceService.loginWithFace(request);
+
+        return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 }

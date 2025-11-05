@@ -102,7 +102,7 @@ public class DashboardService {
         return false;
     }
 
-    // XXX: this is very danbgerous, please REMOVEW THIS method after testing
+    // XXX: this is very danbgerous, please REMOVE THIS method after testing
     // and quit generating fake votes
     @Transactional
     public boolean generateFakeVotes(int no, int electionId) {

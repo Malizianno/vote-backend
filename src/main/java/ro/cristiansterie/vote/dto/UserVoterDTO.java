@@ -1,8 +1,11 @@
 package ro.cristiansterie.vote.dto;
 
+import java.util.Base64;
+
 import ro.cristiansterie.vote.util.UserGenderEnum;
 import ro.cristiansterie.vote.util.UserNationalityEnum;
 
+/* This DTO is used in Face Recognition and implicitly mobile authentication */
 public class UserVoterDTO extends UserDTO {
 
     private String firstname;
@@ -16,7 +19,8 @@ public class UserVoterDTO extends UserDTO {
     private String residenceAddress;
     private Long validityStartDate;
     private Long validityEndDate;
-    private String idImage;
+    private byte[] idImage;
+    private byte[] faceImage;
 
     public String getFirstname() {
         return firstname;
@@ -106,12 +110,37 @@ public class UserVoterDTO extends UserDTO {
         this.validityEndDate = validityEndDate;
     }
 
-    public String getIdImage() {
+    public byte[] getIdImage() {
         return idImage;
     }
 
-    public void setIdImage(String idImage) {
+    public String getIdImageBase64() {
+        return Base64.getEncoder().encodeToString(this.idImage);
+    }
+
+
+    public void setIdImage(byte[] idImage) {
         this.idImage = idImage;
+    }
+
+    public void setIdImageBase64(String base64IdImage) {
+        this.idImage = Base64.getDecoder().decode(base64IdImage);
+    }
+
+    public byte[] getFaceImage() {
+        return faceImage;
+    }
+
+    public String getFaceImageBase64() {
+        return Base64.getEncoder().encodeToString(this.faceImage);
+    }
+
+    public void setFaceImage(byte[] faceImage) {
+        this.faceImage = faceImage;
+    }
+
+    public void setFaceImageBase64(String base64FaceImage) {
+        this.faceImage = Base64.getDecoder().decode(base64FaceImage);
     }
 
 }

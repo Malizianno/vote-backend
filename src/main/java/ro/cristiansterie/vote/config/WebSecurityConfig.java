@@ -25,7 +25,7 @@ public class WebSecurityConfig {
         String DEFAULT_CHECK_HEALTH_URL = "/actuator";
         String DEFAULT_H2_ENDPOINT = "/h2/**";
         String DEFAULT_LOGIN_ENDPOINT = "/login/**";
-        String DEFAULT_REGISTER_ENDPOINT = "/users/profile/register/**";
+        String DEFAULT_REGISTER_ENDPOINT = "/register/**";
 
         String[] AUTH_WHITELIST = {
                 "/v3/api-docs/**",

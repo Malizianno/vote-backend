@@ -3,6 +3,7 @@ package ro.cristiansterie.vote.service;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -52,6 +53,14 @@ public class UserService extends GenericService implements UserDetailsService {
         return convert(repo.findAll());
     }
 
+    public Map<Integer, String> getAllFaceImagesBase64() {
+        // save event
+        events.save(EventActionEnum.GET_ALL, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ALL_FACE_IMAGES);
+
+        return repo.findAll().stream()
+                .collect(Collectors.toMap(UserDAO::getId, UserDAO::getBase64FaceImage));
+    }
+
     public List<UserDTO> getFiltered(UserFilterDTO filter) {
         filter = this.checkFilters(filter);
 
@@ -87,6 +96,15 @@ public class UserService extends GenericService implements UserDetailsService {
         events.save(EventActionEnum.GET, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ONE + id);
         // return user if exists
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
+    }
+
+    public UserVoterDTO getVoter(@NonNull Integer id) {
+        UserDAO returnable = repo.findById(id).orElse(null);
+
+        // save event
+        events.save(EventActionEnum.GET, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ONE + id);
+        // return user if exists
+        return null != returnable && null != returnable.getId() ? convertToVoter(returnable) : null;
     }
 
     public UserVoterDTO getProfile(@NonNull Integer id) {
@@ -155,7 +173,7 @@ public class UserService extends GenericService implements UserDetailsService {
             return null;
         }
 
-        // XXX: should remove this after face recognition is implemented
+        // WIP: remove this after old VOTANT login is deleted
         user.setUsername(
                 user.getLastname().substring(0, 3) + "." + user.getFirstname().substring(0, 3) + user.getCnp());
 

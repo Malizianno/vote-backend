@@ -1,6 +1,8 @@
 package ro.cristiansterie.vote.service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +14,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import ro.cristiansterie.vote.config.CustomAuthenticationManager;
+import ro.cristiansterie.vote.config.FaceIDAuthentication;
 import ro.cristiansterie.vote.dto.LoginRequestDTO;
 import ro.cristiansterie.vote.dto.LoginResponseDTO;
 import ro.cristiansterie.vote.dto.LogoutRequestDTO;
 import ro.cristiansterie.vote.dto.LogoutResponseDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
+import ro.cristiansterie.vote.dto.UserVoterDTO;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
@@ -68,7 +72,7 @@ public class LoginService {
                 return response;
             }
 
-            // WIP: else login a votant user type via biometrics not via user+pass
+            // WIP: remove this after old VOTANT login is deleted
             if (null != request && null != request.getRole() && UserRoleEnum.VOTANT.equals(request.getRole())
                     && foundUser.getAuthorities().size() == 1
                     && foundUser.getAuthorities().contains(new SimpleGrantedAuthority(UserRoleEnum.VOTANT.name()))) {
@@ -99,8 +103,39 @@ public class LoginService {
 
                 return response;
             }
-        } catch (Exception e) {
-            log.info("Exception happened while logging in: {}", e);
+        } catch (Exception ex) {
+            log.error("Exception happened while logging in: {}", ex);
+        }
+
+        return null;
+    }
+
+    public String loginUserWithFace(UserVoterDTO user) {
+        try {
+            UserVoterDTO foundUser = userService.getVoter(user.getId());
+            // UserDetails foundUser = userService.loadUserByUsername(user.getUsername());
+            if (null != user && null != user.getRole() && UserRoleEnum.VOTANT.equals(user.getRole())
+                    && foundUser.getRole() != null
+                    && foundUser.getRole().compareTo(UserRoleEnum.VOTANT) == 0) {
+                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority(UserRoleEnum.VOTANT.name()));
+
+                Authentication auth = authManager.authenticate(
+                        new FaceIDAuthentication(user.getId(), user.getFaceImageBase64(), authorities));
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                log.info("Authentication successfull for VOTANT id: {}", user.getId());
+
+                String token = jwtUtil.generateJWTToken(auth);
+
+                // save event
+                events.save(EventActionEnum.LOGIN, EventScreenEnum.LOGIN,
+                        AppConstants.EVENT_LOGIN_AUTHENTICATED_VOTER + user.getId());
+
+                return token;
+            }
+        } catch (Exception ex) {
+            log.error("Exception happened while logging in: {}", ex);
         }
 
         return null;

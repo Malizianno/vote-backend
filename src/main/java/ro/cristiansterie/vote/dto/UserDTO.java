@@ -1,18 +1,14 @@
 package ro.cristiansterie.vote.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import ro.cristiansterie.vote.util.UserGenderEnum;
-import ro.cristiansterie.vote.util.UserNationalityEnum;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 public class UserDTO {
     private Integer id;
-    private String username;
 
-    @JsonIgnore
+    // these are here for frontend login purposes - the whole object actually
+    private String username;
     private String password;
-    
+
     private UserRoleEnum role;
     private Boolean hasVoted;
 
@@ -24,14 +20,6 @@ public class UserDTO {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public UserRoleEnum getRole() {
         return role;
     }
@@ -40,19 +28,27 @@ public class UserDTO {
         this.role = role;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Boolean getHasVoted() {
         return hasVoted;
     }
 
     public void setHasVoted(Boolean hasVoted) {
         this.hasVoted = hasVoted;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
