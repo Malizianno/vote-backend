@@ -1,6 +1,7 @@
 package ro.cristiansterie.vote.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,8 @@ public class RegistrationController {
         this.service = service;
     }
 
-    @PostMapping(path = "/")
+    @PostMapping(path = "/", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<UserDTO> registerProfile(@RequestBody UserVoterDTO user) {
         UserDTO registered = service.registerProfile(user);
         return new ResponseEntity<>(registered, null != registered ? HttpStatus.OK : HttpStatus.BAD_REQUEST);

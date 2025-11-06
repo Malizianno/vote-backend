@@ -31,7 +31,7 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 
 public class JWTFilter extends OncePerRequestFilter {
 
-    protected static final String[] ALLOW_PATTERNS = new String[] { "/login/**", "/users/save/**", "/index.html" };
+    protected static final String[] ALLOW_PATTERNS = new String[] { "/login/**", "/register/**", "/index.html" };
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
@@ -56,7 +56,8 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         try {
             if (!requestMatcher.matches(request)) {

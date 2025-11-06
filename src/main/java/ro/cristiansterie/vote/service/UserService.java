@@ -173,16 +173,17 @@ public class UserService extends GenericService implements UserDetailsService {
             return null;
         }
 
-        // WIP: remove this after old VOTANT login is deleted
-        user.setUsername(
-                user.getLastname().substring(0, 3) + "." + user.getFirstname().substring(0, 3) + user.getCnp());
-
-        UserDAO found = repo.findByUsername(user.getUsername());
+        UserDAO found = repo.findByCnp(user.getCnp());
         if (null != found) {
-            log.error("Cannot register user, username already exists: {}", user.getUsername());
+            log.error("Cannot register user, cnp already exists: {}", user.getCnp());
 
             return null;
         }
+
+        user.setRole(UserRoleEnum.VOTANT);
+        user.setHasVoted(false);
+        user.setUsername(null);
+        user.setPassword(null);
 
         UserDAO saved = repo.save(convertFromVoter(user));
 

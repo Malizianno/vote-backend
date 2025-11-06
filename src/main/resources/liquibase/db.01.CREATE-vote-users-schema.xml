@@ -19,7 +19,7 @@
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="username" type="VARCHAR(200)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
         </createTable>
 
@@ -125,11 +125,29 @@
             </column>
         </addColumn>
         <addColumn tableName="users">
-            <column name="id_image" type="MEDIUMTEXT">
+            <column name="id_image" type="LONGBLOB">
                 <constraints nullable="true" />
             </column>
         </addColumn>
     </changeSet>
 
+    <changeSet id="remove-column-from-users" author="vote-admin">
+        <dropColumn tableName="users" columnName="birth_address" />
+    </changeSet>
+
+    <changeSet id="extends-user-with-face-image" author="vote-admin">
+        <addColumn tableName="users">
+            <column name="face_image" type="LONGBLOB">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add-unique-constraint-users-cnp" author="vote-admin">
+        <addUniqueConstraint
+            tableName="users"
+            columnNames="cnp"
+            constraintName="uk_users_cnp" />
+    </changeSet>
 
 </databaseChangeLog>

@@ -10,8 +10,9 @@ import ro.cristiansterie.vote.entity.UserDAO;
 
 public interface UserRepository extends JpaRepository<UserDAO, Integer> {
     UserDAO findByUsername(String username);
+    UserDAO findByCnp(Long cnp);
 
-    // XXX: this is used onl;y in developing, please remove
+    // XXX: this is used only in development, please remove
     @Query(value = "SELECT * FROM users LIMIT :limited" , nativeQuery = true)
     List<UserDAO> findLimitedActiveUsers(@Param("limited") int limited);
 

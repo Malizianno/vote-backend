@@ -15,7 +15,6 @@ public class UserVoterDTO extends UserDTO {
     private Integer idNumber;
     private Long cnp;
     private UserNationalityEnum nationality;
-    private String birthAddress;
     private String residenceAddress;
     private Long validityStartDate;
     private Long validityEndDate;
@@ -76,14 +75,6 @@ public class UserVoterDTO extends UserDTO {
 
     public void setNationality(UserNationalityEnum nationality) {
         this.nationality = nationality;
-    }
-
-    public String getBirthAddress() {
-        return birthAddress;
-    }
-
-    public void setBirthAddress(String birthAddress) {
-        this.birthAddress = birthAddress;
     }
 
     public String getResidenceAddress() {

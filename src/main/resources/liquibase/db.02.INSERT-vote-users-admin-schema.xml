@@ -35,8 +35,6 @@
             <column name="cnp" value="1950311040877" />
             <column
                 name="nationality" value="0" />
-            <column name="birth_address"
-                value="Str. Testului, nr. 2" />
             <column name="residence_address"
                 value="Str. Testului, nr. 2" />
             <column name="validity_start_date" value="2020-01-29" />
