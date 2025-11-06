@@ -53,12 +53,12 @@ public class UserService extends GenericService implements UserDetailsService {
         return convert(repo.findAll());
     }
 
-    public Map<Integer, String> getAllFaceImagesBase64() {
+    public Map<Integer, byte[]> getAllFaceImagesBase64() {
         // save event
         events.save(EventActionEnum.GET_ALL, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ALL_FACE_IMAGES);
 
-        return repo.findAll().stream()
-                .collect(Collectors.toMap(UserDAO::getId, UserDAO::getBase64FaceImage));
+        return repo.findAll().stream().filter(user -> user.getFaceImage() != null)
+                .collect(Collectors.toMap(UserDAO::getId, UserDAO::getFaceImage));
     }
 
     public List<UserDTO> getFiltered(UserFilterDTO filter) {

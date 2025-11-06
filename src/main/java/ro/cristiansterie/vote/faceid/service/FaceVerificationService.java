@@ -1,10 +1,12 @@
 package ro.cristiansterie.vote.faceid.service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +40,14 @@ public class FaceVerificationService {
     }
 
     public FaceVerificationResponse loginWithFace(FaceVerificationRequest request) {
-        Map<Integer, String> referenceBase64List = userService.getAllFaceImagesBase64();
+        Map<Integer, byte[]> referenceBase64ListBytes = userService.getAllFaceImagesBase64();
+        Map<Integer, String> referenceBase64List = referenceBase64ListBytes.entrySet().stream().collect(
+                Collectors.toMap(Map.Entry::getKey, entry -> Base64.getEncoder().encodeToString(entry.getValue())));
+
         FaceVerificationResult result = verifyFace(request.getImageBase64(),
                 referenceBase64List.values().stream().toList());
 
+        // WIP: left here at the comparison of the deepface API
         if (result.isMatch()) {
             log.info("Match found with distance: " + result.getDistance());
             log.info("Result: {}", result);

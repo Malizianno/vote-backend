@@ -1,7 +1,5 @@
 package ro.cristiansterie.vote.dto;
 
-import java.util.Base64;
-
 import ro.cristiansterie.vote.util.UserGenderEnum;
 import ro.cristiansterie.vote.util.UserNationalityEnum;
 
@@ -105,33 +103,15 @@ public class UserVoterDTO extends UserDTO {
         return idImage;
     }
 
-    public String getIdImageBase64() {
-        return Base64.getEncoder().encodeToString(this.idImage);
-    }
-
-
     public void setIdImage(byte[] idImage) {
         this.idImage = idImage;
-    }
-
-    public void setIdImageBase64(String base64IdImage) {
-        this.idImage = Base64.getDecoder().decode(base64IdImage);
     }
 
     public byte[] getFaceImage() {
         return faceImage;
     }
 
-    public String getFaceImageBase64() {
-        return Base64.getEncoder().encodeToString(this.faceImage);
-    }
-
     public void setFaceImage(byte[] faceImage) {
         this.faceImage = faceImage;
     }
-
-    public void setFaceImageBase64(String base64FaceImage) {
-        this.faceImage = Base64.getDecoder().decode(base64FaceImage);
-    }
-
 }

@@ -1,7 +1,5 @@
 package ro.cristiansterie.vote.entity;
 
-import java.util.Base64;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -175,31 +173,15 @@ public class UserDAO {
         return idImage;
     }
 
-    public String getBase64IdImage() {
-        return Base64.getEncoder().encodeToString(this.idImage);
-    }
-
     public void setIdImage(byte[] idImage) {
         this.idImage = idImage;
-    }
-
-    public void setBase64IdImage(String base64IdImage) {
-        this.idImage = Base64.getDecoder().decode(base64IdImage);
     }
 
     public byte[] getFaceImage() {
         return faceImage;
     }
 
-    public String getBase64FaceImage() {
-        return Base64.getEncoder().encodeToString(this.faceImage);
-    }
-
     public void setFaceImage(byte[] faceImage) {
         this.faceImage = faceImage;
-    }
-
-    public void setBase64FaceImage(String base64FaceImage) {
-        this.faceImage = Base64.getDecoder().decode(base64FaceImage);
     }
 }
