@@ -11,6 +11,7 @@
             <column name="username" value="null"></column>
             <column name="password" value="null"></column>
             <column name="role" value="1"></column>
+            <column name="has_voted" valueBoolean="false"></column>
             <column name="firstname" value="CRISTIAN-NICOLAE"></column>
             <column name="lastname" value="STERIE"></column>
             <column name="gender" value="0"></column>
@@ -30,6 +31,7 @@
             <column name="username" value="null"></column>
             <column name="password" value="null"></column>
             <column name="role" value="1"></column>
+            <column name="has_voted" valueBoolean="false"></column>
             <column name="firstname" value="ANDREEA-GEORGIANA"></column>
             <column name="lastname" value="TRONCOTĂ"></column>
             <column name="gender" value="1"></column>

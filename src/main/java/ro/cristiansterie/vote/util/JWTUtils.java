@@ -28,7 +28,17 @@ public class JWTUtils {
 
     public String generateJWTToken(Authentication auth) {
         // WIP: the object saved in the JWT should be larger
-        String username = (String) auth.getPrincipal();
+        String username = null;
+
+        try {
+            username = (String) auth.getPrincipal();
+        } catch (ClassCastException cce) {
+            username = String.valueOf((Integer) auth.getPrincipal());
+        } finally {
+            if (username == null) {
+                return null;
+            }
+        }
 
         return Jwts.builder().setSubject(username).setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + config.getExpiration() * 100))

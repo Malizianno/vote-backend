@@ -60,7 +60,7 @@ public class FaceVerificationResult {
     @Override
     public String toString() {
         return "FaceVerificationResult [match=" + match + ", distance=" + distance + ", threshold=" + threshold
-                + ", model=" + model + ", similarity_metric=" + similarity_metric + ", referencePath=" + referenceBase64
-                + "]";
+                + ", model=" + model + ", similarity_metric=" + similarity_metric + ", referenceBase64="
+                + referenceBase64.substring(0, 13) + "]";
     }
 }

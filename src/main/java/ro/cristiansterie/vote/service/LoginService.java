@@ -2,6 +2,7 @@ package ro.cristiansterie.vote.service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public class LoginService {
                         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                log.info("Authentication successfull for ADMIN username: {}", request.getUsername());
+                log.info("Authentication successful for ADMIN username: {}", request.getUsername());
 
                 String token = jwtUtil.generateJWTToken(auth);
 
@@ -80,7 +81,7 @@ public class LoginService {
                         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                log.info("Authentication successfull for VOTANT username: {}", request.getUsername());
+                log.info("Authentication successful for VOTANT username: {}", request.getUsername());
 
                 String token = jwtUtil.generateJWTToken(auth);
 
@@ -113,18 +114,17 @@ public class LoginService {
     public String loginUserWithFace(UserVoterDTO user) {
         try {
             UserVoterDTO foundUser = userService.getVoter(user.getId());
-            // UserDetails foundUser = userService.loadUserByUsername(user.getUsername());
             if (null != user && null != user.getRole() && UserRoleEnum.VOTANT.equals(user.getRole())
                     && foundUser.getRole() != null
                     && foundUser.getRole().compareTo(UserRoleEnum.VOTANT) == 0) {
                 List<SimpleGrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority(UserRoleEnum.VOTANT.name()));
 
-                Authentication auth = authManager.authenticate(
-                        new FaceIDAuthentication(user.getId(), user.getFaceImageBase64(), authorities));
+                Authentication auth = authManager.authenticate(new FaceIDAuthentication(foundUser.getId(),
+                        Base64.getEncoder().encodeToString(foundUser.getFaceImage()), authorities));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                log.info("Authentication successfull for VOTANT id: {}", user.getId());
+                log.info("Authentication successful for VOTANT id: {}", user.getId());
 
                 String token = jwtUtil.generateJWTToken(auth);
 

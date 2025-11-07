@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -249,16 +250,37 @@ public class UserService extends GenericService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDAO found = this.repo.findByUsername(username);
+        UserDAO found = null;
+        String foundUsername = null;
+        String foundPassword = null;
 
-        if (null == found || null == found.getUsername()) {
+        try {
+            int id = Integer.parseInt(username);
+
+            Optional<UserDAO> optional = this.repo.findById(id);
+            if (optional.isPresent()) {
+                found = optional.get();
+                foundUsername = String.valueOf(id);
+                foundPassword = String.valueOf(id);
+
+                log.info("Logging VOTANT with id: {}!", id);
+            }
+        } catch (NumberFormatException nfe) {
+            found = this.repo.findByUsername(username);
+            foundUsername = found.getUsername();
+            foundPassword = found.getPassword();
+
+            log.info("Logging ADMIN with username: {}", username);
+        }
+
+        if (null == found || null == foundUsername) {
             throw new UsernameNotFoundException("User not found by username: " + username);
         }
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(found.getRole().toString()));
 
-        return new User(found.getUsername(), found.getPassword(), authorities);
+        return new User(foundUsername, foundPassword, authorities);
     }
 
     private UserFilterDTO checkFilters(UserFilterDTO filter) {

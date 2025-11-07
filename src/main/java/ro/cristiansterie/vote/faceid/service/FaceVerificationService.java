@@ -47,33 +47,34 @@ public class FaceVerificationService {
         FaceVerificationResult result = verifyFace(request.getImageBase64(),
                 referenceBase64List.values().stream().toList());
 
-        // WIP: left here at the comparison of the deepface API
         if (result.isMatch()) {
-            log.info("Match found with distance: " + result.getDistance());
-            log.info("Result: {}", result);
+            log.info("FaceID: Match found with distance: " + result.getDistance());
+            log.info("FaceID: Result: {}", result);
+
+            var response = new FaceVerificationResponse();
+            String matchedBase64 = result.getReferenceBase64();
+
+            Optional<Integer> matchedId = referenceBase64List.entrySet().stream()
+                    .filter(entry -> entry.getValue().equals(matchedBase64))
+                    .map(Map.Entry::getKey)
+                    .findFirst();
+
+            if (matchedId.isPresent()) {
+                var user = userService.getVoter(matchedId.get());
+
+                response.setHasVoted(user.getHasVoted());
+                response.setId(user.getId());
+                response.setRole(user.getRole());
+                response.setToken(loginService.loginUserWithFace(user));
+
+                log.info("FaceID: User VOTANT Authenticated with face");
+
+                return response;
+            } else {
+                log.error("FaceID: No ID from DB matched!");
+            }
         } else {
-            log.error("No match found.");
-        }
-
-        var response = new FaceVerificationResponse();
-        String matchedBase64 = result.getReferenceBase64();
-
-        Optional<Integer> matchedId = referenceBase64List.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(matchedBase64))
-                .map(Map.Entry::getKey)
-                .findFirst();
-
-        if (matchedId.isPresent()) {
-            var user = userService.getVoter(matchedId.get());
-
-            response.setHasVoted(user.getHasVoted());
-            response.setId(user.getId());
-            response.setRole(user.getRole());
-            response.setToken(loginService.loginUserWithFace(user));
-
-            return response;
-        } else {
-            log.error("No matched ID found.");
+            log.error("FaceID: No matched ID found.");
         }
 
         return null;
