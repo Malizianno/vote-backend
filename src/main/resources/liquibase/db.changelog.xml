@@ -29,4 +29,8 @@
 		<!-- 04. Data creation for events table -->
 		<include file="classpath:liquibase/db.04.CREATE-events-schema.xml" />
 
+		<!-- WIP: TEMPORARY - REMOVE THIS: FOR TESTING PURPOSES ONLY -->
+		<!-- 04. Data creation for events table -->
+		<include file="classpath:liquibase/db.99.INSERT-test-user-data-schema.xml" />
+
 </databaseChangeLog>

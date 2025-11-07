@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="vote-admin" id="vote-test-user-data-delete-this">
+        <insert tableName="users">
+            <column name="id" value="3"></column>
+            <column name="username" value="null"></column>
+            <column name="password" value="null"></column>
+            <column name="role" value="1"></column>
+            <column name="firstname" value="CRISTIAN-NICOLAE"></column>
+            <column name="lastname" value="STERIE"></column>
+            <column name="gender" value="0"></column>
+            <column name="id_series" value="RK"></column>
+            <column name="id_number" value="494525"></column>
+            <column name="cnp" value="1910430035317"></column>
+            <column name="nationality" value="0"></column>
+            <column name="residence_address" value="Mun.Bucureşti Sec.6, Str.Valea Oltului nr.2 bl.M9 sc.B ap.120"></column>
+            <column name="validity_start_date" value="2020-01-29T00:00:00"></column>
+            <column name="validity_end_date" value="2030-04-30T00:00:00"></column>
+            <column name="id_image" value=""></column>
+            <column name="face_image" value=""></column>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="4"></column>
+            <column name="username" value="null"></column>
+            <column name="password" value="null"></column>
+            <column name="role" value="1"></column>
+            <column name="firstname" value="ANDREEA-GEORGIANA"></column>
+            <column name="lastname" value="TRONCOTĂ"></column>
+            <column name="gender" value="1"></column>
+            <column name="id_series" value="RZ"></column>
+            <column name="id_number" value="101987"></column>
+            <column name="cnp" value="2940501250799"></column>
+            <column name="nationality" value="0"></column>
+            <column name="residence_address" value="Mun.Bucureşti Prl.Ghencea nr.38-40 sc.B Et.8 ap.159"></column>
+            <column name="validity_start_date" value="2023-01-25T0:00:00"></column>
+            <column name="validity_end_date" value="2031-08-03T0:00:00"></column>
+            <column name="id_image" value=""></column>
+            <column name="face_image" value=""></column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
