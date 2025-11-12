@@ -35,6 +35,10 @@ public class CandidateService extends GenericService {
         this.events = events;
     }
 
+    public List<CandidateDTO> getAll() {
+        return convert(repo.findAll());
+    }
+
     public List<CandidateDTO> getFiltered(CandidateFilterDTO filter) {
         filter = this.checkFilters(filter);
 
