@@ -1,6 +1,9 @@
 package ro.cristiansterie.vote.util;
 
+import java.time.Instant;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -35,9 +38,10 @@ public class EntityHelper {
 
     public static List<UserDAO> generateFakeUsers(int no) {
         List<UserDAO> returnable = new ArrayList<>();
+        long startNumber = 1234567890000L;
 
         for (int i = 0; i < no; i++) {
-            returnable.add(generateUserDAO());
+            returnable.add(generateUserDAO(startNumber + i));
         }
 
         return returnable;
@@ -62,14 +66,27 @@ public class EntityHelper {
         return dto;
     }
 
-    private static UserDAO generateUserDAO() {
+    private static UserDAO generateUserDAO(Long cnp) {
         UserDAO dto = new UserDAO();
+        Date now = new Date();
 
-        dto.setRole(UserRoleEnum.ADMIN);
-        dto.setPassword("$2a$10$f/QdFjL002VC5.ZmhEtW9eKqUJfn0CvvzIr.dbW/0h5Eu3q1d75ga");
-        dto.setUsername(
-                FIRST_NAMES[random.nextInt(FIRST_NAMES.length)].toLowerCase() + "."
-                        + LAST_NAMES[random.nextInt(LAST_NAMES.length)].toLowerCase());
+        dto.setRole(UserRoleEnum.VOTANT);
+        dto.setHasVoted(false);
+        dto.setFirstname(String.valueOf(cnp));
+        dto.setLastname(String.valueOf(cnp));
+        dto.setGender(cnp % 2 == 0 ? UserGenderEnum.MALE : UserGenderEnum.FEMALE);
+        dto.setCnp(cnp);
+        dto.setNationality(UserNationalityEnum.ROMANIAN);
+        dto.setIdSeries("XX");
+        dto.setIdNumber(Integer.valueOf(String.valueOf(cnp).substring(0, 6)));
+        dto.setResidenceAddress("Residence Address");
+        dto.setValidityStartDate(now.getTime());
+        dto.setValidityEndDate(now.getTime());
+
+        dto.setUsername(null);
+        dto.setPassword(null);
+        dto.setFaceImage(null);
+        dto.setIdImage(null);
 
         return dto;
     }
