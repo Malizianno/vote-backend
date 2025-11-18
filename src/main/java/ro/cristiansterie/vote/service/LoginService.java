@@ -73,7 +73,7 @@ public class LoginService {
                 return response;
             }
 
-            // WIP: remove this after old VOTANT login is deleted
+            // WIP: remove this after testing (old login methoid for mobile with user+pass)
             if (null != request && null != request.getRole() && UserRoleEnum.VOTANT.equals(request.getRole())
                     && foundUser.getAuthorities().size() == 1
                     && foundUser.getAuthorities().contains(new SimpleGrantedAuthority(UserRoleEnum.VOTANT.name()))) {

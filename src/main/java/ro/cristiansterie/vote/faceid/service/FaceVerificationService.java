@@ -47,6 +47,11 @@ public class FaceVerificationService {
         FaceVerificationResult result = verifyFace(request.getImageBase64(),
                 referenceBase64List.values().stream().toList());
 
+        if (null == result) {
+            log.error("Error while verifying face with Deepface algorithm...");
+            return null;
+        }
+
         if (result.isMatch()) {
             log.info("FaceID: Match found with distance: " + result.getDistance());
             log.info("FaceID: Result: {}", result);
@@ -100,7 +105,9 @@ public class FaceVerificationService {
                     FaceVerificationResult.class);
             return response.getBody();
         } catch (RestClientException e) {
-            throw new RuntimeException("Face verification service failed: " + e.getMessage(), e);
+            log.error("Face verification service failed: {}", e.getMessage());
         }
+
+        return null;
     }
 }
