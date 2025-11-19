@@ -44,9 +44,9 @@ public class CandidateController {
                 null != response.getCandidates() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(path = "/all")
-    public ResponseEntity<List<CandidateDTO>> all() {
-        List<CandidateDTO> candidates = service.getAll();
+    @GetMapping(path = "/allForElection/{id}")
+    public ResponseEntity<List<CandidateDTO>> all(@PathVariable int id) {
+        List<CandidateDTO> candidates = service.getAllForElection(id);
 
         return new ResponseEntity<>(candidates, null != candidates ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

@@ -39,6 +39,10 @@ public class CandidateService extends GenericService {
         return convert(repo.findAll());
     }
 
+    public List<CandidateDTO> getAllForElection(int id) {
+        return convert(repo.findAllByElectionId(id));
+    }
+
     public List<CandidateDTO> getFiltered(CandidateFilterDTO filter) {
         filter = this.checkFilters(filter);
 
