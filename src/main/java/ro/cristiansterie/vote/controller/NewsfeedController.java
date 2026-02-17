@@ -52,20 +52,20 @@ public class NewsfeedController {
     }
 
     @PostMapping(path = "/add")
-    public ResponseEntity<NewsfeedPostDTO> add(NewsfeedPostDTO post) {
-        NewsfeedPostDTO saved = service.create(service.convert(post));
+    public ResponseEntity<NewsfeedPostDTO> add(@RequestBody NewsfeedPostDTO post) {
+        NewsfeedPostDTO saved = service.create(post);
         return new ResponseEntity<>(saved, null != saved ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<NewsfeedPostDTO> update(@PathVariable Long id, NewsfeedPostDTO post) {
-        NewsfeedPostDTO updated = service.update(id, service.convert(post));
+    public ResponseEntity<NewsfeedPostDTO> update(@PathVariable Long id, @RequestBody NewsfeedPostDTO post) {
+        NewsfeedPostDTO updated = service.update(id, post);
         return new ResponseEntity<>(updated, null != updated ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        var response = service.delete(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

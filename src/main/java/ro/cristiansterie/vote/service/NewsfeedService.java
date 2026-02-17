@@ -53,16 +53,24 @@ public class NewsfeedService extends GenericService {
         return convert(repo.findById(id).orElse(null));
     }
 
-    public NewsfeedPostDTO create(NewsfeedPostDAO post) {
+    public NewsfeedPostDTO create(NewsfeedPostDTO post) {
         var context = SecurityContextHolder.getContext();
         var user = context.getAuthentication().getName();
         post.setCreatedBy(user);
 
-        return convert(repo.save(post));
+        return convert(repo.save(convert(post)));
     }
 
-    public NewsfeedPostDTO update(Long id, NewsfeedPostDAO updated) {
-        NewsfeedPostDAO existing = repo.findById(id).orElse(updated);
+    public NewsfeedPostDTO update(Long id, NewsfeedPostDTO updated) {
+        if (id == null || updated == null || updated.getId() != id) {
+            return null;
+        }
+
+        NewsfeedPostDAO existing = repo.findById(id).orElse(null);
+
+        if (existing == null) {
+            return null;
+        }
 
         existing.setTitle(updated.getTitle());
         existing.setContent(updated.getContent());
@@ -71,8 +79,15 @@ public class NewsfeedService extends GenericService {
         return convert(repo.save(existing));
     }
 
-    public void delete(Long id) {
-        repo.deleteById(id);
+    public boolean delete(Long id) {
+        try {
+            repo.deleteById(id);
+
+            return true;
+        } catch (Exception ex) {
+            // log exception;
+        }
+        return false;
     }
 
     public NewsfeedPostDTO convert(NewsfeedPostDAO dao) {

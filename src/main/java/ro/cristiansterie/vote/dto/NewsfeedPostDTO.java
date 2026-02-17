@@ -1,14 +1,12 @@
 package ro.cristiansterie.vote.dto;
 
-import java.time.LocalDateTime;
-
 public class NewsfeedPostDTO {
     private Long id;
     private String title;
     private String content;
     private String imageUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
     private String createdBy;
 
     public Long getId() {
@@ -43,19 +41,19 @@ public class NewsfeedPostDTO {
         this.imageUrl = imageUrl;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
