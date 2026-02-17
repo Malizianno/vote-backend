@@ -28,6 +28,9 @@
 
 		<!-- 04. Data creation for events table -->
 		<include file="classpath:liquibase/db.04.CREATE-events-schema.xml" />
+		
+				<!-- 05. Data creation for newsfeed table -->
+				<include file="classpath:liquibase/db.05.CREATE-newsfeed-schema.xml" />
 
 		<!-- WIP: TEMPORARY - REMOVE THIS: FOR TESTING PURPOSES ONLY -->
 		<!-- 04. Data creation for events table -->
