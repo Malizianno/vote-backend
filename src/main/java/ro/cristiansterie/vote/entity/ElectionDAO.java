@@ -19,7 +19,7 @@ public class ElectionDAO extends GenericService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private Boolean enabled;
     private String name;
     private String description;
@@ -29,11 +29,11 @@ public class ElectionDAO extends GenericService {
     @Column(columnDefinition = "json")
     private String candidates;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -92,8 +92,8 @@ public class ElectionDAO extends GenericService {
         try {
             this.candidates = objectMapper.writeValueAsString(candidates);
         } catch (JsonProcessingException e) {
-            // XXX: Handle exception properly
-            e.printStackTrace();
+            // e.printStackTrace();
+            this.candidates = "[]";
         }
     }
 

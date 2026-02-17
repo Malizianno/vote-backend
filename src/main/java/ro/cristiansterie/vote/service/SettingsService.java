@@ -63,7 +63,7 @@ public class SettingsService {
     }
 
     @Transactional
-    public boolean generateFakeCandidates(int electionId) {
+    public boolean generateFakeCandidates(long electionId) {
         try {
             var foundElection = electionService.get(electionId);
             // first clean the DB with previous candidates
@@ -95,7 +95,7 @@ public class SettingsService {
     // XXX: this is very danbgerous, please REMOVE THIS method after testing
     // and quit generating fake votes
     @Transactional
-    public boolean generateFakeVotes(int no, int electionId) {
+    public boolean generateFakeVotes(int no, long electionId) {
         try {
             List<CandidateDAO> candidatesList = candidates.findAllByElectionId(electionId);
             List<UserDAO> usersList = users.findAll();

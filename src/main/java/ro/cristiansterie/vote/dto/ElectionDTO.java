@@ -3,7 +3,7 @@ package ro.cristiansterie.vote.dto;
 import java.util.List;
 
 public class ElectionDTO {
-    private Integer id;
+    private Long id;
     private Boolean enabled;
     private String name;
     private String description;
@@ -11,15 +11,15 @@ public class ElectionDTO {
     private String endDate;
     private List<CandidateDTO> candidates;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 

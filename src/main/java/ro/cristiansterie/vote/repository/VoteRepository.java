@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import ro.cristiansterie.vote.entity.VoteDAO;
 
-public interface VoteRepository extends JpaRepository<VoteDAO, Integer> {
-    void deleteByElectionId(Integer electionId);
+public interface VoteRepository extends JpaRepository<VoteDAO, Long> {
+    void deleteByElectionId(Long electionId);
 }

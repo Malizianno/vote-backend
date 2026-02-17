@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.NonNull;
 import ro.cristiansterie.vote.dto.ElectionDTO;
 import ro.cristiansterie.vote.dto.ElectionFilterDTO;
@@ -21,6 +22,7 @@ import ro.cristiansterie.vote.repository.ElectionRepository;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
+import ro.cristiansterie.vote.util.Paging;
 
 @Service
 public class ElectionService extends GenericService {
@@ -34,6 +36,13 @@ public class ElectionService extends GenericService {
         this.events = events;
     }
 
+    @PostConstruct
+    public void init() {
+        mapper.getConfiguration()
+                .setSkipNullEnabled(true)
+                .setPropertyCondition(ctx -> ctx.getSource() != null);
+    }
+
     public List<ElectionDTO> getAll() {
         // save event
         events.save(EventActionEnum.GET_ALL, EventScreenEnum.ELECTIONS, AppConstants.EVENT_ELECTIONS_GET_ALL);
@@ -44,8 +53,11 @@ public class ElectionService extends GenericService {
     public List<ElectionDTO> getFiltered(ElectionFilterDTO filter) {
         filter = this.checkFilters(filter);
 
-        ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-                .withIgnoreCase();
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withIgnorePaths("candidates", "startDate", "endDate");
         Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
                 Sort.by(Sort.Direction.DESC, "id"));
 
@@ -53,20 +65,23 @@ public class ElectionService extends GenericService {
         events.save(EventActionEnum.GET_FILTERED, EventScreenEnum.ELECTIONS,
                 AppConstants.EVENT_ELECTIONS_GET_FILTERED);
 
-        return convert(repo.findAll(Example.of(convert(filter.getElection()), matcher), pageable).getContent());
+        return convert(repo.findAll(Example.of(convert(filter.getObject()), matcher), pageable).getContent());
     }
 
-    public int countFiltered(ElectionFilterDTO filter) {
+    public Long countFiltered(ElectionFilterDTO filter) {
         filter = this.checkFilters(filter);
 
-        ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-                .withIgnoreCase();
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withIgnorePaths("candidates", "startDate", "endDate");
 
         // save event
         events.save(EventActionEnum.COUNT_FILTERED, EventScreenEnum.ELECTIONS,
                 AppConstants.EVENT_ELECTIONS_COUNT_FILTERED);
 
-        return (int) repo.count(Example.of(convert(filter.getElection()), matcher));
+        return repo.count(Example.of(convert(filter.getObject()), matcher));
     }
 
     public ElectionDTO getLastActiveElection() {
@@ -78,7 +93,7 @@ public class ElectionService extends GenericService {
         return found.isPresent() ? convert(found.get()) : null;
     }
 
-    public ElectionDTO get(@NonNull Integer id) {
+    public ElectionDTO get(@NonNull Long id) {
         ElectionDAO returnable = repo.findById(id).orElse(null);
 
         // save event
@@ -88,7 +103,9 @@ public class ElectionService extends GenericService {
     }
 
     public ElectionDTO save(ElectionDTO toSave) {
-        var saved = repo.save(convert(toSave));
+        var preSave = convert(toSave);
+        preSave.setCandidates(null);
+        var saved = repo.save(preSave);
 
         // save event
         events.save(EventActionEnum.CREATE, EventScreenEnum.ELECTIONS,
@@ -97,7 +114,7 @@ public class ElectionService extends GenericService {
         return convert(saved);
     }
 
-    public boolean delete(Integer id) {
+    public boolean delete(Long id) {
         try {
             repo.deleteById(id);
 
@@ -112,7 +129,7 @@ public class ElectionService extends GenericService {
         return false;
     }
 
-    public boolean changeStatus(int id, boolean enabled) {
+    public boolean changeStatus(long id, boolean enabled) {
         ElectionDAO election = repo.findById(id).orElse(null);
 
         if (null == election || null == election.getId()) {
@@ -143,8 +160,17 @@ public class ElectionService extends GenericService {
         return elections.stream().map(this::convert).collect(Collectors.toList());
     }
 
-    // TODO: check if this is still needed
     private ElectionFilterDTO checkFilters(ElectionFilterDTO filter) {
+        if (filter.getPaging() == null) {
+            filter.setPaging(new Paging());
+        }
+
+        if (filter.getElection() == null) {
+            filter.setElection(new ElectionDTO());
+        }
+
+        filter.getElection().setEnabled(null);
+
         return filter;
     }
 }

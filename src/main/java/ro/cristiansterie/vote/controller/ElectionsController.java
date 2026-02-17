@@ -28,7 +28,7 @@ public class ElectionsController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ElectionDTO> one(@PathVariable int id) {
+    public ResponseEntity<ElectionDTO> one(@PathVariable long id) {
         ElectionDTO election = service.get(id);
         return new ResponseEntity<>(election, null != election ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
@@ -63,13 +63,13 @@ public class ElectionsController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable int id) {
+    public ResponseEntity<Boolean> delete(@PathVariable long id) {
         Boolean deleted = service.delete(id);
         return new ResponseEntity<>(deleted, null != deleted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(path = "/changeStatus/{id}/{enabled}")
-    public ResponseEntity<Boolean> changeStatus(@PathVariable int id, @PathVariable boolean enabled) {
+    public ResponseEntity<Boolean> changeStatus(@PathVariable long id, @PathVariable boolean enabled) {
         Boolean changed = service.changeStatus(id, enabled);
         return new ResponseEntity<>(changed, null != changed ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

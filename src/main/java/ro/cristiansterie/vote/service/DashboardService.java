@@ -29,11 +29,11 @@ public class DashboardService {
         this.events = events;
     }
 
-    public DashboardTotalsDTO getTotals(int electionID) {
+    public DashboardTotalsDTO getTotals(long electionID) {
         DashboardTotalsDTO totals = new DashboardTotalsDTO();
 
-        totals.setCandidates((int) candidates.countByElectionId(electionID));
-        totals.setUsers((int) users.countByRole(UserRoleEnum.VOTANT));
+        totals.setCandidates(candidates.countByElectionId(electionID));
+        totals.setUsers(users.countByRole(UserRoleEnum.VOTANT));
 
         // save event
         events.save(EventActionEnum.GET_ALL, EventScreenEnum.DASHBOARD, AppConstants.EVENT_DASHBOARD_GET_TOTALS);

@@ -49,15 +49,15 @@ public class ElectionHelperController {
     }
 
     @PostMapping(path = "/vote")
-    public ResponseEntity<Boolean> vote(@RequestBody CandidateDTO candidate, @RequestParam("userID") Integer userID) {
+    public ResponseEntity<Boolean> vote(@RequestBody CandidateDTO candidate, @RequestParam("userID") Long userID) {
         Boolean voted = service.vote(candidate, userID);
 
         return new ResponseEntity<>(voted, null != voted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = "/countAllVotes/{electionId}")
-    public ResponseEntity<Integer> countAllVotes(@PathVariable int electionId) {
-        Integer count = service.countAllVotes(electionId);
+    public ResponseEntity<Long> countAllVotes(@PathVariable long electionId) {
+        Long count = service.countAllVotes(electionId);
 
         return new ResponseEntity<>(count, null != count ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

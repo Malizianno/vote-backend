@@ -28,7 +28,7 @@ public class CandidateController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<CandidateDTO> one(@PathVariable int id) {
+    public ResponseEntity<CandidateDTO> one(@PathVariable long id) {
         CandidateDTO candidate = service.get(id);
         return new ResponseEntity<>(candidate, null != candidate ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
@@ -58,7 +58,7 @@ public class CandidateController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable int id) {
+    public ResponseEntity<Boolean> delete(@PathVariable long id) {
         Boolean deleted = service.delete(id);
         return new ResponseEntity<>(deleted, null != deleted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 public class NewsfeedPostDAO {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String title;
@@ -29,6 +29,8 @@ public class NewsfeedPostDAO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String createdBy;
+
+    private Long electionId;
 
     @PrePersist
     public void onCreate() {
@@ -95,5 +97,13 @@ public class NewsfeedPostDAO {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Long getElectionId() {
+        return electionId;
+    }
+
+    public void setElectionId(Long electionId) {
+        this.electionId = electionId;
     }
 }

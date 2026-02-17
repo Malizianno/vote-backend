@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CandidateResponseDTO {
     private List<CandidateDTO> candidates;
-    private int total;
+    private Long total;
 
     public List<CandidateDTO> getCandidates() {
         return candidates;
@@ -14,11 +14,11 @@ public class CandidateResponseDTO {
         this.candidates = candidates;
     }
 
-    public int getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 }

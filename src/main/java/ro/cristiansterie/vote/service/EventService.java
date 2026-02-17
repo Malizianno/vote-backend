@@ -58,19 +58,19 @@ public class EventService extends GenericService {
         Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
                 Sort.by(Sort.Direction.DESC, "id"));
 
-        return convert(repo.findAll(Example.of(convert(filter.getEvent()), matcher), pageable).getContent());
+        return convert(repo.findAll(Example.of(convert(filter.getObject()), matcher), pageable).getContent());
     }
 
-    public int countFiltered(EventFilterDTO filter) {
+    public Long countFiltered(EventFilterDTO filter) {
         filter = this.checkFilters(filter);
 
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
 
-        return (int) repo.count(Example.of(convert(filter.getEvent()), matcher));
+        return repo.count(Example.of(convert(filter.getObject()), matcher));
     }
 
-    public EventDTO get(@NonNull Integer id) {
+    public EventDTO get(@NonNull Long id) {
         EventDAO returnable = repo.findById(id).orElse(null);
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
@@ -110,7 +110,7 @@ public class EventService extends GenericService {
         return false;
     }
 
-    public boolean delete(Integer id) {
+    public boolean delete(Long id) {
         try {
             repo.deleteById(id);
 
@@ -150,16 +150,20 @@ public class EventService extends GenericService {
     }
 
     private EventFilterDTO checkFilters(EventFilterDTO filter) {
-        if (UserRoleEnum.ALL.equals(filter.getEvent().getRole())) {
-            filter.getEvent().setRole(null);
+        if (filter.getObject() == null) {
+            filter.setObject(new EventDTO());
+        }
+        
+        if (UserRoleEnum.ALL.equals(filter.getObject().getRole())) {
+            filter.getObject().setRole(null);
         }
 
-        if (EventActionEnum.ALL.equals(filter.getEvent().getAction())) {
-            filter.getEvent().setAction(null);
+        if (EventActionEnum.ALL.equals(filter.getObject().getAction())) {
+            filter.getObject().setAction(null);
         }
 
-        if (EventScreenEnum.ALL.equals(filter.getEvent().getScreen())) {
-            filter.getEvent().setScreen(null);
+        if (EventScreenEnum.ALL.equals(filter.getObject().getScreen())) {
+            filter.getObject().setScreen(null);
         }
 
         return filter;

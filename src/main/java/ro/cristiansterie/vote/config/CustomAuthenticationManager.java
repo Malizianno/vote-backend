@@ -35,7 +35,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 		}
 
 		try {
-			var id = (Integer) authentication.getPrincipal();
+			var id = (Long) authentication.getPrincipal();
 
 			if (authentication.getPrincipal() != null && id > 0) {
 				var foundUser = userDetailsService.getVoter(id);

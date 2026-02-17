@@ -24,7 +24,7 @@ public class EntityHelper {
         // empty private constructor
     }
 
-    public static List<CandidateDAO> generateFakeCandidates(int electionID) {
+    public static List<CandidateDAO> generateFakeCandidates(long electionID) {
         List<CandidateDAO> returnable = new ArrayList<>();
 
         PartyTypeEnum[] parties = PartyTypeEnum.values();
@@ -47,7 +47,7 @@ public class EntityHelper {
         return returnable;
     }
 
-    private static CandidateDAO generateCandidateDAO(PartyTypeEnum party, int electionID) {
+    private static CandidateDAO generateCandidateDAO(PartyTypeEnum party, long electionID) {
         CandidateDAO dto = new CandidateDAO();
 
         dto.setFirstName(FIRST_NAMES[random.nextInt(FIRST_NAMES.length)]);

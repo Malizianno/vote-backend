@@ -2,13 +2,19 @@ package ro.cristiansterie.vote.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import ro.cristiansterie.vote.dto.NewsfeedPostDTO;
+import ro.cristiansterie.vote.dto.NewsfeedPostFilterDTO;
 import ro.cristiansterie.vote.entity.NewsfeedPostDAO;
 import ro.cristiansterie.vote.repository.NewsfeedRepository;
+import ro.cristiansterie.vote.util.Paging;
 
 @Service
 public class NewsfeedService extends GenericService {
@@ -23,6 +29,26 @@ public class NewsfeedService extends GenericService {
         return convert(repo.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
+    public List<NewsfeedPostDTO> findFiltered(NewsfeedPostFilterDTO filter) {
+        filter = this.checkFilters(filter);
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase();
+        Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
+                Sort.by(Sort.Direction.DESC, "id"));
+
+        return convert(repo.findAll(Example.of(convert(filter.getObject()), matcher), pageable).getContent());
+    }
+
+    public Long countFiltered(NewsfeedPostFilterDTO filter) {
+        filter = this.checkFilters(filter);
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase();
+
+        return repo.count(Example.of(convert(filter.getObject()), matcher));
+    }
+
     public NewsfeedPostDTO findById(Long id) {
         return convert(repo.findById(id).orElse(null));
     }
@@ -31,7 +57,7 @@ public class NewsfeedService extends GenericService {
         var context = SecurityContextHolder.getContext();
         var user = context.getAuthentication().getName();
         post.setCreatedBy(user);
-        
+
         return convert(repo.save(post));
     }
 
@@ -59,5 +85,26 @@ public class NewsfeedService extends GenericService {
 
     public List<NewsfeedPostDTO> convert(List<NewsfeedPostDAO> daos) {
         return daos.stream().map(this::convert).toList();
+    }
+
+    private NewsfeedPostFilterDTO checkFilters(NewsfeedPostFilterDTO filter) {
+        if (filter.getObject() == null) {
+            filter.setObject(new NewsfeedPostDTO());
+        }
+
+        if (filter.getPaging() == null) {
+            filter.setPaging(new Paging());
+        }
+
+        if (filter.getObject().getTitle() != null
+                && filter.getObject().getTitle().isBlank()) {
+            filter.getObject().setTitle(null);
+        }
+
+        if (filter.getObject().getContent() != null && filter.getObject().getContent().isBlank()) {
+            filter.getObject().setContent(null);
+        }
+
+        return filter;
     }
 }

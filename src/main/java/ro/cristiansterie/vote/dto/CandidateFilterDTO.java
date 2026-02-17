@@ -2,15 +2,15 @@ package ro.cristiansterie.vote.dto;
 
 import ro.cristiansterie.vote.util.Paging;
 
-public class CandidateFilterDTO {
+public class CandidateFilterDTO implements Filterable<CandidateDTO> {
     private CandidateDTO candidate;
     private Paging paging;
 
-    public CandidateDTO getCandidate() {
+    public CandidateDTO getObject() {
         return candidate;
     }
 
-    public void setCandidate(CandidateDTO filter) {
+    public void setObject(CandidateDTO filter) {
         this.candidate = filter;
     }
 

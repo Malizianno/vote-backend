@@ -28,7 +28,7 @@ public class EventController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<EventDTO> one(@PathVariable int id) {
+    public ResponseEntity<EventDTO> one(@PathVariable long id) {
         EventDTO event = service.get(id);
         return new ResponseEntity<>(event, null != event ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
@@ -65,7 +65,7 @@ public class EventController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable int id) {
+    public ResponseEntity<Boolean> delete(@PathVariable long id) {
         Boolean deleted = service.delete(id);
         return new ResponseEntity<>(deleted, null != deleted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

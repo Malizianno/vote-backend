@@ -3,7 +3,7 @@ package ro.cristiansterie.vote.dto;
 import ro.cristiansterie.vote.util.PartyTypeEnum;
 
 public class CandidateDTO {
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
     private PartyTypeEnum party;
@@ -11,13 +11,13 @@ public class CandidateDTO {
     private String image;
     private String description;
 
-    private Integer electionId;
+    private Long electionId;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,11 +61,11 @@ public class CandidateDTO {
         this.description = description;
     }
 
-    public Integer getElectionId() {
+    public Long getElectionId() {
         return electionId;
     }
 
-    public void setElectionId(Integer electionId) {
+    public void setElectionId(Long electionId) {
         this.electionId = electionId;
     }
 

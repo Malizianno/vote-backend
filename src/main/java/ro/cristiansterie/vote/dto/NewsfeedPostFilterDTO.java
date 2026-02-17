@@ -2,16 +2,16 @@ package ro.cristiansterie.vote.dto;
 
 import ro.cristiansterie.vote.util.Paging;
 
-public class UserFilterDTO implements Filterable<UserDTO> {
-    private UserDTO user;
+public class NewsfeedPostFilterDTO implements Filterable<NewsfeedPostDTO> {
+    private NewsfeedPostDTO post;
     private Paging paging;
 
-    public UserDTO getObject() {
-        return user;
+    public NewsfeedPostDTO getObject() {
+        return post;
     }
 
-    public void setObject(UserDTO user) {
-        this.user = user;
+    public void setObject(NewsfeedPostDTO post) {
+        this.post = post;
     }
 
     public Paging getPaging() {
@@ -21,4 +21,5 @@ public class UserFilterDTO implements Filterable<UserDTO> {
     public void setPaging(Paging paging) {
         this.paging = paging;
     }
+
 }

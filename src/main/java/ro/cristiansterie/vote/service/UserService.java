@@ -31,6 +31,7 @@ import ro.cristiansterie.vote.repository.UserRepository;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EventActionEnum;
 import ro.cristiansterie.vote.util.EventScreenEnum;
+import ro.cristiansterie.vote.util.Paging;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
@@ -54,7 +55,7 @@ public class UserService extends GenericService implements UserDetailsService {
         return convert(repo.findAll());
     }
 
-    public Map<Integer, byte[]> getAllFaceImagesBase64() {
+    public Map<Long, byte[]> getAllFaceImagesBase64() {
         // save event
         events.save(EventActionEnum.GET_ALL, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ALL_FACE_IMAGES);
 
@@ -74,10 +75,10 @@ public class UserService extends GenericService implements UserDetailsService {
         events.save(EventActionEnum.GET_FILTERED, EventScreenEnum.USERS,
                 AppConstants.EVENT_USERS_GET_FILTERED);
 
-        return convert(repo.findAll(Example.of(convert(filter.getUser()), matcher), pageable).getContent());
+        return convert(repo.findAll(Example.of(convert(filter.getObject()), matcher), pageable).getContent());
     }
 
-    public int countFiltered(UserFilterDTO filter) {
+    public Long countFiltered(UserFilterDTO filter) {
         filter = this.checkFilters(filter);
 
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
@@ -87,10 +88,10 @@ public class UserService extends GenericService implements UserDetailsService {
         events.save(EventActionEnum.COUNT_FILTERED, EventScreenEnum.USERS,
                 AppConstants.EVENT_USERS_COUNT_FILTERED);
 
-        return (int) repo.count(Example.of(convert(filter.getUser()), matcher));
+        return repo.count(Example.of(convert(filter.getObject()), matcher));
     }
 
-    public UserDTO get(@NonNull Integer id) {
+    public UserDTO get(@NonNull Long id) {
         UserDAO returnable = repo.findById(id).orElse(null);
 
         // save event
@@ -99,7 +100,7 @@ public class UserService extends GenericService implements UserDetailsService {
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
 
-    public UserVoterDTO getVoter(@NonNull Integer id) {
+    public UserVoterDTO getVoter(@NonNull Long id) {
         UserDAO returnable = repo.findById(id).orElse(null);
 
         // save event
@@ -108,7 +109,7 @@ public class UserService extends GenericService implements UserDetailsService {
         return null != returnable && null != returnable.getId() ? convertToVoter(returnable) : null;
     }
 
-    public UserVoterDTO getProfile(@NonNull Integer id) {
+    public UserVoterDTO getProfile(@NonNull Long id) {
         UserDAO returnable = repo.findById(id).orElse(null);
 
         // save event
@@ -195,7 +196,7 @@ public class UserService extends GenericService implements UserDetailsService {
         return convertToVoter(saved);
     }
 
-    public boolean delete(Integer id) {
+    public boolean delete(Long id) {
         try {
             repo.deleteById(id);
 
@@ -255,7 +256,7 @@ public class UserService extends GenericService implements UserDetailsService {
         String foundPassword = null;
 
         try {
-            int id = Integer.parseInt(username);
+            long id = Long.parseLong(username);
 
             Optional<UserDAO> optional = this.repo.findById(id);
             if (optional.isPresent()) {
@@ -284,8 +285,16 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     private UserFilterDTO checkFilters(UserFilterDTO filter) {
-        if (UserRoleEnum.ALL.equals(filter.getUser().getRole())) {
-            filter.getUser().setRole(null);
+        if (filter.getPaging() == null) {
+            filter.setPaging(new Paging());
+        }
+
+        if (filter.getObject() == null) {
+            filter.setObject(new UserDTO());
+        }
+
+        if (UserRoleEnum.ALL.equals(filter.getObject().getRole())) {
+            filter.getObject().setRole(null);
         }
 
         return filter;

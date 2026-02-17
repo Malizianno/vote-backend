@@ -39,7 +39,7 @@ public class CandidateService extends GenericService {
         return convert(repo.findAll());
     }
 
-    public List<CandidateDTO> getAllForElection(int id) {
+    public List<CandidateDTO> getAllForElection(long id) {
         return convert(repo.findAllByElectionId(id));
     }
 
@@ -62,16 +62,16 @@ public class CandidateService extends GenericService {
         // return filtered candidates
         List<CandidateDAO> candidatesToReturn;
         if (filter.getPaging() == null || pageable == null) {
-            candidatesToReturn = repo.findAll(Example.of(convert(filter.getCandidate()), matcher));
+            candidatesToReturn = repo.findAll(Example.of(convert(filter.getObject()), matcher));
         } else {
-            candidatesToReturn = repo.findAll(Example.of(convert(filter.getCandidate()), matcher), pageable)
+            candidatesToReturn = repo.findAll(Example.of(convert(filter.getObject()), matcher), pageable)
                     .getContent();
         }
 
         return convert(candidatesToReturn);
     }
 
-    public int countFiltered(CandidateFilterDTO filter) {
+    public Long countFiltered(CandidateFilterDTO filter) {
         filter = this.checkFilters(filter);
 
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
@@ -81,10 +81,10 @@ public class CandidateService extends GenericService {
         events.save(EventActionEnum.COUNT_FILTERED, EventScreenEnum.CANDIDATES,
                 AppConstants.EVENT_CANDIDATES_COUNT_FILTERED);
 
-        return (int) repo.count(Example.of(convert(filter.getCandidate()), matcher));
+        return repo.count(Example.of(convert(filter.getObject()), matcher));
     }
 
-    public CandidateDTO get(@NonNull Integer id) {
+    public CandidateDTO get(@NonNull Long id) {
         CandidateDAO returnable = repo.findById(id).orElse(null);
 
         // save event
@@ -103,7 +103,7 @@ public class CandidateService extends GenericService {
         return convert(saved);
     }
 
-    public boolean delete(Integer id) {
+    public boolean delete(Long id) {
         try {
             // save event
             events.save(EventActionEnum.DELETE, EventScreenEnum.CANDIDATES, AppConstants.EVENT_CANDIDATES_DELETE + id);
@@ -132,8 +132,12 @@ public class CandidateService extends GenericService {
     }
 
     private CandidateFilterDTO checkFilters(CandidateFilterDTO filter) {
-        if (PartyTypeEnum.ALL.equals(filter.getCandidate().getParty())) {
-            filter.getCandidate().setParty(null);
+        if (filter.getObject() == null) {
+            filter.setObject(new CandidateDTO());
+        }
+        
+        if (PartyTypeEnum.ALL.equals(filter.getObject().getParty())) {
+            filter.getObject().setParty(null);
         }
 
         return filter;

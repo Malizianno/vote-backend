@@ -40,8 +40,8 @@ public class FaceVerificationService {
     }
 
     public FaceVerificationResponse loginWithFace(FaceVerificationRequest request) {
-        Map<Integer, byte[]> referenceBase64ListBytes = userService.getAllFaceImagesBase64();
-        Map<Integer, String> referenceBase64List = referenceBase64ListBytes.entrySet().stream().collect(
+        Map<Long, byte[]> referenceBase64ListBytes = userService.getAllFaceImagesBase64();
+        Map<Long, String> referenceBase64List = referenceBase64ListBytes.entrySet().stream().collect(
                 Collectors.toMap(Map.Entry::getKey, entry -> Base64.getEncoder().encodeToString(entry.getValue())));
 
         FaceVerificationResult result = verifyFace(request.getImageBase64(),
@@ -59,7 +59,7 @@ public class FaceVerificationService {
             var response = new FaceVerificationResponse();
             String matchedBase64 = result.getReferenceBase64();
 
-            Optional<Integer> matchedId = referenceBase64List.entrySet().stream()
+            Optional<Long> matchedId = referenceBase64List.entrySet().stream()
                     .filter(entry -> entry.getValue().equals(matchedBase64))
                     .map(Map.Entry::getKey)
                     .findFirst();

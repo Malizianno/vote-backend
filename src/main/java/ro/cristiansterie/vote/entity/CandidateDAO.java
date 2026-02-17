@@ -13,7 +13,7 @@ public class CandidateDAO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -23,13 +23,13 @@ public class CandidateDAO {
     private String image;
     private String description;
 
-    private Integer electionId;
+    private Long electionId;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -73,11 +73,11 @@ public class CandidateDAO {
         this.description = description;
     }
 
-    public Integer getElectionId() {
+    public Long getElectionId() {
         return electionId;
     }
 
-    public void setElectionId(Integer electionId) {
+    public void setElectionId(Long electionId) {
         this.electionId = electionId;
     }
 }

@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<UserDTO> one(@PathVariable int id) {
+    public ResponseEntity<UserDTO> one(@PathVariable long id) {
         UserDTO user = service.get(id);
         return new ResponseEntity<>(user, null != user ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
@@ -50,12 +50,12 @@ public class UserController {
         var adminFilter = new UserFilterDTO();
         var admin = new UserDTO();
         admin.setRole(UserRoleEnum.ADMIN);
-        adminFilter.setUser(admin);
+        adminFilter.setObject(admin);
 
         var votantFilter = new UserFilterDTO();
         var votant = new UserDTO();
         votant.setRole(UserRoleEnum.VOTANT);
-        votantFilter.setUser(votant);
+        votantFilter.setObject(votant);
 
         // set response data
         response.setUsers(service.getFiltered(filter));
@@ -73,13 +73,13 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable int id) {
+    public ResponseEntity<Boolean> delete(@PathVariable long id) {
         Boolean deleted = service.delete(id);
         return new ResponseEntity<>(deleted, null != deleted ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = "/profile/{id}")
-    public ResponseEntity<UserDTO> profile(@PathVariable int id) {
+    public ResponseEntity<UserDTO> profile(@PathVariable long id) {
         UserDTO profile = service.getProfile(id);
         return new ResponseEntity<>(profile, null != profile ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

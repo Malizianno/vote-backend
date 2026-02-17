@@ -2,15 +2,15 @@ package ro.cristiansterie.vote.dto;
 
 import ro.cristiansterie.vote.util.Paging;
 
-public class EventFilterDTO {
+public class EventFilterDTO implements Filterable<EventDTO> {
     private EventDTO event;
     private Paging paging;
 
-    public EventDTO getEvent() {
+    public EventDTO getObject() {
         return event;
     }
 
-    public void setEvent(EventDTO event) {
+    public void setObject(EventDTO event) {
         this.event = event;
     }
 

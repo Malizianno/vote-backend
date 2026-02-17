@@ -56,7 +56,7 @@ public class VoteService extends GenericService {
         return false;
     }
 
-    public boolean cleanDBTable(int electionId) {
+    public boolean cleanDBTable(long electionId) {
         try {
             // first check if there are any entries in DB table
             if (repo.count() > 0) {

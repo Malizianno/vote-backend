@@ -16,8 +16,8 @@ public class UserDAO {
 
     // app user type
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(unique = true)
     private String username;
@@ -49,11 +49,11 @@ public class UserDAO {
     @Column(name = "face_image", columnDefinition = "LONGBLOB")
     private byte[] faceImage;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

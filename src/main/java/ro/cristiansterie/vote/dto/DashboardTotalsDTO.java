@@ -1,22 +1,22 @@
 package ro.cristiansterie.vote.dto;
 
 public class DashboardTotalsDTO {
-    private int users;
-    private int candidates;
+    private long users;
+    private long candidates;
 
-    public int getUsers() {
+    public long getUsers() {
         return users;
     }
 
-    public void setUsers(int users) {
+    public void setUsers(long users) {
         this.users = users;
     }
 
-    public int getCandidates() {
+    public long getCandidates() {
         return candidates;
     }
 
-    public void setCandidates(int candidates) {
+    public void setCandidates(long candidates) {
         this.candidates = candidates;
     }
 }

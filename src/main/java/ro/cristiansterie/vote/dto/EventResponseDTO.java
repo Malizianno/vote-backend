@@ -4,7 +4,7 @@ import java.util.List;
 
 public class EventResponseDTO {
     private List<EventDTO> events;
-    private int total;
+    private Long total;
 
     public List<EventDTO> getEvents() {
         return events;
@@ -14,11 +14,11 @@ public class EventResponseDTO {
         this.events = events;
     }
 
-    public int getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 }

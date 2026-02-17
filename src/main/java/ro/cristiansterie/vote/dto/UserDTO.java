@@ -3,7 +3,7 @@ package ro.cristiansterie.vote.dto;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 public class UserDTO {
-    private Integer id;
+    private Long id;
 
     // these are here for frontend login purposes - the whole object actually
     private String username;
@@ -12,11 +12,11 @@ public class UserDTO {
     private UserRoleEnum role;
     private Boolean hasVoted;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

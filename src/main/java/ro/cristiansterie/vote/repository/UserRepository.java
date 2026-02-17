@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
-public interface UserRepository extends JpaRepository<UserDAO, Integer> {
+public interface UserRepository extends JpaRepository<UserDAO, Long> {
     UserDAO findByUsername(String username);
 
     UserDAO findByCnp(Long cnp);

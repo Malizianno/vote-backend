@@ -46,7 +46,7 @@ public class ElectionsHelperService extends GenericService {
     public ElectionCampaignDTO getElectionCampaignStatus() {
         ElectionCampaignDTO returnable = new ElectionCampaignDTO();
 
-        var campaign = electionService.getAll().stream().filter(el -> el.isEnabled()).collect(Collectors.toList());
+        var campaign = electionService.getAll().stream().filter(el -> el.getEnabled()).collect(Collectors.toList());
 
         returnable.setEnabled(campaign.size() > 0);
         returnable.setElections(campaign);
@@ -58,15 +58,15 @@ public class ElectionsHelperService extends GenericService {
         return returnable;
     }
 
-    public CandidateDTO getElectionResult(int electionId) {
+    public CandidateDTO getElectionResult(long electionId) {
         VoteDTO filterVote = new VoteDTO();
         filterVote.setElectionId(electionId);
         List<VoteDTO> allVotes = voteService.getFiltered(filterVote);
 
-        Map<Integer, Long> candidatesAndVotes = allVotes.stream()
+        Map<Long, Long> candidatesAndVotes = allVotes.stream()
                 .collect(Collectors.groupingBy(VoteDTO::getCandidateID, Collectors.counting()));
 
-        Integer winnerCandidate = Collections.max(candidatesAndVotes.entrySet(), Map.Entry.comparingByValue()).getKey();
+        Long winnerCandidate = Collections.max(candidatesAndVotes.entrySet(), Map.Entry.comparingByValue()).getKey();
 
         // save event
         eventService.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS_HELPER,
@@ -76,7 +76,7 @@ public class ElectionsHelperService extends GenericService {
     }
 
     @Transactional
-    public boolean vote(CandidateDTO voted, Integer userID) {
+    public boolean vote(CandidateDTO voted, Long userID) {
         VoteDTO newVote = new VoteDTO();
 
         newVote.setCandidateID(voted.getId());
@@ -107,7 +107,7 @@ public class ElectionsHelperService extends GenericService {
         return voteService.takeAVote(newVote);
     }
 
-    public List<CandidateWithStatisticsDTO> getParsedVotes(int electionId) {
+    public List<CandidateWithStatisticsDTO> getParsedVotes(long electionId) {
         List<CandidateWithStatisticsDTO> returnable = new ArrayList<>();
 
         VoteDTO filterVote = new VoteDTO();
@@ -116,7 +116,7 @@ public class ElectionsHelperService extends GenericService {
         CandidateFilterDTO filterCandidate = new CandidateFilterDTO();
         CandidateDTO candidateUsedForFilter = new CandidateDTO();
         candidateUsedForFilter.setElectionId(electionId);
-        filterCandidate.setCandidate(candidateUsedForFilter);
+        filterCandidate.setObject(candidateUsedForFilter);
 
         List<VoteDTO> votes = voteService.getFiltered(filterVote);
         List<CandidateDTO> candidates = candidateService.getFiltered(filterCandidate);
@@ -149,7 +149,7 @@ public class ElectionsHelperService extends GenericService {
         return userService.hasVotedByUsername(username);
     }
 
-    public int countAllVotes(int electionId) {
+    public long countAllVotes(long electionId) {
         VoteDTO filterVote = new VoteDTO();
         filterVote.setElectionId(electionId);
 

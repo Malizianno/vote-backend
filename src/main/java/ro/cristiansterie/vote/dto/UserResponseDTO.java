@@ -4,9 +4,9 @@ import java.util.List;
 
 public class UserResponseDTO {
     private List<UserDTO> users;
-    private int total;
-    private int adminUsersCount;
-    private int votantUsersCount;
+    private Long total;
+    private Long adminUsersCount;
+    private Long votantUsersCount;
 
     public List<UserDTO> getUsers() {
         return users;
@@ -16,27 +16,27 @@ public class UserResponseDTO {
         this.users = users;
     }
 
-    public int getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 
-    public int getAdminUsersCount() {
+    public Long getAdminUsersCount() {
         return adminUsersCount;
     }
 
-    public void setAdminUsersCount(int adminUsersCount) {
+    public void setAdminUsersCount(Long adminUsersCount) {
         this.adminUsersCount = adminUsersCount;
     }
 
-    public int getVotantUsersCount() {
+    public Long getVotantUsersCount() {
         return votantUsersCount;
     }
 
-    public void setVotantUsersCount(int votantUsersCount) {
+    public void setVotantUsersCount(Long votantUsersCount) {
         this.votantUsersCount = votantUsersCount;
     }
 

@@ -7,26 +7,26 @@ import ro.cristiansterie.vote.util.PartyTypeEnum;
 public class VoteDTO {
 
     @JsonIgnore
-    private Integer id;
+    private Long id;
 
-    private Integer candidateID;
+    private Long candidateID;
     private PartyTypeEnum party;
     private Long timestamp;
-    private Integer electionId;
+    private Long electionId;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getCandidateID() {
+    public Long getCandidateID() {
         return candidateID;
     }
 
-    public void setCandidateID(Integer candidateID) {
+    public void setCandidateID(Long candidateID) {
         this.candidateID = candidateID;
     }
 
@@ -46,11 +46,11 @@ public class VoteDTO {
         this.timestamp = timestamp;
     }
 
-    public Integer getElectionId() {
+    public Long getElectionId() {
         return electionId;
     }
 
-    public void setElectionId(Integer electionId) {
+    public void setElectionId(Long electionId) {
         this.electionId = electionId;
     }
 
