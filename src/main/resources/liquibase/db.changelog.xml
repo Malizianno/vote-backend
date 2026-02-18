@@ -1,39 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+						http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-		<!-- NAMING CONVENTIONS:
-			* DDL (CREATE/DROP/ALTER) changesets:
-				db.XX.CREATE-...module name...-...feature...-schema.xml
+	<!-- 01. Schema creation for users table -->
+	<include file="classpath:liquibase/db.01.CREATE-vote-users-schema.xml" />
 
-			* DML (INSERT/UPDATE/DELETE) changesets:
-				db.XX.INSERT-...module name...-...feature...-initial-data.xml
+	<!-- 02. Data insertion for users table -->
+	<include file="classpath:liquibase/db.02.INSERT-vote-users-admin-schema.xml" />
 
-			XXX: Golden Rules:
-			XXX: Always use a new changeset in existing prefix schemas
-			XXX: Create new DDL or DML files only when it uses different prefix than existing business!
-			XXX: Push-in changesets only when refactoring without backwards compatibility (major bump in version)!
-		-->
+	<!-- 03. Data creation for elections table -->
+	<include file="classpath:liquibase/db.03.CREATE-elections-schema.xml" />
 
-		<!-- 01. Schema creation for users table -->
-		<include file="classpath:liquibase/db.01.CREATE-vote-users-schema.xml" />
+	<!-- 04. Data creation for events table -->
+	<include file="classpath:liquibase/db.04.CREATE-events-schema.xml" />
 
-		<!-- 02. Data insertion for users table -->
-		<include file="classpath:liquibase/db.02.INSERT-vote-users-admin-schema.xml" />
+	<!-- 05. Data creation for newsfeed table -->
+	<include file="classpath:liquibase/db.05.CREATE-newsfeed-schema.xml" />
 
-		<!-- 03. Data creation for elections table -->
-		<include file="classpath:liquibase/db.03.CREATE-elections-schema.xml" />
-
-		<!-- 04. Data creation for events table -->
-		<include file="classpath:liquibase/db.04.CREATE-events-schema.xml" />
-		
-				<!-- 05. Data creation for newsfeed table -->
-				<include file="classpath:liquibase/db.05.CREATE-newsfeed-schema.xml" />
-
-		<!-- WIP: TEMPORARY - REMOVE THIS: FOR TESTING PURPOSES ONLY -->
-		<!-- 04. Data creation for events table -->
-		<include file="classpath:liquibase/db.99.INSERT-test-user-data-schema.xml" />
+	<!-- WIP: TEMPORARY - REMOVE THIS: FOR TESTING PURPOSES ONLY -->
+	<!-- 04. Data creation for events table -->
+	<include file="classpath:liquibase/db.99.INSERT-test-user-data-schema.xml" />
 
 </databaseChangeLog>

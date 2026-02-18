@@ -28,12 +28,6 @@ public class VoteService extends GenericService {
         this.repo = repo;
     }
 
-    // WIP: this should return statistic on votes only, should check bussiness logic
-
-    private List<VoteDTO> getAll() {
-        return convert(repo.findAll());
-    }
-
     public List<VoteDTO> getFiltered(@NonNull VoteDTO filter) {
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();

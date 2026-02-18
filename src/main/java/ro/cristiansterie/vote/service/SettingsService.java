@@ -7,8 +7,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -92,7 +90,7 @@ public class SettingsService {
         return false;
     }
 
-    // XXX: this is very danbgerous, please REMOVE THIS method after testing
+    // XXX: this is very dangerous, please REMOVE THIS method after testing
     // and quit generating fake votes
     @Transactional
     public boolean generateFakeVotes(int no, long electionId) {
@@ -141,22 +139,4 @@ public class SettingsService {
 
         return false;
     }
-
-    // // XXX: this is very danbgerous, please REMOVE THIS method after testing
-    // // and quit generating fake votes
-    // private boolean authenticateForGenerating() {
-    //     try {
-    //         Authentication auth = authManager.authenticate(
-    //                 new UsernamePasswordAuthenticationToken("ADMIN", "test"));
-    //         auth.setAuthenticated(true);
-
-    //         SecurityContextHolder.getContext().setAuthentication(auth);
-
-    //         return true;
-    //     } catch (Exception ex) {
-    //         log.error("Failed while authenticating to generate data for testing purposes!!!: {}", ex.getMessage());
-    //     }
-
-    //     return false;
-    // }
 }
