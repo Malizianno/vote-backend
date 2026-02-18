@@ -33,7 +33,7 @@ public class JWTUtils {
         try {
             // try to parse it as integer and if it fails, use the string value
             username = String.valueOf(Integer.parseInt(String.valueOf(auth.getPrincipal())));
-        } catch (ClassCastException cce) {
+        } catch (NumberFormatException nfe) {
             username = String.valueOf(auth.getPrincipal());
         } finally {
             if (username == null) {
