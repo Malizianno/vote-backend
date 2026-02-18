@@ -6,6 +6,14 @@ public class UserFilterDTO implements Filterable<UserDTO> {
     private UserDTO user;
     private Paging paging;
 
+    public UserDTO getUser() {
+        return getObject();
+    }
+
+    public void setUser(UserDTO user) {
+        setObject(user);
+    }
+
     public UserDTO getObject() {
         return user;
     }

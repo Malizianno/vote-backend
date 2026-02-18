@@ -6,6 +6,14 @@ public class CandidateFilterDTO implements Filterable<CandidateDTO> {
     private CandidateDTO candidate;
     private Paging paging;
 
+    public CandidateDTO getCandidate() {
+        return getObject();
+    }
+
+    public void setCandidate(CandidateDTO candidate) {
+        setObject(candidate);
+    }
+
     public CandidateDTO getObject() {
         return candidate;
     }

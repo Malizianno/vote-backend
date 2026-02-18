@@ -8,6 +8,7 @@ public class NewsfeedPostDTO {
     private String createdAt;
     private String updatedAt;
     private String createdBy;
+    private Long electionId;
 
     public Long getId() {
         return id;
@@ -65,4 +66,11 @@ public class NewsfeedPostDTO {
         this.createdBy = createdBy;
     }
 
+    public Long getElectionId() {
+        return electionId;
+    }
+
+    public void setElectionId(Long electionId) {
+        this.electionId = electionId;
+    }
 }

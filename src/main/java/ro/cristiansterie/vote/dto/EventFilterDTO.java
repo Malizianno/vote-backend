@@ -6,6 +6,14 @@ public class EventFilterDTO implements Filterable<EventDTO> {
     private EventDTO event;
     private Paging paging;
 
+    public EventDTO getEvent() {
+        return getObject();
+    }
+
+    public void setEvent(EventDTO event) {
+        setObject(event);
+    }
+
     public EventDTO getObject() {
         return event;
     }

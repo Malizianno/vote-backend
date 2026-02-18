@@ -6,6 +6,14 @@ public class NewsfeedPostFilterDTO implements Filterable<NewsfeedPostDTO> {
     private NewsfeedPostDTO post;
     private Paging paging;
 
+    public NewsfeedPostDTO getPost() {
+        return getObject();
+    }
+
+    public void setPost(NewsfeedPostDTO post) {
+        setObject(post);
+    }
+
     public NewsfeedPostDTO getObject() {
         return post;
     }
