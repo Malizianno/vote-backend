@@ -71,39 +71,7 @@ public class LoginService {
                         AppConstants.EVENT_LOGIN_AUTHENTICATED + request.getUsername());
 
                 return response;
-            }
-
-            // WIP: remove this after testing (old login methoid for mobile with user+pass)
-            if (null != request && null != request.getRole() && UserRoleEnum.VOTANT.equals(request.getRole())
-                    && foundUser.getAuthorities().size() == 1
-                    && foundUser.getAuthorities().contains(new SimpleGrantedAuthority(UserRoleEnum.VOTANT.name()))) {
-                Authentication auth = authManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
-                SecurityContextHolder.getContext().setAuthentication(auth);
-                log.info("Authentication successful for VOTANT username: {}", request.getUsername());
-
-                String token = jwtUtil.generateJWTToken(auth);
-
-                LoginResponseDTO response = new LoginResponseDTO();
-
-                response.setUsername(request.getUsername());
-                response.setRole(request.getRole());
-                response.setToken(token);
-                response.setHasVoted(userService.hasVotedByUsername(request.getUsername()));
-
-                UserDTO foundLocalUser = userService.getByUsername(request.getUsername());
-
-                if (null != foundLocalUser && null != foundLocalUser.getId()) {
-                    response.setId(foundLocalUser.getId());
                 }
-
-                // save event
-                events.save(EventActionEnum.LOGIN, EventScreenEnum.LOGIN,
-                        AppConstants.EVENT_LOGIN_AUTHENTICATED + request.getUsername());
-
-                return response;
-            }
         } catch (Exception ex) {
             log.error("Exception happened while logging in: {}", ex);
         }

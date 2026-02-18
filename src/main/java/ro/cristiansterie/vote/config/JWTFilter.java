@@ -68,39 +68,45 @@ public class JWTFilter extends OncePerRequestFilter {
 
                 String jwt = parseJWTToken(request);
 
-                if (null != jwt && jwtUtil.validateJWTToken(jwt) && apikey.equals(authProperties.getFrontend())) {
-                    log.info("validating ADMIN user...");
-
-                    UserDetails userDetails = userService.loadUserByUsername(jwtUtil.parseUsername(jwt));
-                    UserRoleEnum role = UserRoleEnum.valueOf(userDetails.getAuthorities().toArray()[0].toString());
-
-                    Authentication auth = new JWTTokenAuthentication(jwt, userDetails.getUsername(), role,
-                            userDetails.getAuthorities());
-                    auth.setAuthenticated(true);
-
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                    log.info("Authentication successfull for user: {}, apikey: {}!", userDetails.getUsername(), apikey);
-                }
-
-                if (null != jwt && jwtUtil.validateJWTToken(jwt) && apikey.equals(authProperties.getMobile())) {
-                    log.info("validating VOTANT user...");
-
-                    UserDetails userDetails = userService.loadUserByUsername(jwtUtil.parseUsername(jwt));
-                    UserRoleEnum role = UserRoleEnum.valueOf(userDetails.getAuthorities().toArray()[0].toString());
-
-                    Authentication auth = new JWTTokenAuthentication(jwt, userDetails.getUsername(), role,
-                            userDetails.getAuthorities());
-                    auth.setAuthenticated(true);
-
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                    log.info("Authentication successfull for user: {}, apikey: {}!", userDetails.getUsername(), apikey);
-                }
+                loginAndSetContext(jwt, apikey);
             }
         } catch (Exception e) {
             log.error("Cannot set user authentication: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void loginAndSetContext(String jwt, String apikey) {
+        if (isAdminRequest(jwt, apikey) || isMobileRequest(jwt, apikey)) {
+            log.info("Authenticating {} user...", isMobileRequest(jwt, apikey) ? "VOTANT" : "ADMIN");
+
+            authenticate(jwt, apikey);
+        }
+    }
+
+    private void authenticate(String jwt, String apikey) {
+        UserDetails userDetails = userService.loadUserByUsername(jwtUtil.parseUsername(jwt));
+        UserRoleEnum role = UserRoleEnum.valueOf(userDetails.getAuthorities().toArray()[0].toString());
+
+        Authentication auth = new JWTTokenAuthentication(jwt, userDetails.getUsername(), role,
+                userDetails.getAuthorities());
+        auth.setAuthenticated(true);
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        log.info("Authentication successful for user: {}, apikey: {}!", userDetails.getUsername(), apikey);
+    }
+
+    private boolean isAdminRequest(String jwt, String apikey) {
+        return isValidJWT(jwt) && apikey.equals(authProperties.getFrontend());
+    }
+
+    private boolean isMobileRequest(String jwt, String apikey) {
+        return isValidJWT(jwt) && apikey.equals(authProperties.getMobile());
+    }
+
+    private boolean isValidJWT(String jwt) {
+        return null != jwt && jwtUtil.validateJWTToken(jwt);
     }
 
     private String parseJWTToken(HttpServletRequest request) {

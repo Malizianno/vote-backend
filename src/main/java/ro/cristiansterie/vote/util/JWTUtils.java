@@ -31,9 +31,10 @@ public class JWTUtils {
         String username = null;
 
         try {
-            username = (String) auth.getPrincipal();
+            // try to parse it as integer and if it fails, use the string value
+            username = String.valueOf(Integer.parseInt(String.valueOf(auth.getPrincipal())));
         } catch (ClassCastException cce) {
-            username = String.valueOf((Integer) auth.getPrincipal());
+            username = String.valueOf(auth.getPrincipal());
         } finally {
             if (username == null) {
                 return null;
