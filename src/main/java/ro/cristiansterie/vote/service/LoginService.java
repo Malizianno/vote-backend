@@ -14,17 +14,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.config.CustomAuthenticationManager;
 import ro.cristiansterie.vote.config.FaceIDAuthentication;
 import ro.cristiansterie.vote.dto.LoginRequestDTO;
 import ro.cristiansterie.vote.dto.LoginResponseDTO;
 import ro.cristiansterie.vote.dto.LogoutRequestDTO;
 import ro.cristiansterie.vote.dto.LogoutResponseDTO;
-import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.UserVoterDTO;
 import ro.cristiansterie.vote.util.AppConstants;
-import ro.cristiansterie.vote.util.EventActionEnum;
-import ro.cristiansterie.vote.util.EventScreenEnum;
 import ro.cristiansterie.vote.util.JWTUtils;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
@@ -32,19 +30,17 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 public class LoginService {
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private CustomAuthenticationManager authManager;
-    private JWTUtils jwtUtil;
-    private UserService userService;
-    private final EventService events;
+    private final CustomAuthenticationManager authManager;
+    private final JWTUtils jwtUtil;
+    private final UserService userService;
 
-    public LoginService(CustomAuthenticationManager authManager, JWTUtils jwtUtil, UserService userService,
-            EventService events) {
+    public LoginService(CustomAuthenticationManager authManager, JWTUtils jwtUtil, UserService userService) {
         this.authManager = authManager;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
-        this.events = events;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_LOGIN, screen = AppConstants.EVENT_SCREEN_LOGIN, message = AppConstants.EVENT_LOGIN_AUTHENTICATED)
     public LoginResponseDTO login(LoginRequestDTO request) {
         try {
             UserDetails foundUser = userService.loadUserByUsername(request.getUsername());
@@ -66,12 +62,8 @@ public class LoginService {
                 response.setRole(request.getRole());
                 response.setToken(token);
 
-                // save event
-                events.save(EventActionEnum.LOGIN, EventScreenEnum.LOGIN,
-                        AppConstants.EVENT_LOGIN_AUTHENTICATED + request.getUsername());
-
                 return response;
-                }
+            }
         } catch (Exception ex) {
             log.error("Exception happened while logging in: {}", ex);
         }
@@ -79,6 +71,7 @@ public class LoginService {
         return null;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_LOGIN, screen = AppConstants.EVENT_SCREEN_LOGIN, message = AppConstants.EVENT_LOGIN_AUTHENTICATED_VOTER)
     public String loginUserWithFace(UserVoterDTO user) {
         try {
             UserVoterDTO foundUser = userService.getVoter(user.getId());
@@ -96,10 +89,6 @@ public class LoginService {
 
                 String token = jwtUtil.generateJWTToken(auth);
 
-                // save event
-                events.save(EventActionEnum.LOGIN, EventScreenEnum.LOGIN,
-                        AppConstants.EVENT_LOGIN_AUTHENTICATED_VOTER + user.getId());
-
                 return token;
             }
         } catch (Exception ex) {
@@ -109,6 +98,7 @@ public class LoginService {
         return null;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_LOGOUT, screen = AppConstants.EVENT_SCREEN_LOGIN, message = AppConstants.EVENT_LOGIN_LOGOUT)
     public LogoutResponseDTO logout(LogoutRequestDTO request) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -117,10 +107,6 @@ public class LoginService {
 
                 if (!username.isEmpty() && !request.getUsername().isEmpty()) {
                     log.info("Logout successfull for username: {}", username);
-
-                    // save event
-                    events.save(EventActionEnum.LOGOUT, EventScreenEnum.LOGIN,
-                            AppConstants.EVENT_LOGIN_LOGOUT + request.getUsername());
 
                     SecurityContextHolder.getContext().setAuthentication(null);
                 }

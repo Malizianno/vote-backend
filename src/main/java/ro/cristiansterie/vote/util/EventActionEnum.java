@@ -2,7 +2,7 @@ package ro.cristiansterie.vote.util;
 
 public enum EventActionEnum {
     ALL("all"),
-    CREATE("create"),
+    SAVE("save"),
     UPDATE("update"),
     DELETE("delete"),
     GET("get"),
@@ -13,7 +13,10 @@ public enum EventActionEnum {
     VOTE("vote"),
     LOGIN("login"),
     LOGOUT("logout"),
-    REGISTER("register");
+    REGISTER("register"),
+    GET_CAMPAIGN_STATUS("getCampaignStatus"),
+    GET_ELECTION_RESULT("getElectionResult"),
+    CHANGE_STATUS("changeStatus");
 
     private final String action;
 

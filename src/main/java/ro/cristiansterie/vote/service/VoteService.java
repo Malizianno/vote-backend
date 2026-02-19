@@ -12,9 +12,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.dto.VoteDTO;
 import ro.cristiansterie.vote.entity.VoteDAO;
 import ro.cristiansterie.vote.repository.VoteRepository;
+import ro.cristiansterie.vote.util.AppConstants;
 
 @Service
 public class VoteService extends GenericService {
@@ -28,6 +30,7 @@ public class VoteService extends GenericService {
         this.repo = repo;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_FILTERED, screen = AppConstants.EVENT_SCREEN_VOTE, message = AppConstants.EVENT_VOTES_GET_FILTERED)
     public List<VoteDTO> getFiltered(@NonNull VoteDTO filter) {
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
@@ -35,6 +38,7 @@ public class VoteService extends GenericService {
         return convert(repo.findAll(Example.of(convert(filter), matcher)));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_VOTE, screen = AppConstants.EVENT_SCREEN_VOTE, message = AppConstants.EVENT_VOTES_TAKE_A_VOTE)
     public boolean takeAVote(VoteDTO newVote) {
         try {
             String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -50,6 +54,7 @@ public class VoteService extends GenericService {
         return false;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_VOTE, message = AppConstants.EVENT_VOTES_CLEAN_ALL_VOTES)
     public boolean cleanDBTable(long electionId) {
         try {
             // first check if there are any entries in DB table

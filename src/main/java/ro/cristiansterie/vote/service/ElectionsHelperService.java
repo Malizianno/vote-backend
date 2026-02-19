@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.dto.CandidateDTO;
 import ro.cristiansterie.vote.dto.CandidateFilterDTO;
 import ro.cristiansterie.vote.dto.CandidateWithStatisticsDTO;
@@ -19,8 +20,6 @@ import ro.cristiansterie.vote.dto.ElectionCampaignDTO;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.VoteDTO;
 import ro.cristiansterie.vote.util.AppConstants;
-import ro.cristiansterie.vote.util.EventActionEnum;
-import ro.cristiansterie.vote.util.EventScreenEnum;
 
 // XXX: this class executes elections, take care of voting process alltogether
 @Service
@@ -31,18 +30,17 @@ public class ElectionsHelperService extends GenericService {
     private VoteService voteService;
     private CandidateService candidateService;
     private UserService userService;
-    private EventService eventService;
     private final ElectionService electionService;
 
     public ElectionsHelperService(VoteService voteService, CandidateService candidateService, UserService userService,
-            EventService eventService, ElectionService electionService) {
+            ElectionService electionService) {
         this.voteService = voteService;
         this.candidateService = candidateService;
         this.userService = userService;
-        this.eventService = eventService;
         this.electionService = electionService;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_CAMPAIGN_STATUS, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_GET_CAMPAIGN_STATUS)
     public ElectionCampaignDTO getElectionCampaignStatus() {
         ElectionCampaignDTO returnable = new ElectionCampaignDTO();
 
@@ -51,15 +49,12 @@ public class ElectionsHelperService extends GenericService {
         returnable.setEnabled(campaign.size() > 0);
         returnable.setElections(campaign);
 
-        // save event
-        eventService.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS_HELPER,
-                AppConstants.EVENT_ELECTIONS_HELPER_GET_CAMPAIGN_STATUS);
-
         return returnable;
     }
 
     // get election winner by counting over all votes for each candidate, then
     // return the candidate with most votes
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ELECTION_RESULT, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_GET_ELECTION_RESULT)
     public CandidateDTO getElectionResult(long electionId) {
         VoteDTO filterVote = new VoteDTO();
         filterVote.setElectionId(electionId);
@@ -70,14 +65,11 @@ public class ElectionsHelperService extends GenericService {
 
         Long winnerCandidate = Collections.max(candidatesAndVotes.entrySet(), Map.Entry.comparingByValue()).getKey();
 
-        // save event
-        eventService.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS_HELPER,
-                AppConstants.EVENT_ELECTIONS_HELPER_GET_ELECTION_RESULT);
-
         return candidateService.get(winnerCandidate);
     }
 
     @Transactional
+    @Loggable(action = AppConstants.EVENT_ACTION_VOTE, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_VOTE)
     public boolean vote(CandidateDTO voted, Long userID) {
         VoteDTO newVote = new VoteDTO();
 
@@ -93,22 +85,17 @@ public class ElectionsHelperService extends GenericService {
             return false; // no user found in DB
         }
 
-        if (null != userToVote && null != userToVote.getId() && null != userToVote.getHasVoted()
+        if (null != userToVote
+                && null != userToVote.getId()
+                && null != userToVote.getHasVoted()
                 && userToVote.getHasVoted()) {
             return false; // user has voted
         }
 
-        // TODO: check if this really made it work for mobile :)
-        // userToVote.setHasVoted(true);
-        // userService.save(userToVote);
-
-        // save event
-        eventService.save(EventActionEnum.CREATE, EventScreenEnum.ELECTIONS_HELPER,
-                AppConstants.EVENT_ELECTIONS_HELPER_VOTE + voted.getId());
-
         return voteService.takeAVote(newVote);
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ONE, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_GET_PARSED_VOTES)
     public List<CandidateWithStatisticsDTO> getParsedVotes(long electionId) {
         List<CandidateWithStatisticsDTO> returnable = new ArrayList<>();
 
@@ -140,10 +127,6 @@ public class ElectionsHelperService extends GenericService {
             returnable.add(newCandidateWithStatistics);
         });
 
-        // save event
-        eventService.save(EventActionEnum.GET, EventScreenEnum.ELECTIONS_HELPER,
-                AppConstants.EVENT_ELECTIONS_HELPER_GET_PARSED_VOTES);
-
         return returnable;
     }
 
@@ -158,12 +141,8 @@ public class ElectionsHelperService extends GenericService {
         return voteService.getFiltered(filterVote).size();
     }
 
-    // XXX: dangerous method, use with care
+    @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_CLEAN_ALL_VOTES)
     public boolean cleanAllVotes(int electionId) {
-        // save event
-        eventService.save(EventActionEnum.DELETE, EventScreenEnum.ELECTIONS_HELPER,
-                AppConstants.EVENT_ELECTIONS_HELPER_CLEAN_ALL_VOTES);
-
         return voteService.cleanDBTable(electionId);
     }
 }

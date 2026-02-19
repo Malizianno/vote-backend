@@ -12,15 +12,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ro.cristiansterie.vote.config.CustomAuthenticationManager;
+import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.entity.CandidateDAO;
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.CandidateRepository;
 import ro.cristiansterie.vote.repository.UserRepository;
 import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EntityHelper;
-import ro.cristiansterie.vote.util.EventActionEnum;
-import ro.cristiansterie.vote.util.EventScreenEnum;
 
 @Service
 public class SettingsService {
@@ -28,28 +26,22 @@ public class SettingsService {
 
     private CandidateRepository candidates;
     private UserRepository users;
-    private CustomAuthenticationManager authManager;
     private CandidateService candidatesService;
     private ElectionsHelperService electionHelperService;
     private ElectionService electionService;
-    private EventService events;
 
     public SettingsService(CandidateRepository candidates, UserRepository users, CandidateService candidatesService,
-            ElectionsHelperService electionsHelperService, ElectionService electionService, EventService events) {
+            ElectionsHelperService electionsHelperService, ElectionService electionService) {
         this.candidates = candidates;
         this.users = users;
         this.candidatesService = candidatesService;
         this.electionHelperService = electionsHelperService;
         this.electionService = electionService;
-        this.events = events;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_USERS)
     public boolean generateFakeUsers(int no) {
         try {
-            // save event
-            events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,
-                    AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_USERS);
-
             users.saveAll(EntityHelper.generateFakeUsers(no));
 
             return true;
@@ -61,6 +53,7 @@ public class SettingsService {
     }
 
     @Transactional
+    @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_CANDIDATES)
     public boolean generateFakeCandidates(long electionId) {
         try {
             var foundElection = electionService.get(electionId);
@@ -70,10 +63,6 @@ public class SettingsService {
             var fakeCandidates = EntityHelper.generateFakeCandidates(electionId);
             // then generate and save new fake candidates
             candidates.saveAll(fakeCandidates);
-
-            // save event
-            events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,
-                    AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_CANDIDATES);
 
             if (foundElection == null || foundElection.getId() == null || foundElection.getId() <= 0) {
                 throw new IllegalStateException("No election to add fake candidates to!");
@@ -93,6 +82,7 @@ public class SettingsService {
     // XXX: this is very dangerous, please REMOVE THIS method after testing
     // and quit generating fake votes
     @Transactional
+    @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_VOTES)
     public boolean generateFakeVotes(int no, long electionId) {
         try {
             List<CandidateDAO> candidatesList = candidates.findAllByElectionId(electionId);
@@ -127,10 +117,6 @@ public class SettingsService {
             // end testing
             // restore original authentication
             SecurityContextHolder.getContext().setAuthentication(originalAuth);
-
-            // save event
-            events.save(EventActionEnum.CREATE, EventScreenEnum.DASHBOARD,
-                    AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_VOTES);
 
             return true;
         } catch (Exception e) {

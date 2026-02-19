@@ -23,14 +23,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
+import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.UserFilterDTO;
 import ro.cristiansterie.vote.dto.UserVoterDTO;
 import ro.cristiansterie.vote.entity.UserDAO;
 import ro.cristiansterie.vote.repository.UserRepository;
 import ro.cristiansterie.vote.util.AppConstants;
-import ro.cristiansterie.vote.util.EventActionEnum;
-import ro.cristiansterie.vote.util.EventScreenEnum;
 import ro.cristiansterie.vote.util.Paging;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
@@ -40,29 +39,24 @@ public class UserService extends GenericService implements UserDetailsService {
 
     private UserRepository repo;
     private PasswordEncoder passwordEncoder;
-    private final EventService events;
 
-    public UserService(UserRepository repo, PasswordEncoder passwordEncoder, EventService events) {
+    public UserService(UserRepository repo, PasswordEncoder passwordEncoder) {
         this.repo = repo;
         this.passwordEncoder = passwordEncoder;
-        this.events = events;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ALL, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_GET_ALL)
     public List<UserDTO> getAll() {
-        // save event
-        events.save(EventActionEnum.GET_ALL, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ALL);
-
         return convert(repo.findAll());
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ALL, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_GET_ALL_FACE_IMAGES)
     public Map<Long, byte[]> getAllFaceImagesBase64() {
-        // save event
-        events.save(EventActionEnum.GET_ALL, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ALL_FACE_IMAGES);
-
         return repo.findAll().stream().filter(user -> user.getFaceImage() != null)
                 .collect(Collectors.toMap(UserDAO::getId, UserDAO::getFaceImage));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_FILTERED, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_GET_FILTERED)
     public List<UserDTO> getFiltered(UserFilterDTO filter) {
         filter = this.checkFilters(filter);
 
@@ -71,53 +65,44 @@ public class UserService extends GenericService implements UserDetailsService {
         Pageable pageable = PageRequest.of(filter.getPaging().getPage(), filter.getPaging().getSize(),
                 Sort.by(Sort.Direction.DESC, "id"));
 
-        // save event
-        events.save(EventActionEnum.GET_FILTERED, EventScreenEnum.USERS,
-                AppConstants.EVENT_USERS_GET_FILTERED);
-
         return convert(repo.findAll(Example.of(convert(filter.getObject()), matcher), pageable).getContent());
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_COUNT_FILTERED, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_COUNT_FILTERED)
     public Long countFiltered(UserFilterDTO filter) {
         filter = this.checkFilters(filter);
 
         ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase();
 
-        // save event
-        events.save(EventActionEnum.COUNT_FILTERED, EventScreenEnum.USERS,
-                AppConstants.EVENT_USERS_COUNT_FILTERED);
-
         return repo.count(Example.of(convert(filter.getObject()), matcher));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ONE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_GET_ONE)
     public UserDTO get(@NonNull Long id) {
         UserDAO returnable = repo.findById(id).orElse(null);
 
-        // save event
-        events.save(EventActionEnum.GET, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ONE + id);
         // return user if exists
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ONE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_GET_VOTER_ONE)
     public UserVoterDTO getVoter(@NonNull Long id) {
         UserDAO returnable = repo.findById(id).orElse(null);
 
-        // save event
-        events.save(EventActionEnum.GET, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_ONE + id);
         // return user if exists
         return null != returnable && null != returnable.getId() ? convertToVoter(returnable) : null;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ONE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_GET_PROFILE)
     public UserVoterDTO getProfile(@NonNull Long id) {
         UserDAO returnable = repo.findById(id).orElse(null);
 
-        // save event
-        events.save(EventActionEnum.GET, EventScreenEnum.USERS, AppConstants.EVENT_USERS_GET_PROFILE + id);
         // return user if exists
         return null != returnable && null != returnable.getId() ? convertToVoter(returnable) : null;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_USER_SAVE)
     public UserDTO save(UserDTO user) {
         if (null == user || !validateUserRole(user)) {
             log.error("Cannot save user: {}", user);
@@ -134,15 +119,10 @@ public class UserService extends GenericService implements UserDetailsService {
             user.setPassword(found.getPassword());
         }
 
-        var saved = repo.save(convert(user));
-
-        // save event
-        events.save(EventActionEnum.CREATE, EventScreenEnum.USERS,
-                AppConstants.EVENT_USERS_USER_SAVE + saved.getId());
-
-        return convert(saved);
+        return convert(repo.save(convert(user)));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_PROFILE_SAVE)
     public UserVoterDTO saveProfile(UserVoterDTO user) {
         if (null == user || !validateUserRole(user)) {
             log.error("Cannot save user: {}", user);
@@ -159,15 +139,10 @@ public class UserService extends GenericService implements UserDetailsService {
             user.setPassword(found.getPassword());
         }
 
-        UserDAO saved = repo.save(convertFromVoter(user));
-
-        // save event
-        events.save(EventActionEnum.CREATE, EventScreenEnum.USERS,
-                AppConstants.EVENT_USERS_PROFILE_SAVE + saved.getId());
-
-        return convertToVoter(saved);
+        return convertToVoter(repo.save(convertFromVoter(user)));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_PROFILE_REGISTER)
     public UserVoterDTO registerProfile(UserVoterDTO user) {
         if (null == user) {
             log.error("Cannot register user: {}", user);
@@ -187,21 +162,13 @@ public class UserService extends GenericService implements UserDetailsService {
         user.setUsername(null);
         user.setPassword(null);
 
-        UserDAO saved = repo.save(convertFromVoter(user));
-
-        // save event
-        events.save(EventActionEnum.CREATE, EventScreenEnum.USERS,
-                AppConstants.EVENT_USERS_PROFILE_REGISTER + saved.getId());
-
-        return convertToVoter(saved);
+        return convertToVoter(repo.save(convertFromVoter(user)));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_DELETE)
     public boolean delete(Long id) {
         try {
             repo.deleteById(id);
-
-            // save event
-            events.save(EventActionEnum.DELETE, EventScreenEnum.USERS, AppConstants.EVENT_USERS_DELETE + id);
 
             return true;
         } catch (Exception e) {

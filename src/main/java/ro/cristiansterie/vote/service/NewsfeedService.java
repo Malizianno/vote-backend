@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.dto.NewsfeedPostDTO;
 import ro.cristiansterie.vote.dto.NewsfeedPostFilterDTO;
 import ro.cristiansterie.vote.entity.NewsfeedPostDAO;
@@ -27,10 +28,12 @@ public class NewsfeedService extends GenericService {
         this.repo = repo;
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ALL, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_GET_ALL)
     public List<NewsfeedPostDTO> findAll() {
         return convert(repo.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_FILTERED, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_GET_FILTERED)
     public List<NewsfeedPostDTO> findFiltered(NewsfeedPostFilterDTO filter) {
         filter = this.checkFilters(filter);
 
@@ -42,6 +45,7 @@ public class NewsfeedService extends GenericService {
         return convert(repo.findAll(Example.of(convert(filter.getObject()), matcher), pageable).getContent());
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_COUNT_FILTERED, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_COUNT_FILTERED)
     public Long countFiltered(NewsfeedPostFilterDTO filter) {
         filter = this.checkFilters(filter);
 
@@ -51,10 +55,12 @@ public class NewsfeedService extends GenericService {
         return repo.count(Example.of(convert(filter.getObject()), matcher));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_GET_ONE, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_GET_ONE)
     public NewsfeedPostDTO findById(Long id) {
         return convert(repo.findById(id).orElse(null));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_SAVE)
     public NewsfeedPostDTO create(NewsfeedPostDTO post) {
         var context = SecurityContextHolder.getContext();
 
@@ -63,12 +69,13 @@ public class NewsfeedService extends GenericService {
         if (isHuman(context)) {
             username = context.getAuthentication().getName();
         }
-        
+
         post.setCreatedBy(username);
 
         return convert(repo.save(convert(post)));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_UPDATE, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_UPDATE)
     public NewsfeedPostDTO update(Long id, NewsfeedPostDTO updated) {
         if (id == null || updated == null || updated.getId() != id) {
             return null;
@@ -87,6 +94,7 @@ public class NewsfeedService extends GenericService {
         return convert(repo.save(existing));
     }
 
+    @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_DELETE)
     public boolean delete(Long id) {
         try {
             repo.deleteById(id);

@@ -11,7 +11,8 @@ public enum EventScreenEnum {
     CANDIDATES("candidates"),
     VOTE("vote"),
     RESULTS("results"),
-    SETTINGS("settings");
+    SETTINGS("settings"),
+    NEWSFEED("newsfeed");
 
     private final String screen;
 
