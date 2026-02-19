@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import ro.cristiansterie.vote.properties.AuthProperties;
 import ro.cristiansterie.vote.properties.JWTConfiguration;
@@ -19,6 +20,7 @@ import ro.cristiansterie.vote.repository.UserRepository;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ JWTConfiguration.class, AuthProperties.class })
+@EnableScheduling
 public class VoteBackendApplication {
 	protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

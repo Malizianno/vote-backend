@@ -87,9 +87,17 @@ public class EventService extends GenericService {
 
     public boolean save(EventActionEnum action, EventScreenEnum screen, String message) {
         EventDTO event = new EventDTO();
-        var loggedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        var loggedRole = UserRoleEnum.valueOf(
-                SecurityContextHolder.getContext().getAuthentication().getAuthorities().toArray()[0].toString());
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // default to system user if no authenticated user is found
+        var loggedUsername = AppConstants.SYSTEM_USER_USERNAME;
+        // default to admin role if no authenticated user is found (system user)
+        var loggedRole = UserRoleEnum.ADMIN; 
+
+        if (auth != null && auth.isAuthenticated()) {
+            loggedUsername = auth.getName();
+            loggedRole = UserRoleEnum.valueOf(auth.getAuthorities().toArray()[0].toString());
+        }
 
         event.setUsername(
                 loggedUsername.equals(AppConstants.ANONYMOUS_USER) ? AppConstants.ADMIN_USER : loggedUsername);
@@ -153,7 +161,7 @@ public class EventService extends GenericService {
         if (filter.getObject() == null) {
             filter.setObject(new EventDTO());
         }
-        
+
         if (UserRoleEnum.ALL.equals(filter.getObject().getRole())) {
             filter.getObject().setRole(null);
         }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import ro.cristiansterie.vote.dto.NewsfeedPostDTO;
 import ro.cristiansterie.vote.dto.NewsfeedPostFilterDTO;
 import ro.cristiansterie.vote.entity.NewsfeedPostDAO;
 import ro.cristiansterie.vote.repository.NewsfeedRepository;
+import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.Paging;
 
 @Service
@@ -55,8 +57,14 @@ public class NewsfeedService extends GenericService {
 
     public NewsfeedPostDTO create(NewsfeedPostDTO post) {
         var context = SecurityContextHolder.getContext();
-        var user = context.getAuthentication().getName();
-        post.setCreatedBy(user);
+
+        var username = AppConstants.SYSTEM_USER_USERNAME; // default to system user if no authenticated user is found
+
+        if (isHuman(context)) {
+            username = context.getAuthentication().getName();
+        }
+        
+        post.setCreatedBy(username);
 
         return convert(repo.save(convert(post)));
     }
@@ -100,6 +108,10 @@ public class NewsfeedService extends GenericService {
 
     public List<NewsfeedPostDTO> convert(List<NewsfeedPostDAO> daos) {
         return daos.stream().map(this::convert).toList();
+    }
+
+    private boolean isHuman(SecurityContext context) {
+        return context.getAuthentication() != null && context.getAuthentication().isAuthenticated();
     }
 
     private NewsfeedPostFilterDTO checkFilters(NewsfeedPostFilterDTO filter) {

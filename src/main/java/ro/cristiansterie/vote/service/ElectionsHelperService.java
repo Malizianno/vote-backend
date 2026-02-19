@@ -58,6 +58,8 @@ public class ElectionsHelperService extends GenericService {
         return returnable;
     }
 
+    // get election winner by counting over all votes for each candidate, then
+    // return the candidate with most votes
     public CandidateDTO getElectionResult(long electionId) {
         VoteDTO filterVote = new VoteDTO();
         filterVote.setElectionId(electionId);
