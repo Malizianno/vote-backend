@@ -170,7 +170,6 @@ class EventRepositoryIT {
 
         var foundEvent = repository.findById(savedEvent.getId()).orElse(null);
 
-        assertNotNull(foundEvent);
-        assertNull(foundEvent.getId());
+        assertNull(foundEvent);
     }
 }
