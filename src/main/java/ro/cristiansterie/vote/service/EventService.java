@@ -92,7 +92,7 @@ public class EventService extends GenericService {
         // default to system user if no authenticated user is found
         var loggedUsername = AppConstants.SYSTEM_USER_USERNAME;
         // default to admin role if no authenticated user is found (system user)
-        var loggedRole = UserRoleEnum.ADMIN; 
+        var loggedRole = UserRoleEnum.ADMIN;
 
         if (auth != null && auth.isAuthenticated()) {
             loggedUsername = auth.getName();
@@ -118,7 +118,7 @@ public class EventService extends GenericService {
         return false;
     }
 
-    public boolean delete(Long id) {
+    public Boolean delete(Long id) {
         try {
             repo.deleteById(id);
 

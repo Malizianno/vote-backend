@@ -56,14 +56,14 @@ public class ElectionHelperController {
     }
 
     @GetMapping(path = "/countAllVotes/{electionId}")
-    public ResponseEntity<Long> countAllVotes(@PathVariable long electionId) {
+    public ResponseEntity<Long> countAllVotes(@PathVariable Long electionId) {
         Long count = service.countAllVotes(electionId);
 
         return new ResponseEntity<>(count, null != count ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path = "/getParsedVotes/{electionId}")
-    public ResponseEntity<List<CandidateWithStatisticsDTO>> getParsedVotes(@PathVariable int electionId) {
+    public ResponseEntity<List<CandidateWithStatisticsDTO>> getParsedVotes(@PathVariable Long electionId) {
         List<CandidateWithStatisticsDTO> result = service.getParsedVotes(electionId);
 
         return new ResponseEntity<>(result, null != result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);

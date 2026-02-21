@@ -40,7 +40,7 @@ public class SettingsService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_USERS)
-    public boolean generateFakeUsers(int no) {
+    public Boolean generateFakeUsers(Integer no) {
         try {
             users.saveAll(EntityHelper.generateFakeUsers(no));
 
@@ -54,7 +54,7 @@ public class SettingsService {
 
     @Transactional
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_CANDIDATES)
-    public boolean generateFakeCandidates(long electionId) {
+    public Boolean generateFakeCandidates(Long electionId) {
         try {
             var foundElection = electionService.get(electionId);
             // first clean the DB with previous candidates
@@ -83,7 +83,7 @@ public class SettingsService {
     // and quit generating fake votes
     @Transactional
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_VOTES)
-    public boolean generateFakeVotes(int no, long electionId) {
+    public Boolean generateFakeVotes(Integer no, Long electionId) {
         try {
             List<CandidateDAO> candidatesList = candidates.findAllByElectionId(electionId);
             List<UserDAO> usersList = users.findAll();

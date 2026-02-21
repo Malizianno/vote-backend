@@ -91,7 +91,7 @@ public class CandidateService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = CANDIDATES_SCREEN, message = AppConstants.EVENT_CANDIDATES_DELETE)
-    public boolean delete(Long id) {
+    public Boolean delete(Long id) {
         try {
             repo.deleteById(id);
             return true;

@@ -20,7 +20,7 @@ public class SettingsController {
     }
 
     @PostMapping(path = "/fake/candidates/{electionId}")
-    public ResponseEntity<Boolean> fakeCandidates(@PathVariable int electionId) {
+    public ResponseEntity<Boolean> fakeCandidates(@PathVariable Long electionId) {
         boolean status = service.generateFakeCandidates(electionId);
 
         return new ResponseEntity<>(status, status ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
@@ -34,7 +34,7 @@ public class SettingsController {
     }
 
     @PostMapping(path = "/fake/votes/{no}/{electionId}")
-    public ResponseEntity<Boolean> fakeVotes(@PathVariable int no, @PathVariable int electionId) {
+    public ResponseEntity<Boolean> fakeVotes(@PathVariable int no, @PathVariable Long electionId) {
         Boolean status = service.generateFakeVotes(no, electionId);
 
         return new ResponseEntity<>(status, status != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);

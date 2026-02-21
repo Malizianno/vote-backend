@@ -70,7 +70,7 @@ public class ElectionsHelperService extends GenericService {
 
     @Transactional
     @Loggable(action = AppConstants.EVENT_ACTION_VOTE, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_VOTE)
-    public boolean vote(CandidateDTO voted, Long userID) {
+    public Boolean vote(CandidateDTO voted, Long userID) {
         VoteDTO newVote = new VoteDTO();
 
         newVote.setCandidateID(voted.getId());
@@ -96,7 +96,7 @@ public class ElectionsHelperService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_GET_ONE, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_GET_PARSED_VOTES)
-    public List<CandidateWithStatisticsDTO> getParsedVotes(long electionId) {
+    public List<CandidateWithStatisticsDTO> getParsedVotes(Long electionId) {
         List<CandidateWithStatisticsDTO> returnable = new ArrayList<>();
 
         VoteDTO filterVote = new VoteDTO();
@@ -134,15 +134,15 @@ public class ElectionsHelperService extends GenericService {
         return userService.hasVotedByUsername(username);
     }
 
-    public long countAllVotes(long electionId) {
+    public Long countAllVotes(long electionId) {
         VoteDTO filterVote = new VoteDTO();
         filterVote.setElectionId(electionId);
 
-        return voteService.getFiltered(filterVote).size();
+        return Long.valueOf(voteService.getFiltered(filterVote).size());
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_CLEAN_ALL_VOTES)
-    public boolean cleanAllVotes(int electionId) {
+    public Boolean cleanAllVotes(int electionId) {
         return voteService.cleanDBTable(electionId);
     }
 }

@@ -97,7 +97,7 @@ public class ElectionService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_ELECTIONS, message = AppConstants.EVENT_ELECTIONS_DELETE)
-    public boolean delete(Long id) {
+    public Boolean delete(Long id) {
         try {
             repo.deleteById(id);
 
@@ -110,7 +110,7 @@ public class ElectionService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_CHANGE_STATUS, screen = AppConstants.EVENT_SCREEN_ELECTIONS, message = AppConstants.EVENT_ELECTIONS_CHANGE_STATUS)
-    public boolean changeStatus(long id, boolean enabled) {
+    public Boolean changeStatus(long id, boolean enabled) {
         ElectionDAO election = repo.findById(id).orElse(null);
 
         if (null == election || null == election.getId()) {

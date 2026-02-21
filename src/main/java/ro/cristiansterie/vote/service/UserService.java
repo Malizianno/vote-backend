@@ -166,7 +166,7 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_DELETE)
-    public boolean delete(Long id) {
+    public Boolean delete(Long id) {
         try {
             repo.deleteById(id);
 
