@@ -48,7 +48,8 @@ public class WebSecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of(
                             "https://vote-frontend-t3wz.onrender.com",
-                            "https://vote-mobile-1fk7.onrender.com"));
+                            "https://vote-mobile-1fk7.onrender.com",
+                            "http://localhost:4090"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true);
@@ -63,6 +64,7 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+    // keep this, but might remove it later if we don't need it for the frontend
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
