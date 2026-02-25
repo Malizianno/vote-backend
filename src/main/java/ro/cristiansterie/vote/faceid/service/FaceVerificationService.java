@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import ro.cristiansterie.vote.config.DeepfaceProperties;
 import ro.cristiansterie.vote.faceid.dto.FaceVerificationRequest;
 import ro.cristiansterie.vote.faceid.dto.FaceVerificationResponse;
 import ro.cristiansterie.vote.faceid.dto.FaceVerificationResult;
@@ -31,11 +32,13 @@ public class FaceVerificationService {
 
     private final UserService userService;
     private final LoginService loginService;
+    private final DeepfaceProperties deepfaceProperties;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public FaceVerificationService(UserService userService, LoginService loginService) {
+    public FaceVerificationService(UserService userService, LoginService loginService, DeepfaceProperties deepfaceProperties) {
         this.userService = userService;
+        this.deepfaceProperties = deepfaceProperties;
         this.loginService = loginService;
     }
 
@@ -86,7 +89,7 @@ public class FaceVerificationService {
     }
 
     public FaceVerificationResult verifyFace(String imageBase64, List<String> referenceBase64List) {
-        String url = "http://localhost:5001/verify";
+        String url = deepfaceProperties.getUrl() + "/verify";
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("imageBase64", imageBase64);
