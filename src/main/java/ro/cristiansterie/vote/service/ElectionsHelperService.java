@@ -1,14 +1,11 @@
 package ro.cristiansterie.vote.service;
 
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +18,8 @@ import ro.cristiansterie.vote.dto.UserDTO;
 import ro.cristiansterie.vote.dto.VoteDTO;
 import ro.cristiansterie.vote.util.AppConstants;
 
-// XXX: this class executes elections, take care of voting process alltogether
 @Service
 public class ElectionsHelperService extends GenericService {
-
-    protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private VoteService voteService;
     private CandidateService candidateService;

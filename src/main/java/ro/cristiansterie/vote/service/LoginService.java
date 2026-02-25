@@ -1,12 +1,9 @@
 package ro.cristiansterie.vote.service;
 
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,9 +24,7 @@ import ro.cristiansterie.vote.util.JWTUtils;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
-public class LoginService {
-    protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
+public class LoginService extends GenericService {
     private final CustomAuthenticationManager authManager;
     private final JWTUtils jwtUtil;
     private final UserService userService;

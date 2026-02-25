@@ -1,9 +1,5 @@
 package ro.cristiansterie.vote.service;
 
-import java.lang.invoke.MethodHandles;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ro.cristiansterie.vote.aspect.Loggable;
@@ -14,8 +10,7 @@ import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
-public class DashboardService {
-    protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+public class DashboardService extends GenericService {
 
     private CandidateRepository candidates;
     private UserRepository users;

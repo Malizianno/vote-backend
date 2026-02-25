@@ -21,7 +21,6 @@ import ro.cristiansterie.vote.util.Paging;
 
 @Service
 public class NewsfeedService extends GenericService {
-
     private final NewsfeedRepository repo;
 
     public NewsfeedService(NewsfeedRepository repo) {
@@ -101,7 +100,7 @@ public class NewsfeedService extends GenericService {
 
             return true;
         } catch (Exception ex) {
-            // log exception;
+            log.error("Cannot delete newsfeed post with id: {}", id);
         }
         return false;
     }

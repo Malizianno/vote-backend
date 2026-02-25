@@ -1,11 +1,8 @@
 package ro.cristiansterie.vote.service;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.function.Predicate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +14,7 @@ import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
-public class NewsfeedAutomatedService {
-    protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
+public class NewsfeedAutomatedService extends GenericService {
     private final static List<Integer> MILESTONES = List.of(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
     private int postedPercentMilestoneReached = 0;
 
@@ -78,7 +73,6 @@ public class NewsfeedAutomatedService {
         user.setRole(UserRoleEnum.VOTANT);
         userFilter.setUser(user);
 
-        // XXX: what about per zonecode? as in fiecare judet pentru el???
         var totalVoters = userService.countFiltered(userFilter);
         var allVotes = electionHelperService.countAllVotes(electionId);
         var percentageReal = totalVoters == 0 ? 0 : (allVotes * 100) / totalVoters;

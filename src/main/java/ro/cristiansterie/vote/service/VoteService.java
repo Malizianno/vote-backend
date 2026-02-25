@@ -1,11 +1,8 @@
 package ro.cristiansterie.vote.service;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.lang.NonNull;
@@ -20,8 +17,6 @@ import ro.cristiansterie.vote.util.AppConstants;
 
 @Service
 public class VoteService extends GenericService {
-    protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private UserService userService;
     private VoteRepository repo;
 

@@ -1,11 +1,8 @@
 package ro.cristiansterie.vote.service;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +21,6 @@ import ro.cristiansterie.vote.util.PartyTypeEnum;
 
 @Service
 public class CandidateService extends GenericService {
-    protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     protected static final String CANDIDATES_SCREEN = AppConstants.EVENT_SCREEN_CANDIDATES;
 
     private final CandidateRepository repo;

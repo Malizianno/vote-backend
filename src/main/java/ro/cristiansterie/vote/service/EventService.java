@@ -1,13 +1,10 @@
 package ro.cristiansterie.vote.service;
 
-import java.lang.invoke.MethodHandles;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
@@ -28,8 +25,6 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
 public class EventService extends GenericService {
-    protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
     private EventRepository repo;
 
     public EventService(EventRepository repo) {

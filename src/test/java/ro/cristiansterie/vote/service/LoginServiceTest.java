@@ -29,7 +29,6 @@ import ro.cristiansterie.vote.dto.LoginResponseDTO;
 import ro.cristiansterie.vote.dto.LogoutRequestDTO;
 import ro.cristiansterie.vote.dto.LogoutResponseDTO;
 import ro.cristiansterie.vote.dto.UserVoterDTO;
-import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.JWTUtils;
 import ro.cristiansterie.vote.util.TestConstants;
 import ro.cristiansterie.vote.util.UserRoleEnum;

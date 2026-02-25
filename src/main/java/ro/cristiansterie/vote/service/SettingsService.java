@@ -1,11 +1,8 @@
 package ro.cristiansterie.vote.service;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,9 +18,7 @@ import ro.cristiansterie.vote.util.AppConstants;
 import ro.cristiansterie.vote.util.EntityHelper;
 
 @Service
-public class SettingsService {
-    protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
+public class SettingsService extends GenericService {
     private CandidateRepository candidates;
     private UserRepository users;
     private CandidateService candidatesService;
@@ -79,8 +74,6 @@ public class SettingsService {
         return false;
     }
 
-    // XXX: this is very dangerous, please REMOVE THIS method after testing
-    // and quit generating fake votes
     @Transactional
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_VOTES)
     public Boolean generateFakeVotes(Integer no, Long electionId) {
