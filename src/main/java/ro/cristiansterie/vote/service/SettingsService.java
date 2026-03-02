@@ -19,11 +19,11 @@ import ro.cristiansterie.vote.util.EntityHelper;
 
 @Service
 public class SettingsService extends GenericService {
-    private CandidateRepository candidates;
-    private UserRepository users;
-    private CandidateService candidatesService;
-    private ElectionsHelperService electionHelperService;
-    private ElectionService electionService;
+    private final CandidateRepository candidates;
+    private final UserRepository users;
+    private final CandidateService candidatesService;
+    private final ElectionsHelperService electionHelperService;
+    private final ElectionService electionService;
 
     public SettingsService(CandidateRepository candidates, UserRepository users, CandidateService candidatesService,
             ElectionsHelperService electionsHelperService, ElectionService electionService) {

@@ -12,8 +12,8 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 @Service
 public class DashboardService extends GenericService {
 
-    private CandidateRepository candidates;
-    private UserRepository users;
+    private final CandidateRepository candidates;
+    private final UserRepository users;
 
     public DashboardService(CandidateRepository candidates, UserRepository users, CandidateService candidatesService,
             ElectionsHelperService electionsHelperService, ElectionService electionService) {

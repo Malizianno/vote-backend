@@ -14,7 +14,7 @@ import ro.cristiansterie.vote.service.DashboardService;
 @RequestMapping(path = "/dashboard")
 public class DashboardController {
 
-    private DashboardService service;
+    private final DashboardService service;
 
     public DashboardController(DashboardService service) {
         this.service = service;

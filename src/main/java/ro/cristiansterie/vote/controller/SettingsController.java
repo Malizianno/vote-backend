@@ -13,7 +13,7 @@ import ro.cristiansterie.vote.service.SettingsService;
 @RequestMapping(path = "/settings")
 public class SettingsController {
 
-    private SettingsService service;
+    private final SettingsService service;
 
     public SettingsController(SettingsService service) {
         this.service = service;

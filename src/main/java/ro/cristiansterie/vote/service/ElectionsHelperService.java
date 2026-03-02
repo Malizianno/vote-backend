@@ -21,9 +21,9 @@ import ro.cristiansterie.vote.util.AppConstants;
 @Service
 public class ElectionsHelperService extends GenericService {
 
-    private VoteService voteService;
-    private CandidateService candidateService;
-    private UserService userService;
+    private final VoteService voteService;
+    private final CandidateService candidateService;
+    private final UserService userService;
     private final ElectionService electionService;
 
     public ElectionsHelperService(VoteService voteService, CandidateService candidateService, UserService userService,

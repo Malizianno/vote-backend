@@ -21,7 +21,7 @@ import ro.cristiansterie.vote.service.ElectionService;
 @RequestMapping(path = "/election")
 public class ElectionsController {
 
-    private ElectionService service;
+    private final ElectionService service;
 
     public ElectionsController(ElectionService service) {
         this.service = service;

@@ -25,7 +25,7 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
 public class EventService extends GenericService {
-    private EventRepository repo;
+    private final  EventRepository repo;
 
     public EventService(EventRepository repo) {
         this.repo = repo;

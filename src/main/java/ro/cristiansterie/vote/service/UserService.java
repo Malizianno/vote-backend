@@ -32,8 +32,8 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
 public class UserService extends GenericService implements UserDetailsService {
-    private UserRepository repo;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository repo;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository repo, PasswordEncoder passwordEncoder) {
         this.repo = repo;

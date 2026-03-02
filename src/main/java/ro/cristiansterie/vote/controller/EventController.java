@@ -21,7 +21,7 @@ import ro.cristiansterie.vote.service.EventService;
 @RequestMapping(path = "/events")
 public class EventController {
 
-    private EventService service;
+    private final EventService service;
 
     public EventController(EventService service) {
         this.service = service;

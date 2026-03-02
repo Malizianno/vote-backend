@@ -23,7 +23,7 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    private UserService service;
+    private final UserService service;
 
     public UserController(UserService service) {
         this.service = service;

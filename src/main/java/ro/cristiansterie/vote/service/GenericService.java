@@ -11,6 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class GenericService {
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    protected ModelMapper mapper = new ModelMapper();
-    protected ObjectMapper objectMapper = new ObjectMapper();
+    protected final ModelMapper mapper = new ModelMapper();
+    protected final ObjectMapper objectMapper = new ObjectMapper();
 }

@@ -17,8 +17,8 @@ import ro.cristiansterie.vote.util.AppConstants;
 
 @Service
 public class VoteService extends GenericService {
-    private UserService userService;
-    private VoteRepository repo;
+    private final UserService userService;
+    private final VoteRepository repo;
 
     public VoteService(UserService userService, VoteRepository repo) {
         this.userService = userService;

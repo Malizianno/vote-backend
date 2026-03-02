@@ -89,7 +89,7 @@ public class FaceVerificationService {
     }
 
     public FaceVerificationResult verifyFace(String imageBase64, List<String> referenceBase64List) {
-        String url = deepfaceProperties.getUrl() + "/verify";
+        String url = deepfaceProperties.getUrl();
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("imageBase64", imageBase64);
