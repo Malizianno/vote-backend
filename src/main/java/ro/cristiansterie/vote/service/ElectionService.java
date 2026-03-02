@@ -22,7 +22,7 @@ import ro.cristiansterie.vote.util.Paging;
 
 @Service
 public class ElectionService extends GenericService {
-    private ElectionRepository repo;
+    private final ElectionRepository repo;
 
     public ElectionService(ElectionRepository repo) {
         this.repo = repo;
