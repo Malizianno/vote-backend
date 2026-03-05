@@ -12,13 +12,18 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "deepface")
 public class DeepfaceProperties implements InitializingBean {
     protected static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    
+
     private String url;
+    private Integer timeout;
 
     @Override
     public void afterPropertiesSet() {
         if (null == url || url.isEmpty()) {
             throw new IllegalArgumentException("Deepface URL must be provided in application properties.");
+        }
+
+        if (null == timeout || timeout <= 0) {
+            throw new IllegalArgumentException("Deepface timeout must be a positive integer.");
         }
 
         log.info("DeepfaceProperties loaded: url = {}", url);
@@ -30,5 +35,13 @@ public class DeepfaceProperties implements InitializingBean {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
     }
 }

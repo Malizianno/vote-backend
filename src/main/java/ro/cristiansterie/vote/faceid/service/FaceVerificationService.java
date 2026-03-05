@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -34,12 +35,19 @@ public class FaceVerificationService {
     private final LoginService loginService;
     private final DeepfaceProperties deepfaceProperties;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
-    public FaceVerificationService(UserService userService, LoginService loginService, DeepfaceProperties deepfaceProperties) {
+    public FaceVerificationService(UserService userService, LoginService loginService,
+            DeepfaceProperties deepfaceProperties) {
         this.userService = userService;
         this.deepfaceProperties = deepfaceProperties;
         this.loginService = loginService;
+
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(deepfaceProperties.getTimeout());
+        factory.setReadTimeout(deepfaceProperties.getTimeout());
+
+        restTemplate = new RestTemplate(factory);
     }
 
     public FaceVerificationResponse loginWithFace(FaceVerificationRequest request) {
