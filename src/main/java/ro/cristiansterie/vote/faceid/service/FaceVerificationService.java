@@ -89,6 +89,7 @@ public class FaceVerificationService {
     }
 
     public FaceVerificationResult verifyFace(String imageBase64, List<String> referenceBase64List) {
+        log.info("FaceVerificationService::: verifing face...");
         String url = deepfaceProperties.getUrl();
 
         Map<String, Object> payload = new HashMap<>();
@@ -106,7 +107,10 @@ public class FaceVerificationService {
                     HttpMethod.POST,
                     request,
                     FaceVerificationResult.class);
+
+            log.info("FaceVerificationService::: response completed successfully!");
             return response.getBody();
+
         } catch (RestClientException e) {
             log.error("Face verification service failed: {}", e.getMessage());
         }
