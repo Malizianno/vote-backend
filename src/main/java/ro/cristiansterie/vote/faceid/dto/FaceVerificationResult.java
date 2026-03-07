@@ -59,6 +59,17 @@ public class FaceVerificationResult {
 
     @Override
     public String toString() {
+        if (referenceBase64 == null) {
+            return "FaceVerificationResult [match=" + match + ", distance=" + distance + ", threshold=" + threshold
+                    + ", model=" + model + ", similarity_metric=" + similarity_metric + ", referenceBase64=null]";
+        }
+
+        if (referenceBase64.length() <= 13) {
+            return "FaceVerificationResult [match=" + match + ", distance=" + distance + ", threshold=" + threshold
+                    + ", model=" + model + ", similarity_metric=" + similarity_metric + ", referenceBase64="
+                    + referenceBase64 + "]";
+        }
+        
         return "FaceVerificationResult [match=" + match + ", distance=" + distance + ", threshold=" + threshold
                 + ", model=" + model + ", similarity_metric=" + similarity_metric + ", referenceBase64="
                 + referenceBase64.substring(0, 13) + "]";
