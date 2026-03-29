@@ -31,7 +31,7 @@
             <column name="screen" type="VARCHAR(200)">
                 <constraints nullable="false" />
             </column>
-            <column name="messsage" type="VARCHAR(1000)" defaultValue="-">
+            <column name="message" type="VARCHAR(1000)" defaultValue="-">
                 <constraints nullable="false" />
             </column>
             <column name="timestamp" type="DATE">
