@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ro.cristiansterie.vote.dto.EventDTO;
 import ro.cristiansterie.vote.service.EventService;
@@ -30,6 +31,7 @@ public class LoggingAspect {
     }
 
     @Around("@annotation(loggable)")
+    @Transactional
     public Object logExecution(ProceedingJoinPoint joinPoint, Loggable loggable) throws Throwable {
         String methodName = joinPoint.getSignature().toShortString();
         var auth = SecurityContextHolder.getContext().getAuthentication();
