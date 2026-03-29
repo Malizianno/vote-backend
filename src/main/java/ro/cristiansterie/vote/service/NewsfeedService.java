@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.dto.NewsfeedPostDTO;
@@ -60,6 +61,7 @@ public class NewsfeedService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_SAVE)
+    @Transactional
     public NewsfeedPostDTO create(NewsfeedPostDTO post) {
         var context = SecurityContextHolder.getContext();
 
@@ -75,6 +77,7 @@ public class NewsfeedService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_UPDATE, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_UPDATE)
+    @Transactional
     public NewsfeedPostDTO update(Long id, NewsfeedPostDTO updated) {
         if (id == null || updated == null || updated.getId() != id) {
             return null;
@@ -94,6 +97,7 @@ public class NewsfeedService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_NEWSFEED, message = AppConstants.EVENT_NEWSFEED_DELETE)
+    @Transactional
     public boolean delete(Long id) {
         try {
             repo.deleteById(id);

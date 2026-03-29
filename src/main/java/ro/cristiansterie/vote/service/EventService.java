@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.NonNull;
 import ro.cristiansterie.vote.dto.EventDTO;
@@ -25,7 +26,7 @@ import ro.cristiansterie.vote.util.UserRoleEnum;
 
 @Service
 public class EventService extends GenericService {
-    private final  EventRepository repo;
+    private final EventRepository repo;
 
     public EventService(EventRepository repo) {
         this.repo = repo;
@@ -70,6 +71,7 @@ public class EventService extends GenericService {
         return null != returnable && null != returnable.getId() ? convert(returnable) : null;
     }
 
+    @Transactional
     public EventDTO save(EventDTO event) {
         if (null == event || !validateEvent(event)) {
             log.error("Cannot save event: {}", event);
@@ -80,6 +82,7 @@ public class EventService extends GenericService {
         return convert(repo.save(convert(event)));
     }
 
+    @Transactional
     public boolean save(EventActionEnum action, EventScreenEnum screen, String message) {
         EventDTO event = new EventDTO();
         var auth = SecurityContextHolder.getContext().getAuthentication();
@@ -113,6 +116,7 @@ public class EventService extends GenericService {
         return false;
     }
 
+    @Transactional
     public Boolean delete(Long id) {
         try {
             repo.deleteById(id);

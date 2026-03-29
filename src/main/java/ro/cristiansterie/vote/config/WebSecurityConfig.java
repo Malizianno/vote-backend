@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -44,7 +45,7 @@ public class WebSecurityConfig {
                 auth -> auth.requestMatchers(AUTH_WHITELIST).permitAll().anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
-                    // Reuse your existing MVC CORS config
+                    // Reuse existing MVC CORS config
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(List.of(
                             "https://vote-frontend-t3wz.onrender.com",
@@ -55,6 +56,7 @@ public class WebSecurityConfig {
                     config.setAllowCredentials(true);
                     return config;
                 }))
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
                 .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
                 .logout(logout -> logout.logoutSuccessHandler(logoutSuccessHandler));
@@ -64,7 +66,6 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    // keep this, but might remove it later if we don't need it for the frontend
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

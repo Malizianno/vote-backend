@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.config.CustomAuthenticationManager;
@@ -36,6 +37,7 @@ public class LoginService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_LOGIN, screen = AppConstants.EVENT_SCREEN_LOGIN, message = AppConstants.EVENT_LOGIN_AUTHENTICATED)
+    @Transactional
     public LoginResponseDTO login(LoginRequestDTO request) {
         try {
             UserDetails foundUser = userService.loadUserByUsername(request.getUsername());
@@ -67,6 +69,7 @@ public class LoginService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_LOGIN, screen = AppConstants.EVENT_SCREEN_LOGIN, message = AppConstants.EVENT_LOGIN_AUTHENTICATED_VOTER)
+    @Transactional
     public String loginUserWithFace(UserVoterDTO user) {
         try {
             UserVoterDTO foundUser = userService.getVoter(user.getId());
@@ -94,6 +97,7 @@ public class LoginService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_LOGOUT, screen = AppConstants.EVENT_SCREEN_LOGIN, message = AppConstants.EVENT_LOGIN_LOGOUT)
+    @Transactional
     public LogoutResponseDTO logout(LogoutRequestDTO request) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();

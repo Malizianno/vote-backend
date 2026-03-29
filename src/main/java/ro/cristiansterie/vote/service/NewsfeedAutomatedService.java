@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ro.cristiansterie.vote.dto.ElectionDTO;
 import ro.cristiansterie.vote.dto.NewsfeedPostDTO;
@@ -30,6 +31,7 @@ public class NewsfeedAutomatedService extends GenericService {
     }
 
     @Scheduled(fixedRate = 600_000) // Check 10 minutes
+    @Transactional
     public void checkingMilestones() {
         log.info("AUTO::: checking voting status in order to generate automated posts...");
 

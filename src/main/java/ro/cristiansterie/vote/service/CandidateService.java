@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.NonNull;
 import ro.cristiansterie.vote.aspect.Loggable;
@@ -80,6 +81,7 @@ public class CandidateService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = CANDIDATES_SCREEN, message = AppConstants.EVENT_CANDIDATES_SAVE)
+    @Transactional
     public CandidateDTO save(CandidateDTO toSave) {
         var saved = repo.save(convert(toSave));
 
@@ -87,6 +89,7 @@ public class CandidateService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = CANDIDATES_SCREEN, message = AppConstants.EVENT_CANDIDATES_DELETE)
+    @Transactional
     public Boolean delete(Long id) {
         try {
             repo.deleteById(id);

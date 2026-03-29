@@ -136,6 +136,7 @@ public class ElectionsHelperService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_ELECTIONS_HELPER, message = AppConstants.EVENT_ELECTIONS_HELPER_CLEAN_ALL_VOTES)
+    @Transactional
     public Boolean cleanAllVotes(int electionId) {
         return voteService.cleanDBTable(electionId);
     }

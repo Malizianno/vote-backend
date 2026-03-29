@@ -35,6 +35,7 @@ public class SettingsService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_USERS)
+    @Transactional
     public Boolean generateFakeUsers(Integer no) {
         try {
             users.saveAll(EntityHelper.generateFakeUsers(no));
@@ -47,8 +48,8 @@ public class SettingsService extends GenericService {
         return false;
     }
 
-    @Transactional
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_CANDIDATES)
+    @Transactional
     public Boolean generateFakeCandidates(Long electionId) {
         try {
             var foundElection = electionService.get(electionId);
@@ -74,8 +75,8 @@ public class SettingsService extends GenericService {
         return false;
     }
 
-    @Transactional
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_SETTINGS, message = AppConstants.EVENT_DASHBOARD_GENERATE_FAKE_VOTES)
+    @Transactional
     public Boolean generateFakeVotes(Integer no, Long electionId) {
         try {
             List<CandidateDAO> candidatesList = candidates.findAllByElectionId(electionId);

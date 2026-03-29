@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.PostConstruct;
 import lombok.NonNull;
@@ -83,6 +84,7 @@ public class ElectionService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_ELECTIONS, message = AppConstants.EVENT_ELECTIONS_SAVE)
+    @Transactional
     public ElectionDTO save(ElectionDTO toSave) {
         var preSave = convert(toSave);
         preSave.setCandidates(null);
@@ -92,6 +94,7 @@ public class ElectionService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_ELECTIONS, message = AppConstants.EVENT_ELECTIONS_DELETE)
+    @Transactional
     public Boolean delete(Long id) {
         try {
             repo.deleteById(id);
@@ -105,6 +108,7 @@ public class ElectionService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_CHANGE_STATUS, screen = AppConstants.EVENT_SCREEN_ELECTIONS, message = AppConstants.EVENT_ELECTIONS_CHANGE_STATUS)
+    @Transactional
     public Boolean changeStatus(long id, boolean enabled) {
         ElectionDAO election = repo.findById(id).orElse(null);
 

@@ -8,6 +8,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ro.cristiansterie.vote.aspect.Loggable;
 import ro.cristiansterie.vote.dto.VoteDTO;
@@ -34,6 +35,7 @@ public class VoteService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_VOTE, screen = AppConstants.EVENT_SCREEN_VOTE, message = AppConstants.EVENT_VOTES_TAKE_A_VOTE)
+    @Transactional
     public boolean takeAVote(VoteDTO newVote) {
         try {
             String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -50,6 +52,7 @@ public class VoteService extends GenericService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_VOTE, message = AppConstants.EVENT_VOTES_CLEAN_ALL_VOTES)
+    @Transactional
     public boolean cleanDBTable(long electionId) {
         try {
             // first check if there are any entries in DB table

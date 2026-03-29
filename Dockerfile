@@ -13,4 +13,4 @@ COPY --from=builder /app/target/*.jar app.jar
 ENV PORT=8090
 EXPOSE 8090
 
-ENTRYPOINT ["java", "-Xmx512m", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xmx512m", "-Dspring.profiles.active=dev", "-jar", "app.jar"]

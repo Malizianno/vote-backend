@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.NonNull;
 import ro.cristiansterie.vote.aspect.Loggable;
@@ -98,6 +99,7 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_USER_SAVE)
+    @Transactional
     public UserDTO save(UserDTO user) {
         if (null == user || !validateUserRole(user)) {
             log.error("Cannot save user: {}", user);
@@ -118,6 +120,7 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_PROFILE_SAVE)
+    @Transactional
     public UserVoterDTO saveProfile(UserVoterDTO user) {
         if (null == user || !validateUserRole(user)) {
             log.error("Cannot save user: {}", user);
@@ -138,6 +141,7 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_SAVE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_PROFILE_REGISTER)
+    @Transactional
     public UserVoterDTO registerProfile(UserVoterDTO user) {
         if (null == user) {
             log.error("Cannot register user: {}", user);
@@ -161,6 +165,7 @@ public class UserService extends GenericService implements UserDetailsService {
     }
 
     @Loggable(action = AppConstants.EVENT_ACTION_DELETE, screen = AppConstants.EVENT_SCREEN_USERS, message = AppConstants.EVENT_USERS_DELETE)
+    @Transactional
     public Boolean delete(Long id) {
         try {
             repo.deleteById(id);
@@ -189,6 +194,7 @@ public class UserService extends GenericService implements UserDetailsService {
      * @param username to vote
      * @return if the user has successfully voted
      */
+    @Transactional
     public boolean setHasVotedTrue(String username) {
         UserDAO user = this.repo.findByUsername(username);
 

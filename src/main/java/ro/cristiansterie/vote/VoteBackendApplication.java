@@ -35,26 +35,26 @@ public class VoteBackendApplication {
 			log.info("Application started successfully! message from the CommandLineRunner ;)");
 
 			// WIP: TEST DATA TO BE DELETED!!!
-			var faceImage3 = new String(VoteBackendApplication.class
-					.getResourceAsStream("/base64test/test-face-image-3.b64").readAllBytes(), StandardCharsets.UTF_8);
-			var idImage3 = new String(
-					VoteBackendApplication.class.getResourceAsStream("/base64test/test-id-image-3.b64").readAllBytes(),
-					StandardCharsets.UTF_8);
+			// var faceImage3 = new String(VoteBackendApplication.class
+			// 		.getResourceAsStream("/base64test/test-face-image-3.b64").readAllBytes(), StandardCharsets.UTF_8);
+			// var idImage3 = new String(
+			// 		VoteBackendApplication.class.getResourceAsStream("/base64test/test-id-image-3.b64").readAllBytes(),
+			// 		StandardCharsets.UTF_8);
 			var faceImage4 = new String(VoteBackendApplication.class
 					.getResourceAsStream("/base64test/test-face-image-4.b64").readAllBytes(), StandardCharsets.UTF_8);
 			var idImage4 = new String(
 					VoteBackendApplication.class.getResourceAsStream("/base64test/test-id-image-4.b64").readAllBytes(),
 					StandardCharsets.UTF_8);
 
-			var user3 = userRepo.findById(3L).get();
+			// var user3 = userRepo.findById(3L).get();
 			var user4 = userRepo.findById(4L).get();
 
-			user3.setFaceImage(Base64.getDecoder().decode(faceImage3));
-			user3.setIdImage(Base64.getDecoder().decode(idImage3));
+			// user3.setFaceImage(Base64.getDecoder().decode(faceImage3));
+			// user3.setIdImage(Base64.getDecoder().decode(idImage3));
 			user4.setFaceImage(Base64.getDecoder().decode(faceImage4));
 			user4.setIdImage(Base64.getDecoder().decode(idImage4));
 
-			userRepo.saveAllAndFlush(Arrays.asList(user3, user4));
+			userRepo.saveAllAndFlush(Arrays.asList(user4));
 		};
 	}
 }

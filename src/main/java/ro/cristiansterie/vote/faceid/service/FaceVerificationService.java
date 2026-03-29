@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,6 +51,7 @@ public class FaceVerificationService {
         restTemplate = new RestTemplate(factory);
     }
 
+    @Transactional
     public FaceVerificationResponse loginWithFace(FaceVerificationRequest request) {
         Map<Long, byte[]> referenceBase64ListBytes = userService.getAllFaceImagesBase64();
         Map<Long, String> referenceBase64List = referenceBase64ListBytes.entrySet().stream().collect(
@@ -96,6 +98,7 @@ public class FaceVerificationService {
         return null;
     }
 
+    @Transactional
     public FaceVerificationResult verifyFace(String imageBase64, List<String> referenceBase64List) {
         log.info("FaceVerificationService::: verifing face...");
         String url = deepfaceProperties.getUrl();
