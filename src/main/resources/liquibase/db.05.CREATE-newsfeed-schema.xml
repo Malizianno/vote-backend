@@ -30,7 +30,7 @@
             <column name="updated_at" type="DATETIME">
                 <constraints nullable="false" />
             </column>
-            <column name="image_url" type="VARCHAR(200)">
+            <column name="image_url" type="VARCHAR(2000)">
                 <constraints nullable="true" />
             </column>
         </createTable>
